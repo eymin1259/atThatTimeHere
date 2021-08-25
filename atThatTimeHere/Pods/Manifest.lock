@@ -1,0 +1,28 @@
+PODS:
+  - CryptoSwift (1.4.0)
+  - JGProgressHUD (2.2)
+  - RxSwift (6.2.0)
+  - Toast-Swift (5.0.1)
+
+DEPENDENCIES:
+  - CryptoSwift
+  - JGProgressHUD
+  - RxSwift
+  - Toast-Swift
+
+SPEC REPOS:
+  trunk:
+    - CryptoSwift
+    - JGProgressHUD
+    - RxSwift
+    - Toast-Swift
+
+SPEC CHECKSUMS:
+  CryptoSwift: 7cc902df1784de3b389a387756c7d710f197730c
+  JGProgressHUD: d83d7a981b85d11205e19ff8ad5bb9c40571c847
+  RxSwift: d356ab7bee873611322f134c5f9ef379fa183d8f
+  Toast-Swift: 9b6a70f28b3bf0b96c40d46c0c4b9d6639846711
+
+PODFILE CHECKSUM: c4bb72e084cea8595c787c5a997c87e77797c87a
+
+COCOAPODS: 1.10.1
