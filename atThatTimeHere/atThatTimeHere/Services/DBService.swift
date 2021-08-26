@@ -57,7 +57,7 @@ class DBService {
                 let uid = Int(sqlite3_column_int(stmt, 0))
                 let emailAddress = String(cString: sqlite3_column_text(stmt, 1))
                 let password = String(cString: sqlite3_column_text(stmt, 2))
-                user = User(id: uid, email: emailAddress, password: password, bluetoothDevices: nil)
+                user = User(id: uid, email: emailAddress, password: password)
             }
             completion(user)
             return
@@ -80,7 +80,7 @@ class DBService {
                 let uid = Int(sqlite3_column_int(stmt, 0))
                 let emailAddress = String(cString: sqlite3_column_text(stmt, 1))
                 let password = String(cString: sqlite3_column_text(stmt, 2))
-                user = User(id: uid, email: emailAddress, password: password, bluetoothDevices: nil)
+                user = User(id: uid, email: emailAddress, password: password)
             }
             completion(true, user)
             return

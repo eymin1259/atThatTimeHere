@@ -11,9 +11,6 @@ struct User {
     var id : Int
     var email : String
     var password : String
-    //var photoUrl :
-    
-    var bluetoothDevices : [BluetoothDevice]?
     
     var toDictionary : [String:String] {
         return  [

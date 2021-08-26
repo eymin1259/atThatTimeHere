@@ -31,7 +31,7 @@ struct AuthViewModel {
     }
     
     var btnColor : UIColor {
-        return formValid ? #colorLiteral(red: 0.3647058904, green: 0.06666667014, blue: 0.9686274529, alpha: 1) : #colorLiteral(red: 0.3647058904, green: 0.06666667014, blue: 0.9686274529, alpha: 1).withAlphaComponent(0.3)
+        return formValid ? CUSTOM_SKYBLUE : CUSTOM_SKYBLUE.withAlphaComponent(0.3)
     }
     
     var alertColor : UIColor {

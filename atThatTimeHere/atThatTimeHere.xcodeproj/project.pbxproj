@@ -23,6 +23,17 @@
 		A180D58026D67DE20076458B /* TextFieldWithPlaceholder.swift in Sources */ = {isa = PBXBuildFile; fileRef = A180D57F26D67DE20076458B /* TextFieldWithPlaceholder.swift */; };
 		A180D58226D67E060076458B /* MainTabViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A180D58126D67E060076458B /* MainTabViewController.swift */; };
 		A180D58426D67E990076458B /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A180D58326D67E990076458B /* LoginViewController.swift */; };
+		A180D58626D71CBA0076458B /* RegisterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A180D58526D71CBA0076458B /* RegisterViewController.swift */; };
+		A180D58826D71CCC0076458B /* BaseViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A180D58726D71CCC0076458B /* BaseViewController.swift */; };
+		A180D58A26D72B640076458B /* NoteListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A180D58926D72B640076458B /* NoteListViewController.swift */; };
+		A180D58E26D737A90076458B /* DXBarunscriptM-KSCpc-EUC-H.ttf in Resources */ = {isa = PBXBuildFile; fileRef = A180D58D26D737970076458B /* DXBarunscriptM-KSCpc-EUC-H.ttf */; };
+		A180D59026D747080076458B /* DividerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A180D58F26D747080076458B /* DividerView.swift */; };
+		A180D59226D74A7F0076458B /* MenuViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A180D59126D74A7F0076458B /* MenuViewController.swift */; };
+		A180D59426D75C100076458B /* SettingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A180D59326D75C100076458B /* SettingViewController.swift */; };
+		A180D59626D766560076458B /* NoteViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A180D59526D766560076458B /* NoteViewController.swift */; };
+		A180D59826D766F30076458B /* NoteViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A180D59726D766F30076458B /* NoteViewModel.swift */; };
+		A180D59A26D77A2A0076458B /* PhotoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A180D59926D77A2A0076458B /* PhotoView.swift */; };
+		A180D59C26D77EA90076458B /* PhotoService.swift in Sources */ = {isa = PBXBuildFile; fileRef = A180D59B26D77EA90076458B /* PhotoService.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -45,6 +56,17 @@
 		A180D57F26D67DE20076458B /* TextFieldWithPlaceholder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextFieldWithPlaceholder.swift; sourceTree = "<group>"; };
 		A180D58126D67E060076458B /* MainTabViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTabViewController.swift; sourceTree = "<group>"; };
 		A180D58326D67E990076458B /* LoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
+		A180D58526D71CBA0076458B /* RegisterViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegisterViewController.swift; sourceTree = "<group>"; };
+		A180D58726D71CCC0076458B /* BaseViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseViewController.swift; sourceTree = "<group>"; };
+		A180D58926D72B640076458B /* NoteListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoteListViewController.swift; sourceTree = "<group>"; };
+		A180D58D26D737970076458B /* DXBarunscriptM-KSCpc-EUC-H.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "DXBarunscriptM-KSCpc-EUC-H.ttf"; sourceTree = "<group>"; };
+		A180D58F26D747080076458B /* DividerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DividerView.swift; sourceTree = "<group>"; };
+		A180D59126D74A7F0076458B /* MenuViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuViewController.swift; sourceTree = "<group>"; };
+		A180D59326D75C100076458B /* SettingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingViewController.swift; sourceTree = "<group>"; };
+		A180D59526D766560076458B /* NoteViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoteViewController.swift; sourceTree = "<group>"; };
+		A180D59726D766F30076458B /* NoteViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoteViewModel.swift; sourceTree = "<group>"; };
+		A180D59926D77A2A0076458B /* PhotoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoView.swift; sourceTree = "<group>"; };
+		A180D59B26D77EA90076458B /* PhotoService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoService.swift; sourceTree = "<group>"; };
 		C66BA5CF69611BEAC3EDC120 /* Pods-atThatTimeHere.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-atThatTimeHere.release.xcconfig"; path = "Target Support Files/Pods-atThatTimeHere/Pods-atThatTimeHere.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -98,7 +120,6 @@
 		A180D55726D67AD10076458B /* atThatTimeHere */ = {
 			isa = PBXGroup;
 			children = (
-				A180D57E26D67DCC0076458B /* Controllers */,
 				A180D57926D67D4D0076458B /* Views */,
 				A180D57826D67D430076458B /* ViewModels */,
 				A180D57726D67D390076458B /* Models */,
@@ -111,6 +132,7 @@
 				A180D56126D67AD20076458B /* Assets.xcassets */,
 				A180D56326D67AD20076458B /* LaunchScreen.storyboard */,
 				A180D56626D67AD20076458B /* Info.plist */,
+				A180D58D26D737970076458B /* DXBarunscriptM-KSCpc-EUC-H.ttf */,
 			);
 			path = atThatTimeHere;
 			sourceTree = "<group>";
@@ -129,6 +151,7 @@
 			children = (
 				A180D57226D67CDB0076458B /* UserService.swift */,
 				A180D57526D67D0D0076458B /* DBService.swift */,
+				A180D59B26D77EA90076458B /* PhotoService.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -145,6 +168,7 @@
 			isa = PBXGroup;
 			children = (
 				A180D57C26D67DBF0076458B /* AuthViewModel.swift */,
+				A180D59726D766F30076458B /* NoteViewModel.swift */,
 			);
 			path = ViewModels;
 			sourceTree = "<group>";
@@ -152,7 +176,10 @@
 		A180D57926D67D4D0076458B /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				A180D58F26D747080076458B /* DividerView.swift */,
 				A180D57F26D67DE20076458B /* TextFieldWithPlaceholder.swift */,
+				A180D59926D77A2A0076458B /* PhotoView.swift */,
+				A180D57E26D67DCC0076458B /* Controllers */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -162,6 +189,12 @@
 			children = (
 				A180D58126D67E060076458B /* MainTabViewController.swift */,
 				A180D58326D67E990076458B /* LoginViewController.swift */,
+				A180D58526D71CBA0076458B /* RegisterViewController.swift */,
+				A180D58726D71CCC0076458B /* BaseViewController.swift */,
+				A180D58926D72B640076458B /* NoteListViewController.swift */,
+				A180D59126D74A7F0076458B /* MenuViewController.swift */,
+				A180D59326D75C100076458B /* SettingViewController.swift */,
+				A180D59526D766560076458B /* NoteViewController.swift */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -225,6 +258,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A180D58E26D737A90076458B /* DXBarunscriptM-KSCpc-EUC-H.ttf in Resources */,
 				A180D56526D67AD20076458B /* LaunchScreen.storyboard in Resources */,
 				A180D56226D67AD20076458B /* Assets.xcassets in Resources */,
 				A180D56026D67AD10076458B /* Main.storyboard in Resources */,
@@ -280,16 +314,26 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A180D59826D766F30076458B /* NoteViewModel.swift in Sources */,
 				A180D58426D67E990076458B /* LoginViewController.swift in Sources */,
 				A180D55D26D67AD10076458B /* IntroViewController.swift in Sources */,
 				A180D57026D67C0B0076458B /* SQLite.swift in Sources */,
 				A180D57326D67CDB0076458B /* UserService.swift in Sources */,
 				A180D57626D67D0D0076458B /* DBService.swift in Sources */,
+				A180D59426D75C100076458B /* SettingViewController.swift in Sources */,
+				A180D58826D71CCC0076458B /* BaseViewController.swift in Sources */,
 				A180D57B26D67D9F0076458B /* User.swift in Sources */,
+				A180D59A26D77A2A0076458B /* PhotoView.swift in Sources */,
 				A180D58026D67DE20076458B /* TextFieldWithPlaceholder.swift in Sources */,
+				A180D58A26D72B640076458B /* NoteListViewController.swift in Sources */,
+				A180D59C26D77EA90076458B /* PhotoService.swift in Sources */,
+				A180D59026D747080076458B /* DividerView.swift in Sources */,
 				A180D58226D67E060076458B /* MainTabViewController.swift in Sources */,
 				A180D55926D67AD10076458B /* AppDelegate.swift in Sources */,
+				A180D59226D74A7F0076458B /* MenuViewController.swift in Sources */,
 				A180D55B26D67AD10076458B /* SceneDelegate.swift in Sources */,
+				A180D58626D71CBA0076458B /* RegisterViewController.swift in Sources */,
+				A180D59626D766560076458B /* NoteViewController.swift in Sources */,
 				A180D56E26D67BF90076458B /* Constants.swift in Sources */,
 				A180D57D26D67DBF0076458B /* AuthViewModel.swift in Sources */,
 			);
