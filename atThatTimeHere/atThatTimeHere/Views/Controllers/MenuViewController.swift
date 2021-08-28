@@ -11,15 +11,28 @@ class MenuViewController: BaseViewController {
     // 메뉴 : 추억쓰기, 내정보, 앱버전정보, 이용약관, 별점과리뷰작성, 로그아웃
     
     //MARK: UI
-    private var  writeNoteLbl :  UIButton  =  {
+    private lazy var  writeNoteLbl :  UIButton  =  {
         let btn = UIButton(type: .system)
         btn.setTitle("추억 쓰기", for: .normal)
-        btn.setTitleColor(CUSTOM_SKYBLUE, for: .normal)
+        btn.setTitleColor(.black, for: .normal)
         btn.titleLabel?.font = UIFont(name: CUSTOM_FONT, size: 20)
         btn.isEnabled = true
         btn.addTarget(self, action: #selector(didTapWriteNote), for: .touchUpInside)
         return btn
     }()
+    
+    
+    private lazy var  takePhotoLbl :  UIButton  =  {
+        let btn = UIButton(type: .system)
+        btn.setTitle("추억 찍기", for: .normal)
+        btn.setTitleColor(.black, for: .normal)
+        btn.titleLabel?.font = UIFont(name: CUSTOM_FONT, size: 20)
+        btn.isEnabled = true
+        btn.addTarget(self, action: #selector(didTapTakePhoto), for: .touchUpInside)
+        return btn
+    }()
+    
+    
     
     private var  settingLbl :  UIButton  =  {
         let btn = UIButton(type: .system)
@@ -45,7 +58,7 @@ class MenuViewController: BaseViewController {
     //MARK: methods
     func setupUI(){
 
-        let stackView = UIStackView(arrangedSubviews: [writeNoteLbl, settingLbl])
+        let stackView = UIStackView(arrangedSubviews: [writeNoteLbl,  takePhotoLbl, settingLbl])
         stackView.axis = .vertical
         stackView.spacing = 50
         stackView.alignment = .center
@@ -62,9 +75,10 @@ class MenuViewController: BaseViewController {
     //MARK: actions
     @objc func didTapWriteNote(){
         // 추억 쓰기 버튼 클릭
-        let newNote = NoteViewController()
+        var newNote = NoteViewController()
         newNote.viewModel.isNewNote = true // 새로운 노트 작성
         newNote.modalPresentationStyle = .pageSheet
+        newNote.viewModel.isNoteWithPhoto = false
         present(newNote, animated: true, completion: nil)
     }
     
@@ -73,6 +87,17 @@ class MenuViewController: BaseViewController {
         print("debug : didTapWriteNote  ")
         let setting  = SettingViewController()
         navigationController?.pushViewController(setting, animated: true)
+    }
+    
+    @objc func didTapTakePhoto() {
+        print("debug : didTapTakePhoto ")
+        //  newNote.isNoteWithPhoto = false
+        
+        var photoNote = NoteViewController()
+        photoNote.viewModel.isNewNote = true // 새로운 노트 작성
+        photoNote.modalPresentationStyle = .pageSheet
+        photoNote.viewModel.isNoteWithPhoto = true
+        present(photoNote, animated: true, completion: nil)
     }
 
 }

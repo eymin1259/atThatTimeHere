@@ -12,6 +12,7 @@ struct NoteViewModel {
     //MARK: properties
     var isNewNote : Bool = false
     var isEditiing : Bool = false
+    var isNoteWithPhoto : Bool = false
 //    var title
 //    var photo
 //    var context
