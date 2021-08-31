@@ -21,19 +21,6 @@ class MenuViewController: BaseViewController {
         return btn
     }()
     
-    
-    private lazy var  takePhotoLbl :  UIButton  =  {
-        let btn = UIButton(type: .system)
-        btn.setTitle("추억 찍기", for: .normal)
-        btn.setTitleColor(.black, for: .normal)
-        btn.titleLabel?.font = UIFont(name: CUSTOM_FONT, size: 20)
-        btn.isEnabled = true
-        btn.addTarget(self, action: #selector(didTapTakePhoto), for: .touchUpInside)
-        return btn
-    }()
-    
-    
-    
     private var  settingLbl :  UIButton  =  {
         let btn = UIButton(type: .system)
         btn.setTitle("설정", for: .normal)
@@ -58,9 +45,9 @@ class MenuViewController: BaseViewController {
     //MARK: methods
     func setupUI(){
 
-        let stackView = UIStackView(arrangedSubviews: [writeNoteLbl,  takePhotoLbl, settingLbl])
+        let stackView = UIStackView(arrangedSubviews: [writeNoteLbl, settingLbl])
         stackView.axis = .vertical
-        stackView.spacing = 50
+        stackView.spacing = 40
         stackView.alignment = .center
         
         view.addSubview(stackView)
@@ -75,7 +62,7 @@ class MenuViewController: BaseViewController {
     //MARK: actions
     @objc func didTapWriteNote(){
         // 추억 쓰기 버튼 클릭
-        var newNote = NoteViewController()
+        let newNote = NoteViewController()
         newNote.viewModel.isNewNote = true // 새로운 노트 작성
         newNote.modalPresentationStyle = .pageSheet
         newNote.viewModel.isNoteWithPhoto = false
@@ -84,20 +71,7 @@ class MenuViewController: BaseViewController {
     
     @objc func didTapSetting(){
         // 설정버튼 클릭
-        print("debug : didTapWriteNote  ")
         let setting  = SettingViewController()
         navigationController?.pushViewController(setting, animated: true)
     }
-    
-    @objc func didTapTakePhoto() {
-        print("debug : didTapTakePhoto ")
-        //  newNote.isNoteWithPhoto = false
-        
-        var photoNote = NoteViewController()
-        photoNote.viewModel.isNewNote = true // 새로운 노트 작성
-        photoNote.modalPresentationStyle = .pageSheet
-        photoNote.viewModel.isNoteWithPhoto = true
-        present(photoNote, animated: true, completion: nil)
-    }
-
 }

@@ -17,5 +17,8 @@ struct NoteViewModel {
 //    var photo
 //    var context
     
+    var noteImage : UIImage?
+    var noteImageUrl : URL?
+    
     //MARK: methods
 }

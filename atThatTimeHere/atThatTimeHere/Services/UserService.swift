@@ -89,6 +89,7 @@ class  UserService  {
     }
     
     private func saveUserInfoLocally(user : User){
+        print("debug : saveUserInfoLocally -> user : \(user.toDictionary)")
         UserDefaults.standard.set(user.toDictionary, forKey: CURRENTUSERKEY)
         UserDefaults.standard.synchronize()
     }

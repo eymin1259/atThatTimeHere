@@ -91,4 +91,16 @@ class DBService {
         completion(false, nil)
     }
     
+    func postdNote(){
+        
+    }
+    
+    func getNote(id:String){
+        
+    }
+    
+    func getLoteList(){
+        
+    }
+    
 }

@@ -90,7 +90,7 @@ class SettingViewController: BaseViewController {
 
         let stackView = UIStackView(arrangedSubviews: [ myinfoLbl, appVersionLbl, TermsLbl, privacyLbl, appReviewLbl, logoutLbl])
         stackView.axis = .vertical
-        stackView.spacing = 50
+        stackView.spacing = 40
         stackView.alignment = .center
         
         view.addSubview(stackView)
