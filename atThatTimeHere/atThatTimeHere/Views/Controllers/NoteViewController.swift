@@ -7,11 +7,16 @@
 
 import UIKit
 
+protocol NoteViewControllerDelegate {
+    func didSaveNote() // 노트저장성공을 알림
+}
+
 class NoteViewController: BaseViewController {
     
     //MARK: properties
     var viewModel = NoteViewModel()
-    var contextViewBottomLayoutConstraint : NSLayoutConstraint?
+    var contentViewBottomLayoutConstraint : NSLayoutConstraint?
+    var delegate : NoteViewControllerDelegate?
     
     //MARK: UI
     var dividerView = DividerView()
@@ -42,7 +47,7 @@ class NoteViewController: BaseViewController {
     }()
     
     // 본문내용
-    var contextTextView : UITextView = {
+    var contentTextView : UITextView = {
         var tv = UITextView()
         tv.keyboardType = .default
         tv.autocorrectionType = .no
@@ -57,7 +62,7 @@ class NoteViewController: BaseViewController {
     var photoBtn : UIButton = {
         let btn = UIButton(type: .system)
         btn.setTitle("사진", for: .normal)
-        btn.setTitleColor(CUSTOM_SKYBLUE, for: .normal)
+        btn.setTitleColor(CUSTOM_MAIN_COLOR, for: .normal)
         btn.titleLabel?.font = UIFont(name: CUSTOM_FONT, size: 18)
         btn.isEnabled = true
         btn.addTarget(self, action: #selector(didTapPhotoBtn), for: .touchUpInside)
@@ -69,7 +74,7 @@ class NoteViewController: BaseViewController {
     var saveBtn : UIButton = {
         let btn = UIButton(type: .system)
         btn.setTitle("저장", for: .normal)
-        btn.setTitleColor(CUSTOM_SKYBLUE, for: .normal)
+        btn.setTitleColor(CUSTOM_MAIN_COLOR, for: .normal)
         btn.titleLabel?.font = UIFont(name: CUSTOM_FONT, size: 18)
         btn.isEnabled = true
         btn.addTarget(self, action: #selector(didTapSaveBtn), for: .touchUpInside)
@@ -95,7 +100,7 @@ class NoteViewController: BaseViewController {
             
             // 수정 불가능 처리
             titleTextField.isUserInteractionEnabled = false
-            contextTextView.isUserInteractionEnabled = false
+            contentTextView.isUserInteractionEnabled = false
             photoBtn.isHidden = true
             saveBtn.isHidden = true
             
@@ -158,13 +163,13 @@ class NoteViewController: BaseViewController {
         
         
         // 본문내용
-        view.addSubview(contextTextView)
-        contextTextView.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive =  true
-        contextTextView.topAnchor.constraint(equalTo: photoView.bottomAnchor, constant: 15).isActive = true
-        contextTextView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 50).isActive  = true
-        contextTextView.trailingAnchor.constraint(equalTo: view.trailingAnchor,constant: -50).isActive = true
-        contextViewBottomLayoutConstraint  =  contextTextView.bottomAnchor.constraint(equalTo: view.bottomAnchor,constant: -20)
-        contextViewBottomLayoutConstraint?.isActive = true
+        view.addSubview(contentTextView)
+        contentTextView.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive =  true
+        contentTextView.topAnchor.constraint(equalTo: photoView.bottomAnchor, constant: 15).isActive = true
+        contentTextView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 50).isActive  = true
+        contentTextView.trailingAnchor.constraint(equalTo: view.trailingAnchor,constant: -50).isActive = true
+        contentViewBottomLayoutConstraint  =  contentTextView.bottomAnchor.constraint(equalTo: view.bottomAnchor,constant: -20)
+        contentViewBottomLayoutConstraint?.isActive = true
         
         // 사진버튼, 저장버튼은 키보드의 toolbar로 세팅
         let toolbar = UIToolbar()
@@ -175,7 +180,7 @@ class NoteViewController: BaseViewController {
         let emptyBarBtn = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
         toolbar.items = [photoBarBtn, emptyBarBtn, saveBarBtn]
         titleTextField.inputAccessoryView = toolbar
-        contextTextView.inputAccessoryView = toolbar
+        contentTextView.inputAccessoryView = toolbar
         
         // 이미지피커로 고른 사진을 보여줄 view
         view.addSubview(pickerPhotoView)
@@ -193,8 +198,6 @@ class NoteViewController: BaseViewController {
         
         let selectPhoto = UIAlertAction(title: "사진첨부", style: .default) { (_) -> Void in
             self.showLoading()
-            self.viewModel.isNoteWithPhoto = true
-            
             // 권환확인 및 image picker 실행
             PhotoService.shared.checkPhotoPermission(vc: self)
         }
@@ -231,17 +234,17 @@ class NoteViewController: BaseViewController {
         // 키보드가 올라갈때
         if let keyboardFrame = notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue {
             let keyboardHeight = keyboardFrame.cgRectValue.height
-            contextViewBottomLayoutConstraint?.isActive = false
-            contextViewBottomLayoutConstraint?.constant = -keyboardHeight-10
-            contextViewBottomLayoutConstraint?.isActive = true
+            contentViewBottomLayoutConstraint?.isActive = false
+            contentViewBottomLayoutConstraint?.constant = -keyboardHeight-10
+            contentViewBottomLayoutConstraint?.isActive = true
         }
     }
     
     @objc func handleKeyboardWillHide(notification : Notification ){
         // 키보드가 내려갈때
-        contextViewBottomLayoutConstraint?.isActive = false
-        contextViewBottomLayoutConstraint?.constant = -20
-        contextViewBottomLayoutConstraint?.isActive = true
+        contentViewBottomLayoutConstraint?.isActive = false
+        contentViewBottomLayoutConstraint?.constant = -20
+        contentViewBottomLayoutConstraint?.isActive = true
     }
     
     
@@ -253,40 +256,69 @@ class NoteViewController: BaseViewController {
     
     // 저장버튼 클릭 action
     @objc func  didTapSaveBtn() {
-        print("Debug : didTapSaveBtn")
+        // 노트저장(유저아이디, 제목,내용, 이미지파일패스, 시간)
         
-        // 노트저장(제목,내용, 이미지파일패스, 유저아이디, 시간)
-        
-        // showloading()
+        showLoading()
         
         // 현재시간 저장
         let today = Date()
         let formatter = DateFormatter()
-        formatter.dateFormat = "yyyy-MM-dd"
+        formatter.dateFormat = "yyyy-MM-dd HH:mm"
         formatter.locale = Locale(identifier: "ko_kr")
         let todayStr = formatter.string(from: today)
+        // 제목, 내용
+        let title = self.titleTextField.text ?? ""
+        let content = self.contentTextView.text ?? ""
         
-        // 이미지파일 데이터
-        guard let pngImage = viewModel.noteImage?.pngData() else { return}
-        guard let imgUrl = viewModel.noteImageUrl else {return}
-        // 이미지 저장할 path 정의
-        let paths = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)
-        if let filePath = paths.first?.appendingPathComponent(imgUrl.lastPathComponent) {
+        // 이미지첨부된 노트 저장
+        if let pngImage = viewModel.noteImage?.pngData(),let imgUrl = viewModel.noteImageUrl, let filePath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first?.appendingPathComponent(imgUrl.lastPathComponent) {
+            
             //  이미지 저장
             do {
                 try pngImage.write(to: filePath, options: .atomic)
             } catch {
-                print("debug : pngImage.write error -> \(error.localizedDescription)")
                 // 이미지 저장 실패
-                // dissmiss
-                // show alert
+                print("debug : pngImage.write error -> \(error.localizedDescription)")
+                hideLoading()
+                view.endEditing(true)
+                self.view.makeToast("이미지 저장 실패, 앱을 다시 실행해주세요.")
+                return
+            }
+            
+            // 디비에 노트 저장
+            DBService.shared.createNoteTable()
+            DBService.shared.insertNote(title: title, content: content, imagePath: filePath.absoluteString, date: todayStr) { insertResult in
+                if insertResult { // insert 성공
+                    self.hideLoading()
+                    self.view.endEditing(true)
+                    self.dismiss(animated: true, completion: nil)
+                    self.delegate?.didSaveNote()
+                }
+                else { // insert 실패
+                    self.hideLoading()
+                    self.view.endEditing(true)
+                    self.view.makeToast("노트 저장 실패, 앱을 다시 실행해주세요.")
+                }
             }
         }
-    
-        // db insert
-        // let newNote = Note(
+        else { // 이미지 첨부되지 않은 노트 저장
+            // 디비에 저장
+            DBService.shared.createNoteTable()
+            DBService.shared.insertNote(title: title, content: content, imagePath: "", date: todayStr) { insertResult in
+                if insertResult { // insert 성공
+                    self.hideLoading()
+                    self.view.endEditing(true)
+                    self.dismiss(animated: true, completion: nil)
+                    self.delegate?.didSaveNote()
+                }
+                else { // insert 실패
+                    self.hideLoading()
+                    self.view.endEditing(true)
+                    self.view.makeToast("노트 저장 실패, 앱을 다시 실행해주세요.")
+                }
+            }
+        }
     }
-    
 }
 
 // MARK: extension : UIImagePickerControllerDelegate
@@ -295,6 +327,14 @@ extension NoteViewController : UIImagePickerControllerDelegate, UINavigationCont
     // 사진 선택 취소
     func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
         self.hideLoading()
+        if viewModel.noteImage == nil || viewModel.noteImageUrl == nil {
+            viewModel.noteImage = nil
+            viewModel.noteImageUrl = nil
+            viewModel.isNoteWithPhoto = false
+        }
+        else {
+            viewModel.isNoteWithPhoto = true
+        }
         picker.dismiss(animated: true, completion: nil)
     }
     
@@ -307,6 +347,7 @@ extension NoteViewController : UIImagePickerControllerDelegate, UINavigationCont
             viewModel.noteImage = originalImage
             // 완료 이후 ui 처리
             self.hideLoading()
+            self.viewModel.isNoteWithPhoto = true
             picker.dismiss(animated: true, completion: nil)
         }
     }

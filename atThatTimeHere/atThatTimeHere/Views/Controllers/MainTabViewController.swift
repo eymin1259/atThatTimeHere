@@ -24,16 +24,16 @@ class MainTabViewController: UITabBarController {
         let listVC = UINavigationController(rootViewController: NoteListViewController())
         listVC.tabBarItem.image = #imageLiteral(resourceName: "unselected_heart")
         listVC.tabBarItem.selectedImage = #imageLiteral(resourceName: "selected_heart")
-        listVC.navigationBar.tintColor = CUSTOM_SKYBLUE
+        listVC.navigationBar.tintColor = CUSTOM_MAIN_COLOR
         
         // tab2 : 추억쓰기
         let menuVC =  UINavigationController(rootViewController: MenuViewController())
         menuVC.tabBarItem.image = #imageLiteral(resourceName: "unselected_menu")
         menuVC.tabBarItem.selectedImage = #imageLiteral(resourceName: "selected_menu")
-        menuVC.navigationBar.tintColor = CUSTOM_SKYBLUE
+        menuVC.navigationBar.tintColor = CUSTOM_MAIN_COLOR
         
         viewControllers = [listVC, menuVC]
-        tabBar.tintColor = CUSTOM_SKYBLUE
+        tabBar.tintColor = CUSTOM_MAIN_COLOR
     }
     
 }

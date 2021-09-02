@@ -15,7 +15,7 @@ class SettingViewController: BaseViewController {
         let btn = UIButton(type: .system)
         btn.setTitle("내 정보", for: .normal)
         btn.setTitleColor(.black, for: .normal)
-        btn.titleLabel?.font = UIFont(name: CUSTOM_FONT, size: 20)
+        btn.titleLabel?.font = UIFont(name: CUSTOM_FONT, size: 25)
         btn.isEnabled = true
         btn.addTarget(self, action: #selector(didTapMyInfo), for: .touchUpInside)
         return btn
@@ -25,7 +25,7 @@ class SettingViewController: BaseViewController {
         let btn = UIButton(type: .system)
         btn.setTitle("앱 정보", for: .normal)
         btn.setTitleColor(.black, for: .normal)
-        btn.titleLabel?.font = UIFont(name: CUSTOM_FONT, size: 20)
+        btn.titleLabel?.font = UIFont(name: CUSTOM_FONT, size: 25)
         btn.isEnabled = true
         btn.addTarget(self, action: #selector(didTapAppVersion), for: .touchUpInside)
         return btn
@@ -36,7 +36,7 @@ class SettingViewController: BaseViewController {
         let btn = UIButton(type: .system)
         btn.setTitle("이용약관", for: .normal)
         btn.setTitleColor(.black, for: .normal)
-        btn.titleLabel?.font = UIFont(name: CUSTOM_FONT, size: 20)
+        btn.titleLabel?.font = UIFont(name: CUSTOM_FONT, size: 25)
         btn.isEnabled = true
         btn.addTarget(self, action: #selector(didTapTermsOfService), for: .touchUpInside)
         return btn
@@ -47,7 +47,7 @@ class SettingViewController: BaseViewController {
         let btn = UIButton(type: .system)
         btn.setTitle("개인정보 처리방침", for: .normal)
         btn.setTitleColor(.black, for: .normal)
-        btn.titleLabel?.font = UIFont(name: CUSTOM_FONT, size: 20)
+        btn.titleLabel?.font = UIFont(name: CUSTOM_FONT, size: 25)
         btn.isEnabled = true
         btn.addTarget(self, action: #selector(didTapPrivacy), for: .touchUpInside)
         return btn
@@ -57,7 +57,7 @@ class SettingViewController: BaseViewController {
         let btn = UIButton(type: .system)
         btn.setTitle("별점과 리뷰", for: .normal)
         btn.setTitleColor(.black, for: .normal)
-        btn.titleLabel?.font = UIFont(name: CUSTOM_FONT, size: 20)
+        btn.titleLabel?.font = UIFont(name: CUSTOM_FONT, size: 25)
         btn.isEnabled = true
         btn.addTarget(self, action: #selector(didTapAppReview), for: .touchUpInside)
         return btn
@@ -67,7 +67,7 @@ class SettingViewController: BaseViewController {
         let btn = UIButton(type: .system)
         btn.setTitle("로그아웃", for: .normal)
         btn.setTitleColor(.black, for: .normal)
-        btn.titleLabel?.font = UIFont(name: CUSTOM_FONT, size: 20)
+        btn.titleLabel?.font = UIFont(name: CUSTOM_FONT, size: 25)
         btn.isEnabled = true
         btn.addTarget(self, action: #selector(didTapLogout), for: .touchUpInside)
         return btn
@@ -77,7 +77,6 @@ class SettingViewController: BaseViewController {
     //MARK: life cycle
     override func viewDidLoad() {
         super.viewDidLoad()
-
         setupUI()
     }
 
@@ -88,11 +87,11 @@ class SettingViewController: BaseViewController {
     //MARK: methods
     func setupUI(){
 
+        // 스택뷰 생성 -> myinfoLbl, appVersionLbl, TermsLbl, privacyLbl, appReviewLbl, logoutLbl 포함
         let stackView = UIStackView(arrangedSubviews: [ myinfoLbl, appVersionLbl, TermsLbl, privacyLbl, appReviewLbl, logoutLbl])
         stackView.axis = .vertical
         stackView.spacing = 40
         stackView.alignment = .center
-        
         view.addSubview(stackView)
         stackView.translatesAutoresizingMaskIntoConstraints = false
         stackView.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true

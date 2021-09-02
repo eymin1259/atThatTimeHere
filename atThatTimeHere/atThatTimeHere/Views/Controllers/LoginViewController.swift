@@ -20,7 +20,7 @@ class LoginViewController: BaseViewController {
     private let loginTitleLbl :  UILabel  =  {
         let  text = UILabel()
         text.text = "로그인"
-        text.textColor = CUSTOM_SKYBLUE.withAlphaComponent(0.8)
+        text.textColor = CUSTOM_MAIN_COLOR.withAlphaComponent(0.8)
         text.font = UIFont(name: CUSTOM_FONT, size: 30)
         return text
     }()
@@ -43,8 +43,8 @@ class LoginViewController: BaseViewController {
         let btn = UIButton(type: .system)
         btn.setTitle("확인", for: .normal)
         btn.setTitleColor(UIColor(white: 1, alpha: 0.9), for: .normal)
-        btn.titleLabel?.font = UIFont.boldSystemFont(ofSize: 20)
-        btn.backgroundColor = CUSTOM_SKYBLUE
+        btn.titleLabel?.font = UIFont(name: CUSTOM_FONT, size: 20)
+        btn.backgroundColor = CUSTOM_MAIN_COLOR
         btn.layer.cornerRadius = 5
         btn.translatesAutoresizingMaskIntoConstraints = false
         btn.heightAnchor.constraint(equalToConstant: 50).isActive = true
@@ -55,7 +55,7 @@ class LoginViewController: BaseViewController {
     private let signupBtn: UIButton = {
         let btn = UIButton(type: .system)
         btn.setTitle("회원이 아니시면 회원가입하러 가기!", for: .normal)
-        btn.setTitleColor(CUSTOM_SKYBLUE.withAlphaComponent(0.9), for: .normal)
+        btn.setTitleColor(CUSTOM_MAIN_COLOR.withAlphaComponent(0.9), for: .normal)
         btn.titleLabel?.font = UIFont(name: CUSTOM_FONT, size: 16)
         btn.heightAnchor.constraint(equalToConstant: 50).isActive = true
         btn.addTarget(self, action: #selector(handlepSignupBtn), for: .touchUpInside)

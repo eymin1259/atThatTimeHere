@@ -14,8 +14,8 @@ class MenuViewController: BaseViewController {
     private lazy var  writeNoteLbl :  UIButton  =  {
         let btn = UIButton(type: .system)
         btn.setTitle("추억 쓰기", for: .normal)
-        btn.setTitleColor(.black, for: .normal)
-        btn.titleLabel?.font = UIFont(name: CUSTOM_FONT, size: 20)
+        btn.setTitleColor(CUSTOM_MAIN_COLOR, for: .normal)
+        btn.titleLabel?.font = UIFont(name: CUSTOM_FONT, size: 25)
         btn.isEnabled = true
         btn.addTarget(self, action: #selector(didTapWriteNote), for: .touchUpInside)
         return btn
@@ -25,7 +25,7 @@ class MenuViewController: BaseViewController {
         let btn = UIButton(type: .system)
         btn.setTitle("설정", for: .normal)
         btn.setTitleColor(.black, for: .normal)
-        btn.titleLabel?.font = UIFont(name: CUSTOM_FONT, size: 20)
+        btn.titleLabel?.font = UIFont(name: CUSTOM_FONT, size: 25)
         btn.isEnabled = true
         btn.addTarget(self, action: #selector(didTapSetting), for: .touchUpInside)
         return btn
@@ -40,16 +40,23 @@ class MenuViewController: BaseViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         navigationController?.navigationBar.isHidden = true
+        writeNoteLbl.isHidden = false
+        settingLbl.isHidden = false
     }
 
     //MARK: methods
     func setupUI(){
-
+        
+        // customize navigationController backButton
+        let backBtn = UIBarButtonItem(title: "뒤로", style: .plain, target: self, action: nil)
+        backBtn.tintColor = CUSTOM_MAIN_COLOR
+        navigationItem.backBarButtonItem = backBtn
+        
+        // 스택뷰 생성 -> writeNoteLbl, settingLbl 포함
         let stackView = UIStackView(arrangedSubviews: [writeNoteLbl, settingLbl])
         stackView.axis = .vertical
         stackView.spacing = 40
         stackView.alignment = .center
-        
         view.addSubview(stackView)
         stackView.translatesAutoresizingMaskIntoConstraints = false
         stackView.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
@@ -66,12 +73,24 @@ class MenuViewController: BaseViewController {
         newNote.viewModel.isNewNote = true // 새로운 노트 작성
         newNote.modalPresentationStyle = .pageSheet
         newNote.viewModel.isNoteWithPhoto = false
+        newNote.delegate = self
         present(newNote, animated: true, completion: nil)
     }
     
     @objc func didTapSetting(){
         // 설정버튼 클릭
+        
+        writeNoteLbl.isHidden = true
+        settingLbl.isHidden = true
+        
         let setting  = SettingViewController()
         navigationController?.pushViewController(setting, animated: true)
+    }
+}
+
+//MARK: extension NoteViewControllerDelegate
+extension MenuViewController : NoteViewControllerDelegate {
+    func didSaveNote() {
+        self.view.makeToast("노트를 저장했습니다.")
     }
 }

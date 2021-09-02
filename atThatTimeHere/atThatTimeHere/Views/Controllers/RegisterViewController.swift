@@ -26,7 +26,7 @@ class RegisterViewController: BaseViewController {
     private let registerTitleLbl :  UILabel  =  {
         let  text = UILabel()
         text.text = "회원가입"
-        text.textColor = CUSTOM_SKYBLUE.withAlphaComponent(0.8)
+        text.textColor = CUSTOM_MAIN_COLOR.withAlphaComponent(0.8)
         text.font = UIFont(name: CUSTOM_FONT, size: 30)
         return text
     }()
@@ -49,8 +49,8 @@ class RegisterViewController: BaseViewController {
     private let passwordCheckTextField : UITextField = {
         let tf = TextFieldWithPlaceholder(placeholder: "password를 한번더 입력하세요")
         tf.isSecureTextEntry = true
-        tf.autocorrectionType = .no
         tf.textContentType = .oneTimeCode
+        tf.autocorrectionType = .no
         return tf
     }()
     private let passwordAlertLbl :  UILabel  =  {
@@ -63,8 +63,9 @@ class RegisterViewController: BaseViewController {
         let btn = UIButton(type: .system)
         btn.setTitle("확인", for: .normal)
         btn.setTitleColor(UIColor(white: 1, alpha: 0.9), for: .normal)
-        btn.titleLabel?.font = UIFont.boldSystemFont(ofSize: 20)
-        btn.backgroundColor = CUSTOM_SKYBLUE.withAlphaComponent(0.3)
+        // btn.titleLabel?.font = UIFont.boldSystemFont(ofSize: 20)
+        btn.titleLabel?.font = UIFont(name: CUSTOM_FONT, size: 20)
+        btn.backgroundColor = CUSTOM_MAIN_COLOR.withAlphaComponent(0.3)
         btn.layer.cornerRadius = 5
         btn.isEnabled = false
         btn.translatesAutoresizingMaskIntoConstraints = false

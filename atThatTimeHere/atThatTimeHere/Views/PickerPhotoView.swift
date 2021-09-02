@@ -22,9 +22,9 @@ class PickerPhotoView: UIView {
     // 뒤로가기 버튼 -> PickerPhotoView 숨기기
     var closeBtn : UIButton = {
         var btn = UIButton()
-        btn.setTitle("뒤로", for: .normal)
+        btn.setTitle("<  뒤로", for: .normal)
         btn.setTitleColor(.white, for: .normal)
-        btn.titleLabel?.font = UIFont(name: CUSTOM_FONT, size: 30)
+        btn.titleLabel?.font = UIFont(name: CUSTOM_FONT, size: 20)
         btn.isEnabled = true
         btn.addTarget(self, action: #selector(didTapClose), for: .touchUpInside)
         return btn

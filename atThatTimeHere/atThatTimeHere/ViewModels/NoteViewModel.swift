@@ -15,7 +15,7 @@ struct NoteViewModel {
     var isNoteWithPhoto : Bool = false
 //    var title
 //    var photo
-//    var context
+//    var content
     
     var noteImage : UIImage?
     var noteImageUrl : URL?
