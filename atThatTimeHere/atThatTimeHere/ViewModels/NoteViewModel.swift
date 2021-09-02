@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import CoreLocation
 
 struct NoteViewModel {
     
@@ -19,6 +20,19 @@ struct NoteViewModel {
     
     var noteImage : UIImage?
     var noteImageUrl : URL?
+    var locationManager = CLLocationManager()
+    var currentLocation : CLLocation?
     
     //MARK: methods
+    
+    func startLocationUpdate() {
+        locationManager.requestWhenInUseAuthorization()
+        locationManager.desiredAccuracy = kCLLocationAccuracyBest
+        locationManager.startUpdatingLocation()
+    }
+    
+    func stopLocationUpdate(){
+        locationManager.stopMonitoringSignificantLocationChanges()
+        locationManager.stopUpdatingLocation()
+    }
 }

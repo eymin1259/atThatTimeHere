@@ -21,6 +21,7 @@ class BaseViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        print("debug : BaseViewController viewDidLoad")
     }
     
     //MARK: methods

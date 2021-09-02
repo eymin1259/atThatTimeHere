@@ -81,6 +81,7 @@ class RegisterViewController: BaseViewController {
         
         setupUI()
         configureNotificationObserver()
+        emailTextField.becomeFirstResponder()
     }
     
     // MARK: methods

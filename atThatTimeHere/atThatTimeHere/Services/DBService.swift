@@ -106,7 +106,7 @@ class DBService {
     func createNoteTable(){
         do {
             let db = try SQLite()
-            try db.install(query:"CREATE TABLE IF NOT EXISTS Notes (id INTEGER PRIMARY KEY , userId INTEGER, title TEXT, content TEXT, imagePath TEXT, date, TEXT, latitude TEXT, longitude TEXT);")
+            try db.install(query:"CREATE TABLE IF NOT EXISTS Notes (id INTEGER PRIMARY KEY , userId INTEGER, title TEXT, content TEXT, imagePath TEXT, date TEXT, latitude TEXT, longitude TEXT);")
             try db.execute()
         } catch {
             print(error.localizedDescription)
@@ -124,6 +124,7 @@ class DBService {
             checkedContent = "."
         }
         
+        print("debug  :insert -> '\(uid)', '\(checkedTitle)', '\(checkedContent)', '\(imagePath)', '\(date)', '\(latitude)', '\(longitude)'  ")
         do{
             // insert note data
             let db = try SQLite()

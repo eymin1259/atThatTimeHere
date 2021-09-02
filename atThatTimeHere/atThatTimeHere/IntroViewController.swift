@@ -50,7 +50,7 @@ class IntroViewController: UIViewController {
     
     // MARK: methods
     private func setupUI() {
-        view.backgroundColor = .lightGray
+        view.backgroundColor = CUSTOM_MAIN_COLOR
         view.addSubview(lbl)
         lbl.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
         lbl.centerYAnchor.constraint(equalTo: view.centerYAnchor).isActive = true

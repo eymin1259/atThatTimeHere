@@ -2,8 +2,12 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<key></key>
-	<string></string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>추억 장소 저장시 위치권한이 필요합니다.</string>
+	<key>NSLocationAlwaysUsageDescription</key>
+	<string>추억 장소 저장시 위치권한이 필요합니다.</string>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>추억 장소 저장시 위치권한이 필요합니다.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>사진을 선택하기 위해 앨범권한이 필요합니다.</string>
 	<key>UIAppFonts</key>

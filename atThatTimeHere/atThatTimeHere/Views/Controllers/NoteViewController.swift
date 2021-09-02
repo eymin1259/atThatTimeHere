@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import CoreLocation
 
 protocol NoteViewControllerDelegate {
     func didSaveNote() // 노트저장성공을 알림
@@ -52,9 +53,10 @@ class NoteViewController: BaseViewController {
         tv.keyboardType = .default
         tv.autocorrectionType = .no
         tv.translatesAutoresizingMaskIntoConstraints = false
-        tv.backgroundColor = .green.withAlphaComponent(0.2)
+        //  tv.backgroundColor = .green.withAlphaComponent(0.2)
         tv.font = UIFont(name: CUSTOM_FONT, size: 18)
-        tv.textColor = .black.withAlphaComponent(0.85)
+        tv.textColor = .gray
+        tv.text = "내용을 입력하세요"
         return tv
     }()
     
@@ -90,10 +92,14 @@ class NoteViewController: BaseViewController {
         super.viewDidLoad()
         
         // initial setuo
-        
         print("debug : isNoteWithPhoto -> \(viewModel.isNoteWithPhoto)")
         print("debug : is new note -> \(viewModel.isNewNote)")
         setup() // ui setting
+        
+        // set CLLocationManagerDelegate
+        viewModel.locationManager.delegate = self
+        viewModel.startLocationUpdate()
+        showLoading() // 위치정보를 가져올때까지 로딩
         
         // 노트불러오기인경우
         if(viewModel.isNewNote == false){
@@ -170,6 +176,7 @@ class NoteViewController: BaseViewController {
         contentTextView.trailingAnchor.constraint(equalTo: view.trailingAnchor,constant: -50).isActive = true
         contentViewBottomLayoutConstraint  =  contentTextView.bottomAnchor.constraint(equalTo: view.bottomAnchor,constant: -20)
         contentViewBottomLayoutConstraint?.isActive = true
+        contentTextView.delegate = self
         
         // 사진버튼, 저장버튼은 키보드의 toolbar로 세팅
         let toolbar = UIToolbar()
@@ -267,8 +274,11 @@ class NoteViewController: BaseViewController {
         formatter.locale = Locale(identifier: "ko_kr")
         let todayStr = formatter.string(from: today)
         // 제목, 내용
-        let title = self.titleTextField.text ?? ""
-        let content = self.contentTextView.text ?? ""
+        let title = titleTextField.text ?? ""
+        let content = contentTextView.text ?? ""
+       
+        guard let latitude = viewModel.currentLocation?.coordinate.latitude else { return }
+        guard let longitude = viewModel.currentLocation?.coordinate.longitude else { return }
         
         // 이미지첨부된 노트 저장
         if let pngImage = viewModel.noteImage?.pngData(),let imgUrl = viewModel.noteImageUrl, let filePath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first?.appendingPathComponent(imgUrl.lastPathComponent) {
@@ -287,7 +297,7 @@ class NoteViewController: BaseViewController {
             
             // 디비에 노트 저장
             DBService.shared.createNoteTable()
-            DBService.shared.insertNote(title: title, content: content, imagePath: filePath.absoluteString, date: todayStr) { insertResult in
+            DBService.shared.insertNote(title: title, content: content, imagePath: filePath.absoluteString, date: todayStr,  latitude: "\(latitude)", longitude: "\(longitude)") { insertResult in
                 if insertResult { // insert 성공
                     self.hideLoading()
                     self.view.endEditing(true)
@@ -304,7 +314,7 @@ class NoteViewController: BaseViewController {
         else { // 이미지 첨부되지 않은 노트 저장
             // 디비에 저장
             DBService.shared.createNoteTable()
-            DBService.shared.insertNote(title: title, content: content, imagePath: "", date: todayStr) { insertResult in
+            DBService.shared.insertNote(title: title, content: content, imagePath: "", date: todayStr,  latitude: "\(latitude)", longitude: "\(longitude)") { insertResult in
                 if insertResult { // insert 성공
                     self.hideLoading()
                     self.view.endEditing(true)
@@ -349,6 +359,49 @@ extension NoteViewController : UIImagePickerControllerDelegate, UINavigationCont
             self.hideLoading()
             self.viewModel.isNoteWithPhoto = true
             picker.dismiss(animated: true, completion: nil)
+        }
+    }
+}
+
+extension NoteViewController : CLLocationManagerDelegate {
+    //  gps 위치가 변경될 때마다 가장 최근 위치 데이터를 인자로 이 메서드가 호출
+    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+        DispatchQueue.main.asyncAfter(deadline: .now()+0.4) {
+            self.hideLoading() // 위치정보를 가져오면 글작성 가능
+        }
+        // 위치정보
+        guard let location = locations.first else {return}
+        // 기존정보 삭제
+        viewModel.currentLocation = nil
+        // 새로운 위치정보 저장
+        viewModel.currentLocation = location
+    }
+    
+    //  gps위치정보를 가져올때 에러발생시 호출되는 함수
+    func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
+        print("debug : locationManager didFailWithError -> \(error.localizedDescription)")
+        viewModel.stopLocationUpdate()
+        viewModel.startLocationUpdate()
+    }
+    
+    // 앱의 위치 추적 허가 상태가 변경되면 이 메서드를 호출
+    func locationManagerDidChangeAuthorization(_ manager: CLLocationManager) {
+        if manager.authorizationStatus == .denied || manager.authorizationStatus == .notDetermined || manager.authorizationStatus == .restricted {
+            self.hideLoading()
+            self.view.makeToast("위치정보 권한이 필요합니다.")
+        }
+    }
+}
+
+extension NoteViewController : UITextViewDelegate {
+    func textViewDidBeginEditing(_ textView: UITextView) {
+        if textView.text.trimmingCharacters(in: .whitespacesAndNewlines) == "내용을 입력하세요" {
+            textView.text = ""
+        }
+    }
+    func textViewDidEndEditing(_ textView: UITextView) {
+        if textView.text.trimmingCharacters(in: .whitespacesAndNewlines) == "" {
+            textView.text = "내용을 입력하세요"
         }
     }
 }

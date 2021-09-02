@@ -112,7 +112,7 @@ class SettingViewController: BaseViewController {
         guard let dictionary = Bundle.main.infoDictionary else {return}
         guard let version = dictionary["CFBundleShortVersionString"] as? String else {return}
         
-        showDialog(title: "앱 정보", message: "\nvserion : \(version)\nemail : eymin1259@gmail.com")
+        showDialog(title: "앱 정보", message: "\nvserion : \(version)\n개발자 : eymin1259@gmail.com")
     }
     
     @objc func didTapTermsOfService(){
