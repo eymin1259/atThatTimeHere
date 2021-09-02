@@ -6,9 +6,14 @@
 //
 
 import UIKit
+import CoreLocation
 
 class MenuViewController: BaseViewController {
     // 메뉴 : 추억쓰기, 내정보, 앱버전정보, 이용약관, 별점과리뷰작성, 로그아웃
+    
+    //MARK: properties
+    var locationManager = CLLocationManager()
+    var currentLocation : CLLocation?
     
     //MARK: UI
     private lazy var  writeNoteLbl :  UIButton  =  {
@@ -35,7 +40,13 @@ class MenuViewController: BaseViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        // initial setting
         setupUI()
+        
+        //gps location update start
+        locationManager.delegate = self
+        startLocationUpdate()
+        showLoading() // 위치정보를 가져올때까지 로딩
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -66,6 +77,18 @@ class MenuViewController: BaseViewController {
         
     }
     
+    // gps location update 시작
+    func startLocationUpdate() {
+        locationManager.requestWhenInUseAuthorization()
+        locationManager.desiredAccuracy = kCLLocationAccuracyBest
+        locationManager.startUpdatingLocation()
+    }
+    // gps location update 중단
+    func stopLocationUpdate(){
+        locationManager.stopMonitoringSignificantLocationChanges()
+        locationManager.stopUpdatingLocation()
+    }
+    
     //MARK: actions
     @objc func didTapWriteNote(){
         // 추억 쓰기 버튼 클릭
@@ -74,15 +97,21 @@ class MenuViewController: BaseViewController {
         newNote.modalPresentationStyle = .pageSheet
         newNote.viewModel.isNoteWithPhoto = false
         newNote.delegate = self
+        // location check
+        if let location = currentLocation{
+            newNote.viewModel.currentLocation = location
+        }
+        else {
+            newNote.viewModel.currentLocation = nil
+        }
+        
         present(newNote, animated: true, completion: nil)
     }
     
     @objc func didTapSetting(){
         // 설정버튼 클릭
-        
         writeNoteLbl.isHidden = true
         settingLbl.isHidden = true
-        
         let setting  = SettingViewController()
         navigationController?.pushViewController(setting, animated: true)
     }
@@ -92,5 +121,38 @@ class MenuViewController: BaseViewController {
 extension MenuViewController : NoteViewControllerDelegate {
     func didSaveNote() {
         self.view.makeToast("노트를 저장했습니다.")
+    }
+}
+
+extension MenuViewController : CLLocationManagerDelegate {
+    //  gps 위치가 변경될 때마다 가장 최근 위치 데이터를 인자로 이 메서드가 호출
+    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+        hideLoading()
+        // 위치정보
+        guard let location = locations.first else {return}
+        // 기존정보 삭제
+        currentLocation = nil
+        // 새로운 위치정보 저장
+        currentLocation = location
+    }
+    
+    //  gps위치정보를 가져올때 에러발생시 호출되는 함수
+    func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
+        print("debug : locationManager didFailWithError -> \(error.localizedDescription)")
+        hideLoading()
+        // 기존정보 삭제
+        currentLocation = nil
+        stopLocationUpdate()
+    }
+    
+    // 앱의 위치 추적 허가 상태가 변경되면 이 메서드를 호출
+    func locationManagerDidChangeAuthorization(_ manager: CLLocationManager) {
+        if manager.authorizationStatus == .denied || manager.authorizationStatus == .notDetermined || manager.authorizationStatus == .restricted {
+            hideLoading()
+            stopLocationUpdate()
+            // 기존정보 삭제
+            currentLocation = nil
+            self.view.makeToast("위치정보 권한이 필요합니다.")
+        }
     }
 }

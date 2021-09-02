@@ -96,11 +96,6 @@ class NoteViewController: BaseViewController {
         print("debug : is new note -> \(viewModel.isNewNote)")
         setup() // ui setting
         
-        // set CLLocationManagerDelegate
-        viewModel.locationManager.delegate = self
-        viewModel.startLocationUpdate()
-        showLoading() // 위치정보를 가져올때까지 로딩
-        
         // 노트불러오기인경우
         if(viewModel.isNewNote == false){
             
@@ -277,8 +272,15 @@ class NoteViewController: BaseViewController {
         let title = titleTextField.text ?? ""
         let content = contentTextView.text ?? ""
        
-        guard let latitude = viewModel.currentLocation?.coordinate.latitude else { return }
-        guard let longitude = viewModel.currentLocation?.coordinate.longitude else { return }
+        // 디폴트좌표 -> 북극
+        var latitude = CLLocationDegrees(78.231570)
+        var longitude = CLLocationDegrees(15.574564)
+        
+        // 현재위치좌표
+        if  let lati = viewModel.currentLocation?.coordinate.latitude, let  longi = viewModel.currentLocation?.coordinate.longitude {
+            latitude = lati
+            longitude = longi
+        }
         
         // 이미지첨부된 노트 저장
         if let pngImage = viewModel.noteImage?.pngData(),let imgUrl = viewModel.noteImageUrl, let filePath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first?.appendingPathComponent(imgUrl.lastPathComponent) {
@@ -359,36 +361,6 @@ extension NoteViewController : UIImagePickerControllerDelegate, UINavigationCont
             self.hideLoading()
             self.viewModel.isNoteWithPhoto = true
             picker.dismiss(animated: true, completion: nil)
-        }
-    }
-}
-
-extension NoteViewController : CLLocationManagerDelegate {
-    //  gps 위치가 변경될 때마다 가장 최근 위치 데이터를 인자로 이 메서드가 호출
-    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-        DispatchQueue.main.asyncAfter(deadline: .now()+0.4) {
-            self.hideLoading() // 위치정보를 가져오면 글작성 가능
-        }
-        // 위치정보
-        guard let location = locations.first else {return}
-        // 기존정보 삭제
-        viewModel.currentLocation = nil
-        // 새로운 위치정보 저장
-        viewModel.currentLocation = location
-    }
-    
-    //  gps위치정보를 가져올때 에러발생시 호출되는 함수
-    func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
-        print("debug : locationManager didFailWithError -> \(error.localizedDescription)")
-        viewModel.stopLocationUpdate()
-        viewModel.startLocationUpdate()
-    }
-    
-    // 앱의 위치 추적 허가 상태가 변경되면 이 메서드를 호출
-    func locationManagerDidChangeAuthorization(_ manager: CLLocationManager) {
-        if manager.authorizationStatus == .denied || manager.authorizationStatus == .notDetermined || manager.authorizationStatus == .restricted {
-            self.hideLoading()
-            self.view.makeToast("위치정보 권한이 필요합니다.")
         }
     }
 }

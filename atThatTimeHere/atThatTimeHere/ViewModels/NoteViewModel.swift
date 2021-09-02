@@ -11,28 +11,17 @@ import CoreLocation
 struct NoteViewModel {
     
     //MARK: properties
+    
+    //  note attributes
     var isNewNote : Bool = false
     var isEditiing : Bool = false
     var isNoteWithPhoto : Bool = false
-//    var title
-//    var photo
-//    var content
     
+    // note image
     var noteImage : UIImage?
     var noteImageUrl : URL?
-    var locationManager = CLLocationManager()
+    
+    // note location
     var currentLocation : CLLocation?
-    
-    //MARK: methods
-    
-    func startLocationUpdate() {
-        locationManager.requestWhenInUseAuthorization()
-        locationManager.desiredAccuracy = kCLLocationAccuracyBest
-        locationManager.startUpdatingLocation()
-    }
-    
-    func stopLocationUpdate(){
-        locationManager.stopMonitoringSignificantLocationChanges()
-        locationManager.stopUpdatingLocation()
-    }
+
 }

@@ -22,6 +22,14 @@ class RegisterViewController: BaseViewController {
     }()
     
     //MARK: UI
+    private let hatView : UIView = {
+        var view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.backgroundColor = .systemGray2
+        view.heightAnchor.constraint(equalToConstant: 3).isActive  = true
+        view.layer.cornerRadius = 2
+        return view
+    }()
     
     private let registerTitleLbl :  UILabel  =  {
         let  text = UILabel()
@@ -88,6 +96,11 @@ class RegisterViewController: BaseViewController {
     private func setupUI(){
         
         view.backgroundColor = .white
+        
+        view.addSubview(hatView)
+        hatView.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive =  true
+        hatView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 10).isActive = true
+        hatView.widthAnchor.constraint(equalToConstant: 40).isActive = true
         
         view.addSubview(registerTitleLbl)
         registerTitleLbl.translatesAutoresizingMaskIntoConstraints = false
