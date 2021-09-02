@@ -162,7 +162,7 @@ class DBService {
         
         do{
             let db = try SQLite()
-            try db.install(query:"SELECT * FROM Notes  WHERE userId = \(uid);")
+            try db.install(query:"SELECT * FROM Notes  WHERE userId = \(uid) ORDER BY id DESC;")
             try db.execute(){ row in
                 let note_id = Int(sqlite3_column_int(row, 0))
                 let note_uid = Int(sqlite3_column_int(row, 1))
@@ -202,8 +202,8 @@ class DBService {
                 
                 let note = Note(id: note_id, userId: note_uid, title: note_title, content: note_content, imagePath: note_imagePath, date: note_date, latitude: note_latitude, longitude: note_longitude)
                 completion(true, note)
-                return
             }
+            return
         }
         catch {
             print("debug : getNotes fail -> \(error.localizedDescription)")

@@ -40,10 +40,10 @@ class NoteViewController: BaseViewController {
     }()
     
     // 노트에 등록된 사진
-    var photoView : UIView = {
-        var view = UIView()
+    var photoView : UIImageView = {
+        var view = UIImageView()
         view.translatesAutoresizingMaskIntoConstraints = false
-        view.backgroundColor = .yellow
+        view.backgroundColor = .clear
         return view
     }()
     
@@ -192,7 +192,34 @@ class NoteViewController: BaseViewController {
     
     // 노트불러오기인경우 노트정보 load
     func loadNoteData(){
-        // dbservice
+        
+        print("Debug : note load data  -> \(viewModel.noteId)")
+        // 노트 아이디
+        guard let nid = viewModel.noteId else {
+            view.makeToast("노트정보가 없습니다..")
+            return
+        }
+        DBService.shared.getNote(ByNoteId: "\(nid)") { result, noteData in
+            if result == false{
+                self.view.makeToast("노트정보가 없습니다...")
+                return
+            }
+            self.titleTextField.text = noteData?.title
+            self.contentTextView.text = noteData?.content
+            
+            if let imagePath = noteData?.imagePath, let imageUrl = URL(string: imagePath) {
+                do {
+                    let imageData = try Data(contentsOf: imageUrl)
+                    self.photoView.image =  UIImage(data: imageData)
+                    self.photoView.sizeToFit()
+                } catch {
+                    print("Error loading image : \(error)")
+                    self.view.makeToast("사진정보가 없습니다...")
+                    return
+                }
+            }
+        }
+        
     }
     
     func showPhotoAlert()  {
@@ -283,11 +310,11 @@ class NoteViewController: BaseViewController {
         }
         
         // 이미지첨부된 노트 저장
-        if let pngImage = viewModel.noteImage?.pngData(),let imgUrl = viewModel.noteImageUrl, let filePath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first?.appendingPathComponent(imgUrl.lastPathComponent) {
+        if let jpenData = viewModel.noteImage?.jpegData(compressionQuality: 1.0),let imgUrl = viewModel.noteImageUrl, let filePath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first?.appendingPathComponent(imgUrl.lastPathComponent) {
             
             //  이미지 저장
             do {
-                try pngImage.write(to: filePath, options: .atomic)
+                try jpenData.write(to: filePath, options: .atomic)
             } catch {
                 // 이미지 저장 실패
                 print("debug : pngImage.write error -> \(error.localizedDescription)")

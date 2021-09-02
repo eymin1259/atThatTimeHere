@@ -17,7 +17,8 @@ struct NoteViewModel {
     var isEditiing : Bool = false
     var isNoteWithPhoto : Bool = false
     
-    // note image
+    // note data
+    var noteId : Int?
     var noteImage : UIImage?
     var noteImageUrl : URL?
     

@@ -11,6 +11,7 @@
 		A15E678F26DDB7E100D1A9FB /* Note.swift in Sources */ = {isa = PBXBuildFile; fileRef = A15E678E26DDB7E100D1A9FB /* Note.swift */; };
 		A15E679326DE568B00D1A9FB /* PickerPhotoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A15E679226DE568B00D1A9FB /* PickerPhotoView.swift */; };
 		A15E679526E0AB5700D1A9FB /* NoteListTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A15E679426E0AB5700D1A9FB /* NoteListTableViewCell.swift */; };
+		A15E679726E1067800D1A9FB /* NoteListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A15E679626E1067800D1A9FB /* NoteListViewModel.swift */; };
 		A180D55926D67AD10076458B /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A180D55826D67AD10076458B /* AppDelegate.swift */; };
 		A180D55B26D67AD10076458B /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A180D55A26D67AD10076458B /* SceneDelegate.swift */; };
 		A180D55D26D67AD10076458B /* IntroViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A180D55C26D67AD10076458B /* IntroViewController.swift */; };
@@ -44,6 +45,7 @@
 		A15E678E26DDB7E100D1A9FB /* Note.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Note.swift; sourceTree = "<group>"; };
 		A15E679226DE568B00D1A9FB /* PickerPhotoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PickerPhotoView.swift; sourceTree = "<group>"; };
 		A15E679426E0AB5700D1A9FB /* NoteListTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoteListTableViewCell.swift; sourceTree = "<group>"; };
+		A15E679626E1067800D1A9FB /* NoteListViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoteListViewModel.swift; sourceTree = "<group>"; };
 		A180D55526D67AD10076458B /* atThatTimeHere.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = atThatTimeHere.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		A180D55826D67AD10076458B /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		A180D55A26D67AD10076458B /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -174,6 +176,7 @@
 			children = (
 				A180D57C26D67DBF0076458B /* AuthViewModel.swift */,
 				A180D59726D766F30076458B /* NoteViewModel.swift */,
+				A15E679626E1067800D1A9FB /* NoteListViewModel.swift */,
 			);
 			path = ViewModels;
 			sourceTree = "<group>";
@@ -328,6 +331,7 @@
 				A180D57326D67CDB0076458B /* UserService.swift in Sources */,
 				A180D57626D67D0D0076458B /* DBService.swift in Sources */,
 				A180D59426D75C100076458B /* SettingViewController.swift in Sources */,
+				A15E679726E1067800D1A9FB /* NoteListViewModel.swift in Sources */,
 				A180D58826D71CCC0076458B /* BaseViewController.swift in Sources */,
 				A180D57B26D67D9F0076458B /* User.swift in Sources */,
 				A180D58026D67DE20076458B /* TextFieldWithPlaceholder.swift in Sources */,

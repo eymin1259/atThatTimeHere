@@ -12,6 +12,7 @@ class NoteListViewController: BaseViewController {
     // 추억보기
     //MARK: properties
     var tableView = UITableView()
+    var noteListViewModel = NoteListViewModel()
     
     //MARK: UI
     private var  titleLbl :  UILabel  =  {
@@ -30,14 +31,14 @@ class NoteListViewController: BaseViewController {
         
         tableView.delegate = self
         tableView.dataSource = self
-        tableView.reloadData()
+        //tableView.reloadData()
 
         setupUI()
     }
     
     override func viewWillAppear(_ animated: Bool) {
         print("debug : NoteListViewController viewWillAppear ")
-        tableView.reloadData()
+        noteListUpdate()
     }
     
     //MARK: methods
@@ -70,27 +71,41 @@ class NoteListViewController: BaseViewController {
         tableView.separatorStyle = .none
     }
 
+    func noteListUpdate(){
+        noteListViewModel.getNoteList()
+        tableView.reloadData()
+    }
 }
 
+//MARK: extension UITableViewDelegate
 extension NoteListViewController : UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 10
+        return noteListViewModel.noteList.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        
         let cell = NoteListTableViewCell()
-        cell.setUpCell(index: indexPath.item, noteid: 777, title: "long  title asdasdasasd astitasda sdas ekkkkkkkkd ddddddd", date: "2011-12-13 11:23")
+        cell.setUpCell(index: indexPath.item, noteid:  noteListViewModel.noteList[indexPath.item].id, title: noteListViewModel.noteList[indexPath.item].title, date: noteListViewModel.noteList[indexPath.item].date)
       //  cell.backgroundColor = .yellow
        //  cell.heightAnchor.constraint(equalToConstant: 20).isActive = true
         return cell
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        // 추억보기
         tableView.deselectRow(at: indexPath, animated: true)
         
-        let noteId = tableView.cellForRow(at: indexPath) as? NoteListTableViewCell
+        // 선택된 노트의 id
+        guard let noteCell = tableView.cellForRow(at: indexPath) as? NoteListTableViewCell else {return}
+        print("debug : didSelectRowAt -> \(indexPath.item), note id -> \(noteCell.noteId)")
         
-        print("debug : didSelectRowAt -> \(indexPath.item), note id -> \(noteId?.noteId)")
+        // note 정보로드
+        let newNote = NoteViewController()
+        newNote.viewModel.isNewNote = false // 기존 노트 불러오기
+        newNote.modalPresentationStyle = .pageSheet
+        newNote.viewModel.isNoteWithPhoto = noteListViewModel.noteList[indexPath.item].imagePath == "" ? false : true
+        newNote.viewModel.noteId = noteCell.noteId
+        present(newNote, animated: true, completion: nil)
     }
-    
 }
