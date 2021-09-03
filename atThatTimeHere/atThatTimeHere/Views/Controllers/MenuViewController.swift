@@ -14,7 +14,7 @@ class MenuViewController: BaseViewController {
     //MARK: properties
     var locationManager = CLLocationManager()
     var currentLocation : CLLocation?
-    
+
     //MARK: UI
     private lazy var  writeNoteLbl :  UIButton  =  {
         let btn = UIButton(type: .system)
@@ -45,8 +45,8 @@ class MenuViewController: BaseViewController {
         
         //gps location update start
         locationManager.delegate = self
+        locationManager.allowsBackgroundLocationUpdates = true // 백그라운드 설정
         startLocationUpdate()
-        showLoading() // 위치정보를 가져올때까지 로딩
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -79,6 +79,7 @@ class MenuViewController: BaseViewController {
     
     // gps location update 시작
     func startLocationUpdate() {
+        showLoading() // 위치정보를 가져올때까지 로딩
         locationManager.requestWhenInUseAuthorization()
         locationManager.desiredAccuracy = kCLLocationAccuracyBest
         locationManager.startUpdatingLocation()
@@ -104,7 +105,6 @@ class MenuViewController: BaseViewController {
         else {
             newNote.viewModel.currentLocation = nil
         }
-        
         present(newNote, animated: true, completion: nil)
     }
     
@@ -134,7 +134,7 @@ extension MenuViewController : CLLocationManagerDelegate {
         currentLocation = nil
         // 새로운 위치정보 저장
         currentLocation = location
-        print("Debug : location at MenuTab -> \(location)")
+        print("Debug : location at MenuTab -> \(location.coordinate)")
     }
     
     //  gps위치정보를 가져올때 에러발생시 호출되는 함수
