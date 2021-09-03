@@ -15,6 +15,8 @@ public let CUSTOM_MAIN_COLOR  = #colorLiteral(red: 0.9098039269, green: 0.457337
 public let CUSTOM_FONT = "DXBarunscriptM-KSCpc-EUC-H"
 public let ALARM_ON = 0
 public let ALARM_OFF = -1
+public let RETURN_RANGE = 200.0
+public let REMINDE_INTERVAL_DAY = 31.0
 
 // 이용약관
 public let  TERMS_OF_SERVICE = ""

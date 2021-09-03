@@ -348,7 +348,7 @@ class NoteViewController: BaseViewController {
             
             // 디비에 노트 저장
             DBService.shared.createNoteTable()
-            DBService.shared.insertNote(title: title, content: content, imagePath: filePath.absoluteString, date: todayStr,  latitude: "\(latitude)", longitude: "\(longitude)", lastAlarmDate: "1999-12-31", onOffAlarm: ALARM_ON) { insertResult in
+            DBService.shared.insertNote(title: title, content: content, imagePath: filePath.absoluteString, writeDate: todayStr,  latitude: "\(latitude)", longitude: "\(longitude)", lastAlarmDate: todayStr, onOffAlarm: ALARM_ON) { insertResult in
                 if insertResult { // insert 성공
                     self.hideLoading()
                     self.view.endEditing(true)
@@ -365,7 +365,7 @@ class NoteViewController: BaseViewController {
         else { // 이미지 첨부되지 않은 노트 저장
             // 디비에 저장
             DBService.shared.createNoteTable()
-            DBService.shared.insertNote(title: title, content: content, imagePath: "", date: todayStr,  latitude: "\(latitude)", longitude: "\(longitude)", lastAlarmDate: "1999-12-31", onOffAlarm: ALARM_ON) { insertResult in
+            DBService.shared.insertNote(title: title, content: content, imagePath: "", writeDate: todayStr,  latitude: "\(latitude)", longitude: "\(longitude)", lastAlarmDate: todayStr, onOffAlarm: ALARM_ON) { insertResult in
                 if insertResult { // insert 성공
                     self.hideLoading()
                     self.view.endEditing(true)

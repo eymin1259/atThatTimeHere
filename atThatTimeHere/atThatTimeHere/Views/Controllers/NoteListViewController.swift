@@ -44,6 +44,7 @@ class NoteListViewController: BaseViewController {
     override func viewWillAppear(_ animated: Bool) {
         print("debug : NoteListViewController viewWillAppear ")
         noteListUpdate()
+        print("Debug : notelIst check -> \(noteListViewModel.noteList)")
     }
     
     //MARK: methods
@@ -91,9 +92,7 @@ extension NoteListViewController : UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
         let cell = NoteListTableViewCell()
-        cell.setUpCell(index: indexPath.item, noteid:  noteListViewModel.noteList[indexPath.item].id, title: noteListViewModel.noteList[indexPath.item].title, date: noteListViewModel.noteList[indexPath.item].date)
-      //  cell.backgroundColor = .yellow
-       //  cell.heightAnchor.constraint(equalToConstant: 20).isActive = true
+        cell.setUpCell(index: indexPath.item, noteid:  noteListViewModel.noteList[indexPath.item].id, title: noteListViewModel.noteList[indexPath.item].title, date: noteListViewModel.noteList[indexPath.item].writeDate)
         return cell
     }
     
@@ -103,7 +102,6 @@ extension NoteListViewController : UITableViewDelegate, UITableViewDataSource {
         
         // 선택된 노트의 id
         guard let noteCell = tableView.cellForRow(at: indexPath) as? NoteListTableViewCell else {return}
-        print("debug : didSelectRowAt -> \(indexPath.item), note id -> \(noteCell.noteId)")
         
         // note 정보로드
         let newNote = NoteViewController()

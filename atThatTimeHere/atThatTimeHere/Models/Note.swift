@@ -13,7 +13,7 @@ struct Note {
     var title : String // 제목
     var content : String // 내용
     var imagePath : String // 이미지패스
-    var date : String // 날짜
+    var writeDate : String // 작성 날짜
     var latitude : String // 위도
     var longitude : String // 경도
     var lastAlarmDate : String // 마지막 알람날짜
@@ -26,7 +26,7 @@ struct Note {
             "title": title,
             "content": content,
             "imagePath": imagePath,
-            "date": date,
+            "writeDate": writeDate,
             "latitude" : latitude,
             "longitude" : longitude,
             "lastAlarmDate" : lastAlarmDate,

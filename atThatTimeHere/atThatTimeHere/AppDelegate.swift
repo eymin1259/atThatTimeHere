@@ -28,6 +28,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                 print("debug : requestAuthorization success")
             }
         }
+        center.delegate = self
         
         return true
     }
@@ -45,4 +46,25 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // If any sessions were discarded while the application was not running, this will be called shortly after application:didFinishLaunchingWithOptions.
         // Use this method to release any resources that were specific to the discarded scenes, as they will not return.
     }
+}
+
+extension AppDelegate : UNUserNotificationCenterDelegate {
+    // foreground에 있을 때에도 push알림을 받게 하는 함수
+    func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
+        completionHandler([.alert, .sound, .badge])
+    }
+    
+    // 알람클릭시 호출되는 함수
+    func userNotificationCenter(_ center: UNUserNotificationCenter,
+                                  didReceive response: UNNotificationResponse,
+                                  withCompletionHandler completionHandler: @escaping () -> Void) {
+        print("debug : userNotificationCenter delegate didReceive ")
+
+          // deep link처리 시 아래 url값 가지고 처리
+          let url = response.notification.request.content.userInfo
+        print("Debug : didReceive res -> \(response) ")
+        print("Debug : didReceive url -> \(url) ")
+
+          completionHandler()
+      }
 }
