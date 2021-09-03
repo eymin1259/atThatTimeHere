@@ -315,7 +315,7 @@ class NoteViewController: BaseViewController {
         // 현재시간 저장
         let today = Date()
         let formatter = DateFormatter()
-        formatter.dateFormat = "yyyy-MM-dd HH:mm"
+        formatter.dateFormat = "yyyy-MM-dd"
         formatter.locale = Locale(identifier: "ko_kr")
         let todayStr = formatter.string(from: today)
         // 제목, 내용
@@ -348,7 +348,7 @@ class NoteViewController: BaseViewController {
             
             // 디비에 노트 저장
             DBService.shared.createNoteTable()
-            DBService.shared.insertNote(title: title, content: content, imagePath: filePath.absoluteString, date: todayStr,  latitude: "\(latitude)", longitude: "\(longitude)") { insertResult in
+            DBService.shared.insertNote(title: title, content: content, imagePath: filePath.absoluteString, date: todayStr,  latitude: "\(latitude)", longitude: "\(longitude)", lastAlarmDate: "1999-12-31", onOffAlarm: ALARM_ON) { insertResult in
                 if insertResult { // insert 성공
                     self.hideLoading()
                     self.view.endEditing(true)
@@ -365,7 +365,7 @@ class NoteViewController: BaseViewController {
         else { // 이미지 첨부되지 않은 노트 저장
             // 디비에 저장
             DBService.shared.createNoteTable()
-            DBService.shared.insertNote(title: title, content: content, imagePath: "", date: todayStr,  latitude: "\(latitude)", longitude: "\(longitude)") { insertResult in
+            DBService.shared.insertNote(title: title, content: content, imagePath: "", date: todayStr,  latitude: "\(latitude)", longitude: "\(longitude)", lastAlarmDate: "1999-12-31", onOffAlarm: ALARM_ON) { insertResult in
                 if insertResult { // insert 성공
                     self.hideLoading()
                     self.view.endEditing(true)

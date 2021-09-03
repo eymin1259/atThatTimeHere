@@ -14,6 +14,7 @@ class MenuViewController: BaseViewController {
     //MARK: properties
     var locationManager = CLLocationManager()
     var currentLocation : CLLocation?
+    var viewModel = NoteListViewModel()
 
     //MARK: UI
     private lazy var  writeNoteLbl :  UIButton  =  {
@@ -53,6 +54,14 @@ class MenuViewController: BaseViewController {
         navigationController?.navigationBar.isHidden = true
         writeNoteLbl.isHidden = false
         settingLbl.isHidden = false
+        
+        // note list update
+        viewModel.updateNoteList()
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        // note list update
+        viewModel.updateNoteList()
     }
 
     //MARK: methods
@@ -134,6 +143,7 @@ extension MenuViewController : CLLocationManagerDelegate {
         currentLocation = nil
         // 새로운 위치정보 저장
         currentLocation = location
+        print("Debug : note list count -> \(viewModel.noteList.count)")
         print("Debug : location at MenuTab -> \(location.coordinate)")
     }
     

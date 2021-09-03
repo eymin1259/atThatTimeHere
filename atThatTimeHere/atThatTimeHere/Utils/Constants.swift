@@ -13,6 +13,8 @@ public let PASSWORD_SECRET_KEY = "AAAA_AAAA_AAAA_A"
 public let PASSWORD_SECRET_IV = "AAAA_AAAA_BBBB_B"
 public let CUSTOM_MAIN_COLOR  = #colorLiteral(red: 0.9098039269, green: 0.457337912, blue: 0.7299843892, alpha: 1)
 public let CUSTOM_FONT = "DXBarunscriptM-KSCpc-EUC-H"
+public let ALARM_ON = 0
+public let ALARM_OFF = -1
 
 // 이용약관
 public let  TERMS_OF_SERVICE = ""

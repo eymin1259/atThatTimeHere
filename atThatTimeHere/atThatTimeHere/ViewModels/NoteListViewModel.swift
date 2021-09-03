@@ -12,7 +12,7 @@ class NoteListViewModel {
     //MARK: properties
     var  noteList = [Note]()
     
-    func getNoteList() {
+    func updateNoteList() {
         // db
         DBService.shared.getNotes { result, notes in
             if result == false {
@@ -20,6 +20,7 @@ class NoteListViewModel {
                 self.noteList.removeAll()
                 return
             }
+            self.noteList.removeAll()
             self.noteList = notes!
         }
     }

@@ -6,12 +6,8 @@
 //
 
 import UIKit
-import CoreLocation
 
 class IntroViewController: UIViewController {
-    
-    // MARK: properties
-    private var locationManager = CLLocationManager()
      
     // MARK: UI
     private let lbl : UILabel = {
@@ -25,9 +21,6 @@ class IntroViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setupUI()
-        
-        // 위치권한
-        locationManager.requestAlwaysAuthorization()
         
         // 로그인여부 체크
         if let _ = UserDefaults.standard.dictionary(forKey: CURRENTUSERKEY) {

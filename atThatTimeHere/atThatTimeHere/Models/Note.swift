@@ -16,7 +16,8 @@ struct Note {
     var date : String // 날짜
     var latitude : String // 위도
     var longitude : String // 경도
-    
+    var lastAlarmDate : String // 마지막 알람날짜
+    var onOffAlarm : Int // 알람on/off : ALARM_ON(0) = on, ALARM_OFF(-1) = off
     
     var toNoteDictionary : [String:String] {
         return  [
@@ -27,7 +28,9 @@ struct Note {
             "imagePath": imagePath,
             "date": date,
             "latitude" : latitude,
-            "longitude" : longitude
+            "longitude" : longitude,
+            "lastAlarmDate" : lastAlarmDate,
+            "onOffAlarm" : "\(onOffAlarm)"
         ]
     }
 }

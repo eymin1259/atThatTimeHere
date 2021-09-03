@@ -11,10 +11,11 @@ class NoteListViewController: BaseViewController {
     
     // 추억보기
     //MARK: properties
-    var tableView = UITableView()
     var noteListViewModel = NoteListViewModel()
     
     //MARK: UI
+    
+    // 타이틀
     private var  titleLbl :  UILabel  =  {
         let  text = UILabel()
         text.text = "추억 보기"
@@ -23,8 +24,12 @@ class NoteListViewController: BaseViewController {
         return text
     }()
     
+    // 구분선
     private var dividerView = DividerView()
-
+    
+    // 노트 테이블뷰
+    var tableView = UITableView()
+    
     //MARK: life cycle
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -72,7 +77,7 @@ class NoteListViewController: BaseViewController {
     }
 
     func noteListUpdate(){
-        noteListViewModel.getNoteList()
+        noteListViewModel.updateNoteList()
         tableView.reloadData()
     }
 }

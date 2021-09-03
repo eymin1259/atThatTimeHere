@@ -6,12 +6,29 @@
 //
 
 import UIKit
+import CoreLocation
+import UserNotifications
 
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
+    private let locationManager = CLLocationManager()
+    let center = UNUserNotificationCenter.current()
+    
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
+        
+        // 위치권한 설정
+        locationManager.requestAlwaysAuthorization()
+        
+        // 알람권한 설정
+        let authOptions = UNAuthorizationOptions(arrayLiteral: .alert, .badge, .sound)
+        center.requestAuthorization(options: authOptions) { isSuccess, error in
+            if isSuccess {
+                print("debug : requestAuthorization success")
+            }
+        }
+        
         return true
     }
 
