@@ -44,6 +44,8 @@ class NoteViewController: BaseViewController {
         var view = UIImageView()
         view.translatesAutoresizingMaskIntoConstraints = false
         view.backgroundColor = .clear
+        view.contentMode = .scaleAspectFit
+        view.clipsToBounds = true
         return view
     }()
     
@@ -56,8 +58,18 @@ class NoteViewController: BaseViewController {
         //  tv.backgroundColor = .green.withAlphaComponent(0.2)
         tv.font = UIFont(name: CUSTOM_FONT, size: 18)
         tv.textColor = .gray
-        tv.text = "내용을 입력하세요"
+        tv.text = ""
         return tv
+    }()
+    
+    // 본문내용 placeholer
+    var contentPlaceHolder : UILabel = {
+        var lbl  = UILabel()
+        lbl.text = "내용을 입력하세요."
+        lbl.font = UIFont(name: CUSTOM_FONT, size: 18)
+        lbl.textColor = .gray.withAlphaComponent(0.6)
+        lbl.translatesAutoresizingMaskIntoConstraints = false
+        return lbl
     }()
     
     // 사진첨부 버튼
@@ -102,11 +114,15 @@ class NoteViewController: BaseViewController {
             // 수정 불가능 처리
             titleTextField.isUserInteractionEnabled = false
             contentTextView.isUserInteractionEnabled = false
+            contentPlaceHolder.isHidden = true
             photoBtn.isHidden = true
             saveBtn.isHidden = true
             
             // 불러올 노트정보 load
             loadNoteData()
+        }
+        else{  // 노트쓰기인 경우
+            titleTextField.becomeFirstResponder()
         }
     }
     
@@ -159,8 +175,10 @@ class NoteViewController: BaseViewController {
         view.addSubview(photoView)
         photoView.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive =  true
         photoView.topAnchor.constraint(equalTo: dividerView.bottomAnchor, constant: 15).isActive = true
-        photoView.widthAnchor.constraint(equalToConstant: 260).isActive = true
-        photoView.heightAnchor.constraint(equalToConstant: viewModel.isNoteWithPhoto ? 260 : 0).isActive = true
+        photoView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 50).isActive  = true
+        photoView.trailingAnchor.constraint(equalTo: view.trailingAnchor,constant: -50).isActive = true
+
+        photoView.heightAnchor.constraint(equalToConstant: viewModel.isNoteWithPhoto ? 400 : 0).isActive = true
         
         
         // 본문내용
@@ -172,6 +190,12 @@ class NoteViewController: BaseViewController {
         contentViewBottomLayoutConstraint  =  contentTextView.bottomAnchor.constraint(equalTo: view.bottomAnchor,constant: -20)
         contentViewBottomLayoutConstraint?.isActive = true
         contentTextView.delegate = self
+        
+        // 본문내용 placeholder
+        view.addSubview(contentPlaceHolder)
+        contentPlaceHolder.topAnchor.constraint(equalTo: contentTextView.topAnchor).isActive = true
+        contentPlaceHolder.leadingAnchor.constraint(equalTo: contentTextView.leadingAnchor).isActive  = true
+        contentPlaceHolder.isHidden = viewModel.isNewNote ? false : true
         
         // 사진버튼, 저장버튼은 키보드의 toolbar로 세팅
         let toolbar = UIToolbar()
@@ -192,8 +216,7 @@ class NoteViewController: BaseViewController {
     
     // 노트불러오기인경우 노트정보 load
     func loadNoteData(){
-        
-        print("Debug : note load data  -> \(viewModel.noteId)")
+
         // 노트 아이디
         guard let nid = viewModel.noteId else {
             view.makeToast("노트정보가 없습니다..")
@@ -211,7 +234,7 @@ class NoteViewController: BaseViewController {
                 do {
                     let imageData = try Data(contentsOf: imageUrl)
                     self.photoView.image =  UIImage(data: imageData)
-                    self.photoView.sizeToFit()
+                    // self.photoView.sizeToFit()
                 } catch {
                     print("Error loading image : \(error)")
                     self.view.makeToast("사진정보가 없습니다...")
@@ -297,7 +320,7 @@ class NoteViewController: BaseViewController {
         let todayStr = formatter.string(from: today)
         // 제목, 내용
         let title = titleTextField.text ?? ""
-        let content = contentTextView.text ?? ""
+        var content = contentTextView.text ?? ""
        
         // 디폴트좌표 -> 북극
         var latitude = CLLocationDegrees(78.231570)
@@ -311,7 +334,6 @@ class NoteViewController: BaseViewController {
         
         // 이미지첨부된 노트 저장
         if let jpenData = viewModel.noteImage?.jpegData(compressionQuality: 1.0),let imgUrl = viewModel.noteImageUrl, let filePath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first?.appendingPathComponent(imgUrl.lastPathComponent) {
-            
             //  이미지 저장
             do {
                 try jpenData.write(to: filePath, options: .atomic)
@@ -394,13 +416,17 @@ extension NoteViewController : UIImagePickerControllerDelegate, UINavigationCont
 
 extension NoteViewController : UITextViewDelegate {
     func textViewDidBeginEditing(_ textView: UITextView) {
-        if textView.text.trimmingCharacters(in: .whitespacesAndNewlines) == "내용을 입력하세요" {
+        // 본문내용 입력 시작시 비어있던 상태면
+        if textView.text.trimmingCharacters(in: .whitespacesAndNewlines) == "" {
             textView.text = ""
+            contentPlaceHolder.isHidden = true
         }
     }
     func textViewDidEndEditing(_ textView: UITextView) {
+        // 본문내용 입력 종료시 비어있던 상태면
         if textView.text.trimmingCharacters(in: .whitespacesAndNewlines) == "" {
-            textView.text = "내용을 입력하세요"
+            textView.text = ""
+            contentPlaceHolder.isHidden = false
         }
     }
 }

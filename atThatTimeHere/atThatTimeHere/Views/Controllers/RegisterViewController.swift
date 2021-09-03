@@ -50,15 +50,15 @@ class RegisterViewController: BaseViewController {
         let tf = TextFieldWithPlaceholder(placeholder: "사용할 password를 입력하세요")
         tf.isSecureTextEntry = true
         tf.autocorrectionType = .no
-        tf.textContentType = .oneTimeCode
+        tf.keyboardType = .default
         return tf
     }()
     
     private let passwordCheckTextField : UITextField = {
         let tf = TextFieldWithPlaceholder(placeholder: "password를 한번더 입력하세요")
         tf.isSecureTextEntry = true
-        tf.textContentType = .oneTimeCode
         tf.autocorrectionType = .no
+        tf.keyboardType = .default
         return tf
     }()
     private let passwordAlertLbl :  UILabel  =  {

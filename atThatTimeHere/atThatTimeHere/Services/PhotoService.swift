@@ -47,7 +47,7 @@ struct PhotoService {
                 imagePickerController.sourceType = .photoLibrary
                 imagePickerController.delegate = vc as? UIImagePickerControllerDelegate & UINavigationControllerDelegate
                 imagePickerController.modalPresentationStyle = .overFullScreen
-                imagePickerController.allowsEditing = true
+                imagePickerController.allowsEditing = false
                 vc.present(imagePickerController, animated: true, completion: nil)
             }
         }
