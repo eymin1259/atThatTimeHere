@@ -134,6 +134,7 @@ extension MenuViewController : CLLocationManagerDelegate {
         currentLocation = nil
         // 새로운 위치정보 저장
         currentLocation = location
+        print("Debug : location at MenuTab -> \(location)")
     }
     
     //  gps위치정보를 가져올때 에러발생시 호출되는 함수
