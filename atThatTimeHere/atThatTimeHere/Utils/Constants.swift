@@ -17,6 +17,7 @@ public let ALARM_ON = 0
 public let ALARM_OFF = -1
 public let RETURN_RANGE = 200.0
 public let REMINDE_INTERVAL_DAY = 31.0
+public let DID_RECEIVE_PUSH_ALARM = "DID_RECEIVE_PUSH_ALARM"
 
 // 이용약관
 public let  TERMS_OF_SERVICE = ""

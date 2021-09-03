@@ -145,21 +145,13 @@ extension MenuViewController : CLLocationManagerDelegate {
         currentLocation = nil
         // 새로운 위치정보 저장
         currentLocation = location
-        
-//
-//        let dateFormatter = DateFormatter()
-//        dateFormatter.dateFormat = "yyyy-MM-dd"
-        
+  
         let formatter = DateFormatter()
         formatter.dateFormat = "yyyy-MM-dd"
         formatter.locale = Locale(identifier: "ko_kr")
-        
-        
-        print("Debug : note list count -> \(viewModel.noteList.count)")
-        print("Debug : location at MenuTab -> \(location.coordinate)")
-        viewModel.noteList.forEach { noteItem in
-            
-            
+
+        for (idx, noteItem) in viewModel.noteList.enumerated() {
+   
             if let noteLatitude = Double(noteItem.latitude), let noteLongitude = Double(noteItem.longitude), let distance = currentLocation?.distance(from: CLLocation(latitude: noteLatitude, longitude: noteLongitude)), distance <= RETURN_RANGE, let lastAlarmDate = formatter.date(from: noteItem.lastAlarmDate), let writeDate = formatter.date(from:noteItem.writeDate) {
                 // 해당지역 RETURN_RANGE(돌아옴인식범위,200m) 이내로 다시방문한 경우
                 // distance : 노트쓴 장소와 현재 위치 거리차이
@@ -188,6 +180,9 @@ extension MenuViewController : CLLocationManagerDelegate {
                             content.title = noteItem.title
                             content.body = "\(Int(writeDateIntervalDay))일전 지금 이곳에서 작성한 노트입니다."
                             content.badge = 1
+                            content.sound = .default
+                            let indexDict : [String:String] = ["index" : "\(idx)"]
+                            content.userInfo = indexDict
                             
                             // 알람 전송
                             let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 1, repeats: false)

@@ -15,6 +15,9 @@ class MainTabViewController: UITabBarController {
         view.backgroundColor = .white
         
         configureTabbarController()
+        
+        // 알람 클릭시 발송되는 noti 인식 -> selected index = noteListViewController로 설정
+        NotificationCenter.default.addObserver(self, selector: #selector(didReceivePushAlarm), name: NSNotification.Name(rawValue: DID_RECEIVE_PUSH_ALARM), object: nil)
     }
     
     //MARK: methods
@@ -36,4 +39,9 @@ class MainTabViewController: UITabBarController {
         tabBar.tintColor = CUSTOM_MAIN_COLOR
     }
     
+    //MARK: actions
+    @objc func didReceivePushAlarm(noti : Notification){
+        // selected index = noteListViewController로 설정
+        self.selectedIndex = 0
+    }
 }

@@ -39,6 +39,9 @@ class NoteListViewController: BaseViewController {
         //tableView.reloadData()
 
         setupUI()
+        
+        // 알람 클릭시 발송되는 noti 인식 -> show note
+        NotificationCenter.default.addObserver(self, selector: #selector(didReceivePushAlarm), name: NSNotification.Name(rawValue: DID_RECEIVE_PUSH_ALARM), object: nil)
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -48,6 +51,7 @@ class NoteListViewController: BaseViewController {
     }
     
     //MARK: methods
+    
     func setupUI(){
         
         navigationController?.navigationBar.isHidden = true
@@ -80,6 +84,26 @@ class NoteListViewController: BaseViewController {
     func noteListUpdate(){
         noteListViewModel.updateNoteList()
         tableView.reloadData()
+    }
+    
+    //MARK: actions
+    
+    @objc func didReceivePushAlarm(noti : Notification){
+        if let data = noti.userInfo as? [String:String], let nid = data["nid"], let noteId = Int(nid), let idx = data["index"], let idxInt = Int(idx) {
+            // nid : 알람에 해당하는 노트id
+            // idxInt : 알람에해당하는 노트의 index
+            
+            // note show
+            let newNote = NoteViewController()
+            newNote.viewModel.isNewNote = false // 기존 노트 불러오기
+            newNote.modalPresentationStyle = .pageSheet
+            newNote.viewModel.isNoteWithPhoto = noteListViewModel.noteList[idxInt].imagePath == "" ? false : true
+            newNote.viewModel.noteId = noteId
+            present(newNote, animated: true, completion: nil)
+            
+        }else{
+            print("Debug : no data")
+        }
     }
 }
 

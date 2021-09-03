@@ -58,13 +58,21 @@ extension AppDelegate : UNUserNotificationCenterDelegate {
     func userNotificationCenter(_ center: UNUserNotificationCenter,
                                   didReceive response: UNNotificationResponse,
                                   withCompletionHandler completionHandler: @escaping () -> Void) {
-        print("debug : userNotificationCenter delegate didReceive ")
-
-          // deep link처리 시 아래 url값 가지고 처리
-          let url = response.notification.request.content.userInfo
-        print("Debug : didReceive res -> \(response) ")
-        print("Debug : didReceive url -> \(url) ")
-
-          completionHandler()
+        
+        // 알람에 해당하는 노트 id
+        let nid = response.notification.request.identifier
+        // 노트의 index
+        guard let idx = response.notification.request.content.userInfo["index"] as? String else {
+            completionHandler()
+            return
+        }
+        let noteDict : [String:String] = ["nid" : nid, "index" : idx]
+    
+        // notificaion 전송
+        // maintabViewController 수신 -> selected tab = NoteListViewController
+        //  NoteListViewController 수신 -> show note
+        NotificationCenter.default.post(name: NSNotification.Name(rawValue: DID_RECEIVE_PUSH_ALARM) , object: nil, userInfo: noteDict)
+        
+        completionHandler()
       }
 }
