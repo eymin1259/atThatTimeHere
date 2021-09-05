@@ -88,7 +88,12 @@ class SettingViewController: BaseViewController {
     func setupUI(){
 
         // 스택뷰 생성 -> myinfoLbl, appVersionLbl, TermsLbl, privacyLbl, appReviewLbl, logoutLbl 포함
-        let stackView = UIStackView(arrangedSubviews: [ myinfoLbl, appVersionLbl, TermsLbl, privacyLbl, appReviewLbl, logoutLbl])
+        
+        // 이용약관, 개인정보처리방침 포함
+        // let stackView = UIStackView(arrangedSubviews: [ myinfoLbl, appVersionLbl, TermsLbl, privacyLbl, appReviewLbl, logoutLbl])
+        
+        // 이용약관, 개인정보처리방침 미포함
+        let stackView = UIStackView(arrangedSubviews: [ myinfoLbl, appVersionLbl, appReviewLbl, logoutLbl])
         stackView.axis = .vertical
         stackView.spacing = 40
         stackView.alignment = .center
@@ -104,8 +109,8 @@ class SettingViewController: BaseViewController {
     //MARK: actions
     @objc func didTapMyInfo(){
         // id
-        print("debug : didTapMyInfo  ")
-        showDialog(title: "내 정보", message: "ㅁ")
+        guard let email = UserDefaults.standard.dictionary(forKey: CURRENTUSERKEY)?["email"] else { return }
+        showDialog(title: "내 정보", message: "id : \(email)")
     }
     
     @objc func didTapAppVersion(){

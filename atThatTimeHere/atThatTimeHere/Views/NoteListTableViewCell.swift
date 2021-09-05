@@ -18,7 +18,7 @@ class NoteListTableViewCell: UITableViewCell {
     // 제목
     private var titleLbl : UILabel = {
         let lbl = UILabel()
-        lbl.text = "asd"
+        lbl.text = "제목없음"
         lbl.textColor = .black
         lbl.font = UIFont(name: CUSTOM_FONT, size: 22)
         lbl.lineBreakMode = .byTruncatingTail
@@ -28,23 +28,14 @@ class NoteListTableViewCell: UITableViewCell {
     // 날짜
     private var dateLbl : UILabel = {
         let lbl = UILabel()
-        lbl.text = "aas"
+        lbl.text = "2000-01-01"
         lbl.textColor = .gray
         lbl.font = UIFont(name: CUSTOM_FONT, size: 14)
         return lbl
     }()
     
-    private var headerDivider = DividerView()
-    
-    private var goNoteBtn : UILabel = {
-        let lbl = UILabel()
-        lbl.text = ">"
-        lbl.textColor = .black
-        lbl.font = UIFont(name: CUSTOM_FONT, size: 22)
-       // lbl.font = .systemFont(ofSize: 22)
-        return lbl
-    }()
-    
+    // 주소
+    // private var locationLbl
 
     // MARK: life cycle
      override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
@@ -55,50 +46,21 @@ class NoteListTableViewCell: UITableViewCell {
         
         selectedBackgroundView = bgView
         backgroundColor = .clear
-        
-         heightAnchor.constraint(equalToConstant: 86).isActive = true
-        
-        
-        
+        heightAnchor.constraint(equalToConstant: 86).isActive = true
         selectedBackgroundView?.layer.cornerRadius = 15
-        
-//        addSubview(headerDivider)
-//        headerDivider.translatesAutoresizingMaskIntoConstraints = false
-//        headerDivider.topAnchor.constraint(equalTo: topAnchor).isActive = true
-//        headerDivider.leftAnchor.constraint(equalTo: leftAnchor, constant: 20).isActive = true
-//        headerDivider.rightAnchor.constraint(equalTo: rightAnchor, constant: 20).isActive =  true
-        
+   
+        // 제목
         addSubview(titleLbl)
         titleLbl.translatesAutoresizingMaskIntoConstraints = false
-        //titleLbl.topAnchor.constraint(equalTo: topAnchor, constant: 5).isActive = true
         titleLbl.centerYAnchor.constraint(equalTo: centerYAnchor, constant: -12).isActive = true
         titleLbl.leftAnchor.constraint(equalTo: leftAnchor).isActive = true
         titleLbl.rightAnchor.constraint(equalTo: rightAnchor).isActive = true
 
-        
+        // 날짜
         addSubview(dateLbl)
         dateLbl.translatesAutoresizingMaskIntoConstraints = false
         dateLbl.topAnchor.constraint(equalTo: titleLbl.bottomAnchor, constant: 5).isActive = true
         dateLbl.leftAnchor.constraint(equalTo: leftAnchor).isActive = true
-        
-//        addSubview(goNoteBtn)
-//        goNoteBtn.translatesAutoresizingMaskIntoConstraints = false
-//        //goNoteBtn.topAnchor.constraint(equalTo: topAnchor, constant: 5).isActive = true
-//        goNoteBtn.centerYAnchor.constraint(equalTo: centerYAnchor, constant: 0).isActive = true
-//        goNoteBtn.rightAnchor.constraint(equalTo: rightAnchor).isActive = true
-        
-        
-//         addSubview(profileImageView)
-//         profileImageView.setDimensions(height: 50, width: 50)
-//         profileImageView.layer.cornerRadius = 50 / 2
-//         profileImageView.centerY(inView: self, leftAnchor: leftAnchor, paddingLeft: 12)
-//
-//         let stack = UIStackView(arrangedSubviews: [usernameLabel, fullnameLabel])
-//         stack.axis = .vertical
-//         stack.spacing = 5
-//         stack.alignment = .leading
-//         addSubview(stack)
-//         stack.centerY(inView: profileImageView, leftAnchor: profileImageView.rightAnchor, paddingLeft: 10)
          
      }
      
@@ -110,13 +72,7 @@ class NoteListTableViewCell: UITableViewCell {
         idx = index
         noteId = noteid
         titleLbl.text = title
-        
         dateLbl.text = date
-        
-        if idx == 0 {
-            headerDivider.isHidden = true
-        }
-        headerDivider.isHidden = true
     }
     
   

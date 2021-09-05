@@ -18,7 +18,7 @@ class MenuViewController: BaseViewController {
     var viewModel = NoteListViewModel()
 
     //MARK: UI
-    private lazy var  writeNoteLbl :  UIButton  =  {
+    private var  writeNoteLbl :  UIButton  =  {
         let btn = UIButton(type: .system)
         btn.setTitle("추억 쓰기", for: .normal)
         btn.setTitleColor(CUSTOM_MAIN_COLOR, for: .normal)
@@ -30,7 +30,7 @@ class MenuViewController: BaseViewController {
     
     private var  settingLbl :  UIButton  =  {
         let btn = UIButton(type: .system)
-        btn.setTitle("설정", for: .normal)
+        btn.setTitle("앱 설정", for: .normal)
         btn.setTitleColor(.black, for: .normal)
         btn.titleLabel?.font = UIFont(name: CUSTOM_FONT, size: 25)
         btn.isEnabled = true

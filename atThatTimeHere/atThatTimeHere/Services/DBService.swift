@@ -39,7 +39,7 @@ class DBService {
         }
     }
     
-    func getUserInfo(email: String, completion: @escaping(User?)->Void) {
+    func getUserInfo(byEmail email : String, completion: @escaping(User?)->Void) {
         var user : User? = nil
         
         do{
@@ -59,7 +59,6 @@ class DBService {
         }
         completion(nil)
     }
-    
     
     func insertUserInfo(email: String, password: String, photoUrl:String?, completion: @escaping(Bool, User?)->Void){
         do{
@@ -104,8 +103,6 @@ class DBService {
         if content == "" {
             checkedContent = "."
         }
-        
-        print("debug  :insert -> '\(uid)', '\(checkedTitle)', '\(checkedContent)', '\(imagePath)', '\(writeDate)', '\(latitude)', '\(longitude)'  ")
         do{
             // insert note data
             let db = try SQLite()

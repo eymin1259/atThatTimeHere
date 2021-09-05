@@ -29,7 +29,7 @@ class  UserService  {
             return
         }
         
-        DBService.shared.getUserInfo(email: email) { (userInDb) in
+        DBService.shared.getUserInfo(byEmail: email) { (userInDb) in
             if let user = userInDb {
                 if user.password == encryptedPassword {
                     self.saveUserInfoLocally(user: user)
@@ -51,7 +51,7 @@ class  UserService  {
     // MARK: sign up
     func signUp(email: String, password: String, completion: @escaping(Bool, String)->Void) {
         DBService.shared.createUserTable()
-        DBService.shared.getUserInfo(email: email) { (userInDb) in
+        DBService.shared.getUserInfo(byEmail: email) { (userInDb) in
             if let _ = userInDb {
                 completion(false, "이미 존재하는 이메일입니다.")
                 return
