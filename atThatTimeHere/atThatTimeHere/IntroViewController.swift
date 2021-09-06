@@ -8,7 +8,7 @@
 import UIKit
 
 class IntroViewController: UIViewController {
-     
+    
     // MARK: UI
     
     private let memoryLbl :  UILabel  =  {
@@ -22,13 +22,13 @@ class IntroViewController: UIViewController {
     
     private let noteLbl :  UILabel  =  {
         let  text = UILabel()
-        text.text = "노트"
+        text.text = "알람"
         text.textColor = .white
         text.font = UIFont(name: CUSTOM_FONT, size: 30)
         text.translatesAutoresizingMaskIntoConstraints = false
         return text
     }()
-
+    
     // MARK: life cycle
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -61,10 +61,10 @@ class IntroViewController: UIViewController {
         memoryLbl.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
         memoryLbl.centerYAnchor.constraint(equalTo: view.centerYAnchor, constant: -15).isActive = true
         
-        
         view.addSubview(noteLbl)
         noteLbl.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
         noteLbl.centerYAnchor.constraint(equalTo: view.centerYAnchor, constant: 15).isActive = true
+        
     }
 }
 
