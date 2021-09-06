@@ -1,5 +1,7 @@
-# atThatTimeHere
-그때 여기 : 위치메모 앱
+
+# 추억노트앱 배포 레포지토리
+
+- no public !
 
 
 ReadME  작성 예시
