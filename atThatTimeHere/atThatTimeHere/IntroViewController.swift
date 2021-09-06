@@ -59,11 +59,11 @@ class IntroViewController: UIViewController {
         
         view.addSubview(memoryLbl)
         memoryLbl.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
-        memoryLbl.centerYAnchor.constraint(equalTo: view.centerYAnchor, constant: -15).isActive = true
+        memoryLbl.centerYAnchor.constraint(equalTo: view.centerYAnchor, constant: -18).isActive = true
         
         view.addSubview(noteLbl)
         noteLbl.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
-        noteLbl.centerYAnchor.constraint(equalTo: view.centerYAnchor, constant: 15).isActive = true
+        noteLbl.centerYAnchor.constraint(equalTo: view.centerYAnchor, constant: 18).isActive = true
         
     }
 }
