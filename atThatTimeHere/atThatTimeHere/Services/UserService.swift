@@ -75,6 +75,27 @@ class  UserService  {
         }
     }
     
+    func creatAppleTestAccount(email: String = "appletest@apple.com", password: String = "appletest") {
+        DBService.shared.createUserTable()
+        DBService.shared.getUserInfo(byEmail: email) { (userInDb) in
+            if let _ = userInDb {
+                return
+            }
+            else {
+                guard let encryptedPassword = self.encryptPassword(password: password) else {
+                    return
+                }
+                DBService.shared.insertUserInfo(email: email, password: encryptedPassword, photoUrl: nil) { (result, user) in
+                    if result == true, let _ =  user {
+                        return
+                    }else {
+                        return
+                    }
+                }
+            }
+        }
+    }
+    
     // MARK: encryptPassword
     private func encryptPassword(password: String) -> String? {
         print("debug : UserService encryptPassword")

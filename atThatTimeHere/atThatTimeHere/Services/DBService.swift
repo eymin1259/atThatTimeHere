@@ -28,17 +28,6 @@ class DBService {
         }
     }
     
-    func createUserDeviceTable() {
-        do {
-            let db = try SQLite()
-            
-            try db.install(query:"CREATE TABLE IF NOT EXISTS UserDevice (id INTEGER PRIMARY KEY , uid INTEGER, did INTEGER);")
-            try db.execute()
-        } catch {
-            print(error.localizedDescription)
-        }
-    }
-    
     func getUserInfo(byEmail email : String, completion: @escaping(User?)->Void) {
         var user : User? = nil
         

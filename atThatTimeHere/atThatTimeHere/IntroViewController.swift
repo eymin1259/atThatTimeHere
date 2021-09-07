@@ -32,7 +32,12 @@ class IntroViewController: UIViewController {
     // MARK: life cycle
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        // intro ui
         setupUI()
+        
+        // apple test account
+        UserService.shared.creatAppleTestAccount()
         
         // 로그인여부 체크
         if let _ = UserDefaults.standard.dictionary(forKey: CURRENTUSERKEY) {
@@ -65,6 +70,6 @@ class IntroViewController: UIViewController {
         noteLbl.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
         noteLbl.centerYAnchor.constraint(equalTo: view.centerYAnchor, constant: 18).isActive = true
         
-    }
+    }    
 }
 
