@@ -55,7 +55,7 @@ class SettingViewController: BaseViewController {
     
     private var  appReviewLbl :  UIButton  =  {
         let btn = UIButton(type: .system)
-        btn.setTitle("별점과 리뷰", for: .normal)
+        btn.setTitle("의견 보내기", for: .normal)
         btn.setTitleColor(.black, for: .normal)
         btn.titleLabel?.font = UIFont(name: CUSTOM_FONT, size: 25)
         btn.isEnabled = true
@@ -123,19 +123,20 @@ class SettingViewController: BaseViewController {
     @objc func didTapTermsOfService(){
         // 정보저장x, 앱버전
         print("debug : didTapTermsOfService  ")
-        showDialog(title: "이용약관", message: "ㅠ")
+        showDialog(title: "이용약관", message: TERMS_OF_SERVICE)
     }
     
     @objc func didTapPrivacy(){
         // 개인정보처리방침
         print("debug : didTapTermsOfService  ")
-        showDialog(title: "개인정보 처리방침", message: "ㅊ")
+        showDialog(title: "개인정보 처리방침", message: PRIVACY_POLICY)
     }
     
     @objc func didTapAppReview(){
-        // storekit
-        // https://zeddios.tistory.com/551
-        print("debug : didTapAppReview  ")
+        // 의견 보내기
+        if let scene = UIApplication.shared.connectedScenes.first(where: { $0.activationState == .foregroundActive }) as? UIWindowScene {
+            SKStoreReviewController.requestReview(in: scene)
+        }
     }
     
     @objc func didTapLogout(){

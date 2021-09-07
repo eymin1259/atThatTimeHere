@@ -165,6 +165,7 @@ extension MenuViewController : CLLocationManagerDelegate {
                     // 알람on, REMINDE_INTERVAL_DAY(알람간격,31일)이상이면 -> 알람 보내기
                     
                     stopLocationUpdate()
+                    
                     let todayStr = formatter.string(from: Date()) // 오늘날짜
                     let writeDateIntervalDay = writeDate.timeIntervalSinceNow / 86400 * -1 // 노트쓴 날짜로부터 오늘날짜 시간차이
                     

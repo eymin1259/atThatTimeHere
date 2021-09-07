@@ -17,10 +17,9 @@ struct PhotoService {
         print("debug : PhotoService shared init ")
     }
 
-    
+    // 사진권한 체크
     func checkPhotoPermission(vc : BaseViewController) {
         let photoAuthorizationStatus = PHPhotoLibrary.authorizationStatus()
-        
         switch photoAuthorizationStatus {
         case .authorized:
             runPhotoLibrary(vc: vc)
@@ -39,6 +38,7 @@ struct PhotoService {
         }
     }
     
+    // 앨범에서 사진고르는 imagePicker 실행
     func runPhotoLibrary(vc : BaseViewController) {
         DispatchQueue.main.async {
             
@@ -53,6 +53,7 @@ struct PhotoService {
         }
     }
     
+    // 사진권한 없을시 권한설정 유도
     func goPhoneSetting(vc : BaseViewController){
         let alertController = UIAlertController(title :"알림", message: "사진 등록을 위해 사진 접근권한이 필요합니다.", preferredStyle: .alert)
         

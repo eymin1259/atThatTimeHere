@@ -320,7 +320,7 @@ class NoteViewController: BaseViewController {
         let todayStr = formatter.string(from: today)
         // 제목, 내용
         let title = titleTextField.text ?? ""
-        var content = contentTextView.text ?? ""
+        let content = contentTextView.text ?? ""
        
         // 디폴트좌표 -> 북극
         var latitude = CLLocationDegrees(78.231570)
@@ -332,6 +332,7 @@ class NoteViewController: BaseViewController {
             longitude = longi
         }
         print("debug : note is saved at -> (\(latitude), \(longitude)")
+        
         // 이미지첨부된 노트 저장
         if let jpenData = viewModel.noteImage?.jpegData(compressionQuality: 1.0),let imgUrl = viewModel.noteImageUrl, let filePath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first?.appendingPathComponent(imgUrl.lastPathComponent) {
             //  이미지 저장
@@ -414,19 +415,20 @@ extension NoteViewController : UIImagePickerControllerDelegate, UINavigationCont
     }
 }
 
+// MARK: extension : UITextViewDelegate
 extension NoteViewController : UITextViewDelegate {
     func textViewDidBeginEditing(_ textView: UITextView) {
         // 본문내용 입력 시작시 비어있던 상태면
         if textView.text.trimmingCharacters(in: .whitespacesAndNewlines) == "" {
             textView.text = ""
-            contentPlaceHolder.isHidden = true
+            contentPlaceHolder.isHidden = true // 플레이스홀더 보여주기
         }
     }
     func textViewDidEndEditing(_ textView: UITextView) {
         // 본문내용 입력 종료시 비어있던 상태면
         if textView.text.trimmingCharacters(in: .whitespacesAndNewlines) == "" {
             textView.text = ""
-            contentPlaceHolder.isHidden = false
+            contentPlaceHolder.isHidden = false // 플레이스홀더 숨기기
         }
     }
 }
