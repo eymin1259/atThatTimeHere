@@ -59,6 +59,7 @@ class NoteViewController: BaseViewController {
         tv.font = UIFont(name: CUSTOM_FONT, size: 18)
         tv.textColor = .gray
         tv.text = ""
+        tv.backgroundColor = .green
         return tv
     }()
     
@@ -70,6 +71,18 @@ class NoteViewController: BaseViewController {
         lbl.textColor = .gray.withAlphaComponent(0.6)
         lbl.translatesAutoresizingMaskIntoConstraints = false
         return lbl
+    }()
+    
+    // 수정버튼
+    var editBtn : UIButton = {
+        let btn = UIButton(type: .system)
+        btn.setTitle("수정", for: .normal)
+        btn.setTitleColor(CUSTOM_MAIN_COLOR, for: .normal)
+        btn.titleLabel?.font = UIFont(name: CUSTOM_FONT, size: 20)
+        btn.isEnabled = true
+        btn.addTarget(self, action: #selector(didTapEditBtn), for: .touchUpInside)
+        btn.translatesAutoresizingMaskIntoConstraints = false
+        return btn
     }()
     
     // 사진첨부 버튼
@@ -177,9 +190,7 @@ class NoteViewController: BaseViewController {
         photoView.topAnchor.constraint(equalTo: dividerView.bottomAnchor, constant: 15).isActive = true
         photoView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 50).isActive  = true
         photoView.trailingAnchor.constraint(equalTo: view.trailingAnchor,constant: -50).isActive = true
-
         photoView.heightAnchor.constraint(equalToConstant: viewModel.isNoteWithPhoto ? 400 : 0).isActive = true
-        
         
         // 본문내용
         view.addSubview(contentTextView)
@@ -187,7 +198,7 @@ class NoteViewController: BaseViewController {
         contentTextView.topAnchor.constraint(equalTo: photoView.bottomAnchor, constant: 15).isActive = true
         contentTextView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 50).isActive  = true
         contentTextView.trailingAnchor.constraint(equalTo: view.trailingAnchor,constant: -50).isActive = true
-        contentViewBottomLayoutConstraint  =  contentTextView.bottomAnchor.constraint(equalTo: view.bottomAnchor,constant: -20)
+        contentViewBottomLayoutConstraint  =  contentTextView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor,constant: -60)
         contentViewBottomLayoutConstraint?.isActive = true
         contentTextView.delegate = self
         
@@ -207,11 +218,20 @@ class NoteViewController: BaseViewController {
         toolbar.items = [photoBarBtn, emptyBarBtn, saveBarBtn]
         titleTextField.inputAccessoryView = toolbar
         contentTextView.inputAccessoryView = toolbar
+    
+        // 수정버튼
+        view.addSubview(editBtn)
+        editBtn.translatesAutoresizingMaskIntoConstraints = false
+        editBtn.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -10).isActive = true
+        editBtn.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -50).isActive = true
+        editBtn.isHidden = viewModel.isNewNote ? false : false // true : false
         
         // 이미지피커로 고른 사진을 보여줄 view
         view.addSubview(pickerPhotoView)
         pickerPhotoView.setup()
         pickerPhotoView.isHidden = true
+        
+        
     }
     
     // 노트불러오기인경우 노트정보 load
@@ -259,13 +279,13 @@ class NoteViewController: BaseViewController {
             self.pickerPhotoView.setImage(image: self.viewModel.noteImage!)
             self.pickerPhotoView.isHidden = false
         }
-        let removePhoto = UIAlertAction(title: "첨부취소", style: .default) { (_) -> Void in
+        let removePhoto = UIAlertAction(title: "첨부취소", style: .destructive) { (_) -> Void in
             // 선택한 데이터 초기화
             self.viewModel.noteImageUrl = nil
             self.viewModel.noteImage = nil
             self.viewModel.isNoteWithPhoto = false
         }
-        let cancle = UIAlertAction(title: "닫기", style: .default){ (_) -> Void in
+        let cancle = UIAlertAction(title: "닫기", style: .cancel){ (_) -> Void in
         }
         
         if viewModel.isNoteWithPhoto {
@@ -281,13 +301,31 @@ class NoteViewController: BaseViewController {
         present(alertController, animated: true, completion: nil)
     }
     
+    func showNoteEditAlert(){
+        let alertController = UIAlertController(title :"수정", message: "", preferredStyle: .actionSheet)
+        
+        let editNote = UIAlertAction(title: "추억 수정", style: .default) { (_) -> Void in
+            // 글, 내용 수정
+        }
+        let removeNote = UIAlertAction(title: "추억 지우기", style: .destructive ) { (_) -> Void in
+            // 추억지우기
+        }
+        let cancle = UIAlertAction(title: "닫기", style: .cancel){ (_) -> Void in
+        }
+        
+        alertController.addAction(editNote)
+        alertController.addAction(removeNote)
+        alertController.addAction(cancle)
+        present(alertController, animated: true, completion: nil)
+    }
+    
     //MARK: actions
     @objc func handleKeyboardWillAppear(notification : NSNotification) {
         // 키보드가 올라갈때
         if let keyboardFrame = notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue {
             let keyboardHeight = keyboardFrame.cgRectValue.height
             contentViewBottomLayoutConstraint?.isActive = false
-            contentViewBottomLayoutConstraint?.constant = -keyboardHeight-10
+            contentViewBottomLayoutConstraint?.constant = -keyboardHeight
             contentViewBottomLayoutConstraint?.isActive = true
         }
     }
@@ -295,14 +333,17 @@ class NoteViewController: BaseViewController {
     @objc func handleKeyboardWillHide(notification : Notification ){
         // 키보드가 내려갈때
         contentViewBottomLayoutConstraint?.isActive = false
-        contentViewBottomLayoutConstraint?.constant = -20
+        contentViewBottomLayoutConstraint?.constant = -60
         contentViewBottomLayoutConstraint?.isActive = true
     }
     
+    // 수정버튼 클릭
+    @objc func didTapEditBtn() {
+        showNoteEditAlert()
+    }
     
     // 사진버튼 클릭 action
     @objc func  didTapPhotoBtn(){
-        print("Debug : didTapPhoto")
         showPhotoAlert()
     }
     
