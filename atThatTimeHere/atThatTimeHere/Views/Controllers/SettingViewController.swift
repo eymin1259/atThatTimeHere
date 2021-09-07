@@ -110,7 +110,7 @@ class SettingViewController: BaseViewController {
     @objc func didTapMyInfo(){
         // id
         guard let email = UserDefaults.standard.dictionary(forKey: CURRENTUSERKEY)?["email"] else { return }
-        showDialog(title: "내 정보", message: "id : \(email)")
+        showDialog(title: "내 정보", message: "email : \(email)")
     }
     
     @objc func didTapAppVersion(){

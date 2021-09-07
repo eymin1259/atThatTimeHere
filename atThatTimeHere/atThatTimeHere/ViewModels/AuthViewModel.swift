@@ -35,17 +35,24 @@ struct AuthViewModel {
     }
     
     var alertColor : UIColor {
-        if let passwordVal = password, let passworkCheckVal = passwordCheck, passwordVal == passworkCheckVal {
-            return #colorLiteral(red: 0.4666666687, green: 0.7647058964, blue: 0.2666666806, alpha: 1)
+        if let emailVal = email, isValidEmail(emailVal) == false {
+            return #colorLiteral(red: 0.9254902005, green: 0.2352941185, blue: 0.1019607857, alpha: 1)
         }
-        return #colorLiteral(red: 0.9254902005, green: 0.2352941185, blue: 0.1019607857, alpha: 1)
+        else if let passwordVal = password, let passworkCheckVal = passwordCheck, passwordVal != passworkCheckVal {
+            return #colorLiteral(red: 0.9254902005, green: 0.2352941185, blue: 0.1019607857, alpha: 1)
+        }
+        return #colorLiteral(red: 0.4666666687, green: 0.7647058964, blue: 0.2666666806, alpha: 1)
     }
     
     var alertMessage : String {
-        if let passwordVal = password, let passworkCheckVal = passwordCheck, passwordVal == passworkCheckVal {
-            return " "
+        if let emailVal = email, isValidEmail(emailVal) == false {
+            return "이메일 형식이 올바르지 않습니다."
         }
-        return "비밀번호가 일치하지 않습니다."
+        else if let passwordVal = password, let passworkCheckVal = passwordCheck, passwordVal != passworkCheckVal {
+            return "비밀번호가 일치하지 않습니다."
+        }
+        return " "
+        
     }
     
     //MARK: methods
@@ -59,5 +66,11 @@ struct AuthViewModel {
         UserService.shared.signUp(email: self.email ?? "", password: self.password ?? "") { (registerRes, Msg) in
             completion(registerRes, Msg)
         }
+    }
+    
+    func isValidEmail(_ email:String) -> Bool {
+        let emailRegEx = "[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,64}"
+        let emailTest = NSPredicate(format:"SELF MATCHES %@", emailRegEx)
+        return emailTest.evaluate(with: email)
     }
 }

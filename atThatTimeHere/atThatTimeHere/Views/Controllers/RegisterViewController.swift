@@ -40,7 +40,7 @@ class RegisterViewController: BaseViewController {
     }()
     
     private let emailTextField : UITextField = {
-        let tf = TextFieldWithPlaceholder(placeholder: "사용할 ID를 입력하세요")
+        let tf = TextFieldWithPlaceholder(placeholder: "사용할 email를 입력하세요")
         tf.keyboardType = .emailAddress
         tf.autocorrectionType = .no
 
@@ -156,6 +156,8 @@ class RegisterViewController: BaseViewController {
     @objc func textDidChange(sender: UITextView) {
         if sender == emailTextField {
             registerViewModel.email = sender.text
+            passwordAlertLbl.textColor = registerViewModel.alertColor
+            passwordAlertLbl.text = registerViewModel.alertMessage
         }
         else if sender == passwordTextField {
             registerViewModel.password = sender.text

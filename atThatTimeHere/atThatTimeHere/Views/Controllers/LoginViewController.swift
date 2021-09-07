@@ -25,7 +25,7 @@ class LoginViewController: BaseViewController {
         return text
     }()
     private let emailTextField : UITextField = {
-        let tf = TextFieldWithPlaceholder(placeholder: "ID")
+        let tf = TextFieldWithPlaceholder(placeholder: "email")
         tf.keyboardType = .emailAddress
         tf.autocorrectionType = .no
         return tf

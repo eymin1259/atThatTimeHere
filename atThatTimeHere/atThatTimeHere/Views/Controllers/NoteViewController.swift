@@ -331,7 +331,7 @@ class NoteViewController: BaseViewController {
             latitude = lati
             longitude = longi
         }
-        
+        print("debug : note is saved at -> (\(latitude), \(longitude)")
         // 이미지첨부된 노트 저장
         if let jpenData = viewModel.noteImage?.jpegData(compressionQuality: 1.0),let imgUrl = viewModel.noteImageUrl, let filePath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first?.appendingPathComponent(imgUrl.lastPathComponent) {
             //  이미지 저장

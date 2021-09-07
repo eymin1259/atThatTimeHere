@@ -53,14 +53,15 @@ class NoteListTableViewCell: UITableViewCell {
         addSubview(titleLbl)
         titleLbl.translatesAutoresizingMaskIntoConstraints = false
         titleLbl.centerYAnchor.constraint(equalTo: centerYAnchor, constant: -12).isActive = true
-        titleLbl.leftAnchor.constraint(equalTo: leftAnchor).isActive = true
-        titleLbl.rightAnchor.constraint(equalTo: rightAnchor).isActive = true
+        titleLbl.leftAnchor.constraint(equalTo: leftAnchor, constant: 15).isActive = true
+        titleLbl.rightAnchor.constraint(equalTo: rightAnchor, constant: -15).isActive = true
 
         // 날짜
         addSubview(dateLbl)
         dateLbl.translatesAutoresizingMaskIntoConstraints = false
         dateLbl.topAnchor.constraint(equalTo: titleLbl.bottomAnchor, constant: 5).isActive = true
-        dateLbl.leftAnchor.constraint(equalTo: leftAnchor).isActive = true
+        dateLbl.leftAnchor.constraint(equalTo: leftAnchor, constant: 15).isActive = true
+        dateLbl.rightAnchor.constraint(equalTo: rightAnchor, constant: -15).isActive = true
          
      }
      

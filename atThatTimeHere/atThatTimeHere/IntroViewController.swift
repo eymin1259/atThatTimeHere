@@ -44,7 +44,7 @@ class IntroViewController: UIViewController {
             }
         }else{
             // 로그인되어 있지 않으면 go login
-            DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
                 let controller = LoginViewController()
                 let nav = UINavigationController(rootViewController: controller)
                 nav.modalPresentationStyle = .fullScreen

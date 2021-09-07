@@ -15,7 +15,7 @@ struct User {
     var toDictionary : [String:String] {
         return  [
             "id" : "\(id)", // db primary key
-            "email": email, // login id
+            "email": email, // login email
             "password": password // login pw
         ]
     }
