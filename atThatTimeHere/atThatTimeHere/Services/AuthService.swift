@@ -8,14 +8,15 @@
 import Foundation
 import CryptoSwift
 
-class  UserService  {
+class  AuthService  {
     
-    static let shared = UserService()
+    static let shared = AuthService()
     
     private init () {
         print("debug : UserService shared init ")
     }
     
+    // MARK: logout
     func logout() {
         UserDefaults.standard.removeObject(forKey: CURRENTUSERKEY)
         UserDefaults.standard.synchronize()

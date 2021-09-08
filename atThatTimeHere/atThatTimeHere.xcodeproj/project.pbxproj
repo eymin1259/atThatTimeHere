@@ -20,7 +20,7 @@
 		A180D56526D67AD20076458B /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A180D56326D67AD20076458B /* LaunchScreen.storyboard */; };
 		A180D56E26D67BF90076458B /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = A180D56D26D67BF90076458B /* Constants.swift */; };
 		A180D57026D67C0B0076458B /* SQLite.swift in Sources */ = {isa = PBXBuildFile; fileRef = A180D56F26D67C0B0076458B /* SQLite.swift */; };
-		A180D57326D67CDB0076458B /* UserService.swift in Sources */ = {isa = PBXBuildFile; fileRef = A180D57226D67CDB0076458B /* UserService.swift */; };
+		A180D57326D67CDB0076458B /* AuthService.swift in Sources */ = {isa = PBXBuildFile; fileRef = A180D57226D67CDB0076458B /* AuthService.swift */; };
 		A180D57626D67D0D0076458B /* DBService.swift in Sources */ = {isa = PBXBuildFile; fileRef = A180D57526D67D0D0076458B /* DBService.swift */; };
 		A180D57B26D67D9F0076458B /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = A180D57A26D67D9F0076458B /* User.swift */; };
 		A180D57D26D67DBF0076458B /* AuthViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A180D57C26D67DBF0076458B /* AuthViewModel.swift */; };
@@ -56,7 +56,7 @@
 		A180D56626D67AD20076458B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		A180D56D26D67BF90076458B /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		A180D56F26D67C0B0076458B /* SQLite.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SQLite.swift; sourceTree = "<group>"; };
-		A180D57226D67CDB0076458B /* UserService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserService.swift; sourceTree = "<group>"; };
+		A180D57226D67CDB0076458B /* AuthService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthService.swift; sourceTree = "<group>"; };
 		A180D57526D67D0D0076458B /* DBService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DBService.swift; sourceTree = "<group>"; };
 		A180D57A26D67D9F0076458B /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
 		A180D57C26D67DBF0076458B /* AuthViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthViewModel.swift; sourceTree = "<group>"; };
@@ -155,7 +155,7 @@
 		A180D57126D67CCE0076458B /* Services */ = {
 			isa = PBXGroup;
 			children = (
-				A180D57226D67CDB0076458B /* UserService.swift */,
+				A180D57226D67CDB0076458B /* AuthService.swift */,
 				A180D57526D67D0D0076458B /* DBService.swift */,
 				A180D59B26D77EA90076458B /* PhotoService.swift */,
 			);
@@ -328,7 +328,7 @@
 				A15E678F26DDB7E100D1A9FB /* Note.swift in Sources */,
 				A180D55D26D67AD10076458B /* IntroViewController.swift in Sources */,
 				A180D57026D67C0B0076458B /* SQLite.swift in Sources */,
-				A180D57326D67CDB0076458B /* UserService.swift in Sources */,
+				A180D57326D67CDB0076458B /* AuthService.swift in Sources */,
 				A180D57626D67D0D0076458B /* DBService.swift in Sources */,
 				A180D59426D75C100076458B /* SettingViewController.swift in Sources */,
 				A15E679726E1067800D1A9FB /* NoteListViewModel.swift in Sources */,
@@ -505,7 +505,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = yongmin.atThatTimeHere;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
 		};
@@ -525,7 +525,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = yongmin.atThatTimeHere;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Release;
 		};

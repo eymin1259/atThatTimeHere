@@ -130,6 +130,7 @@ class LoginViewController: BaseViewController {
         loginViewModel.login() { (loginRes, loginMsg) in
             self.view.makeToast(loginMsg)
             if loginRes {
+                self.showLoading()
                 DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
                     let controller = MainTabViewController()
                     self.navigationController?.pushViewController(controller, animated: true)

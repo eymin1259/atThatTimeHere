@@ -11,18 +11,27 @@ class IntroViewController: UIViewController {
     
     // MARK: UI
     
-    private let memoryLbl :  UILabel  =  {
+    private let atThatTimeLbl :  UILabel  =  {
         let  text = UILabel()
-        text.text = "추억"
+        text.text = "그때"
         text.textColor = .white
         text.font = UIFont(name: CUSTOM_FONT, size: 30)
         text.translatesAutoresizingMaskIntoConstraints = false
         return text
     }()
     
-    private let noteLbl :  UILabel  =  {
+    private let hereLbl :  UILabel  =  {
         let  text = UILabel()
-        text.text = "알람"
+        text.text = "이곳"
+        text.textColor = .white
+        text.font = UIFont(name: CUSTOM_FONT, size: 30)
+        text.translatesAutoresizingMaskIntoConstraints = false
+        return text
+    }()
+    
+    private let dotLbl :  UILabel  =  {
+        let  text = UILabel()
+        text.text = "。"
         text.textColor = .white
         text.font = UIFont(name: CUSTOM_FONT, size: 30)
         text.translatesAutoresizingMaskIntoConstraints = false
@@ -36,8 +45,8 @@ class IntroViewController: UIViewController {
         // intro ui
         setupUI()
         
-        // apple test account
-        UserService.shared.creatAppleTestAccount()
+        // 초기 db 세팅 -> make apple test account
+        AuthService.shared.creatAppleTestAccount()
         
         // 로그인여부 체크
         if let _ = UserDefaults.standard.dictionary(forKey: CURRENTUSERKEY) {
@@ -62,14 +71,17 @@ class IntroViewController: UIViewController {
     private func setupUI() {
         view.backgroundColor = CUSTOM_MAIN_COLOR
         
-        view.addSubview(memoryLbl)
-        memoryLbl.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
-        memoryLbl.centerYAnchor.constraint(equalTo: view.centerYAnchor, constant: -18).isActive = true
+        view.addSubview(atThatTimeLbl)
+        atThatTimeLbl.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+        atThatTimeLbl.centerYAnchor.constraint(equalTo: view.centerYAnchor, constant: -18).isActive = true
         
-        view.addSubview(noteLbl)
-        noteLbl.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
-        noteLbl.centerYAnchor.constraint(equalTo: view.centerYAnchor, constant: 18).isActive = true
+        view.addSubview(hereLbl)
+        hereLbl.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+        hereLbl.centerYAnchor.constraint(equalTo: view.centerYAnchor, constant: 18).isActive = true
         
-    }    
+        view.addSubview(dotLbl)
+        dotLbl.leadingAnchor.constraint(equalTo: hereLbl.trailingAnchor).isActive = true
+        dotLbl.bottomAnchor.constraint(equalTo: hereLbl.bottomAnchor).isActive = true
+    }
 }
 

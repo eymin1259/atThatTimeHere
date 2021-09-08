@@ -82,6 +82,23 @@ class DBService {
         }
     }
     
+    func createNoteTableWithFirstNote(){
+        guard let uid = UserDefaults.standard.dictionary(forKey: CURRENTUSERKEY)?["id"] else { return }
+        do {
+            // create note table
+            let db = try SQLite()
+            try db.install(query:"CREATE TABLE IF NOT EXISTS Notes (id INTEGER PRIMARY KEY , userId INTEGER, title TEXT, content TEXT, imagePath TEXT, writeDate TEXT, latitude TEXT, longitude TEXT, lastAlarmDate TEXT, onOffAlarm INTEGER );")
+            try db.execute()
+                                              
+            // insert first note
+            try db.install(query:"INSERT INTO Notes (userId, title, content, imagePath, writeDate, latitude, longitude, lastAlarmDate, onOffAlarm ) VALUES ('\(uid)', '환영합니다 :)', '그때이곳은 당신의 소중한 추억을 알려주는 앱 입니다. 의미있는 장소에서 추억노트를 작성해보세요. 훗날 그곳에 다시갔을 때 작성했던 추억을 보여드릴께요 !', '', '', '78.231570', '15.574564' , '1999-12-31', '1'  ); ")
+            try db.execute()
+            
+        } catch {
+            print(error.localizedDescription)
+        }
+    }
+    
     func insertNote(title: String, content: String, imagePath:String = "", writeDate:String, latitude:String, longitude:String, lastAlarmDate:String , onOffAlarm : Int, completion: @escaping(Bool)->Void){
         guard let uid = UserDefaults.standard.dictionary(forKey: CURRENTUSERKEY)?["id"] else { return }
         var checkedTitle = title

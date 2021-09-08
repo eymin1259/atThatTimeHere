@@ -141,9 +141,14 @@ class RegisterViewController: BaseViewController {
         showLoading()
         registerViewModel.register { (resultBoolean, resultMsg) in
             self.hideLoading()
-            self.view.makeToast(resultMsg)
+            self.view.makeToast(resultMsg) // 회원가입 성공 메시지
             
             if resultBoolean { // 회원가입 성공
+                
+                // 초기 note table 세팅
+                DBService.shared.createNoteTableWithFirstNote()
+                
+                // loginView Controller에게 회원가입 성공 알림
                 DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
                     self.dismiss(animated: true) {
                         self.delegate?.registerDidFinish()

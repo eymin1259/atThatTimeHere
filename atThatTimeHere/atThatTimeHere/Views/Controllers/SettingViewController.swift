@@ -141,7 +141,7 @@ class SettingViewController: BaseViewController {
     
     @objc func didTapLogout(){
         // 유저정보 삭제
-        UserService.shared.logout()
+        AuthService.shared.logout()
         
         // 인트로VC로 이동
         DispatchQueue.main.async {

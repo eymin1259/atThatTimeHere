@@ -55,11 +55,10 @@ class NoteViewController: BaseViewController {
         tv.keyboardType = .default
         tv.autocorrectionType = .no
         tv.translatesAutoresizingMaskIntoConstraints = false
-        //  tv.backgroundColor = .green.withAlphaComponent(0.2)
         tv.font = UIFont(name: CUSTOM_FONT, size: 18)
         tv.textColor = .gray
         tv.text = ""
-        tv.backgroundColor = .green
+        tv.backgroundColor = .green.withAlphaComponent(0.2)
         return tv
     }()
     
@@ -200,7 +199,8 @@ class NoteViewController: BaseViewController {
         contentTextView.trailingAnchor.constraint(equalTo: view.trailingAnchor,constant: -50).isActive = true
         contentViewBottomLayoutConstraint  =  contentTextView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor,constant: -60)
         contentViewBottomLayoutConstraint?.isActive = true
-        contentTextView.delegate = self
+        contentTextView.delegate = self // 본문내용 placeholder -> UITextViewDelegate
+        contentTextView.layoutManager.delegate = self // 본문내용 줄간격 -> NSLayoutManagerDelegate
         
         // 본문내용 placeholder
         view.addSubview(contentPlaceHolder)
@@ -457,7 +457,8 @@ extension NoteViewController : UIImagePickerControllerDelegate, UINavigationCont
 }
 
 // MARK: extension : UITextViewDelegate
-extension NoteViewController : UITextViewDelegate {
+extension NoteViewController : UITextViewDelegate, NSLayoutManagerDelegate {
+    // 본문내용 placeholder
     func textViewDidBeginEditing(_ textView: UITextView) {
         // 본문내용 입력 시작시 비어있던 상태면
         if textView.text.trimmingCharacters(in: .whitespacesAndNewlines) == "" {
@@ -465,11 +466,16 @@ extension NoteViewController : UITextViewDelegate {
             contentPlaceHolder.isHidden = true // 플레이스홀더 보여주기
         }
     }
+    // 본문내용 placeholder
     func textViewDidEndEditing(_ textView: UITextView) {
         // 본문내용 입력 종료시 비어있던 상태면
         if textView.text.trimmingCharacters(in: .whitespacesAndNewlines) == "" {
             textView.text = ""
             contentPlaceHolder.isHidden = false // 플레이스홀더 숨기기
         }
+    }
+    // 줄간격
+    func layoutManager(_ layoutManager: NSLayoutManager, lineSpacingAfterGlyphAt glyphIndex: Int, withProposedLineFragmentRect rect: CGRect) -> CGFloat {
+        return 10
     }
 }

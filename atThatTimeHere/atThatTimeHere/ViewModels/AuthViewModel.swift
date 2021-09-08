@@ -57,13 +57,13 @@ struct AuthViewModel {
     
     //MARK: methods
     func login(completion: @escaping(Bool, String)->Void) {
-        UserService.shared.login(email: self.email ?? "", password: self.password ?? "") { (loginResult, loginMsg) in
+        AuthService.shared.login(email: self.email ?? "", password: self.password ?? "") { (loginResult, loginMsg) in
             completion(loginResult, loginMsg)
         }
     }
     
     func register(completion: @escaping(Bool, String)->Void) {
-        UserService.shared.signUp(email: self.email ?? "", password: self.password ?? "") { (registerRes, Msg) in
+        AuthService.shared.signUp(email: self.email ?? "", password: self.password ?? "") { (registerRes, Msg) in
             completion(registerRes, Msg)
         }
     }
