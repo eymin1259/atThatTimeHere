@@ -40,6 +40,7 @@ class NoteListViewController: BaseViewController {
 
         setupUI()
         
+        
         // 알람 클릭시 발송되는 noti 인식 -> show note
         NotificationCenter.default.addObserver(self, selector: #selector(didReceivePushAlarm), name: NSNotification.Name(rawValue: DID_RECEIVE_PUSH_ALARM), object: nil)
     }
@@ -99,6 +100,7 @@ class NoteListViewController: BaseViewController {
             newNote.modalPresentationStyle = .pageSheet
             newNote.viewModel.isNoteWithPhoto = noteListViewModel.noteList[idxInt].imagePath == "" ? false : true
             newNote.viewModel.noteId = noteId
+            newNote.delegate = self
             present(newNote, animated: true, completion: nil)
             
         }else{
@@ -133,6 +135,14 @@ extension NoteListViewController : UITableViewDelegate, UITableViewDataSource {
         newNote.modalPresentationStyle = .pageSheet
         newNote.viewModel.isNoteWithPhoto = noteListViewModel.noteList[indexPath.item].imagePath == "" ? false : true
         newNote.viewModel.noteId = noteCell.noteId
+        newNote.delegate = self
         present(newNote, animated: true, completion: nil)
+    }
+}
+
+extension NoteListViewController : NoteViewControllerDelegate {
+    func didRemoveNote() {
+        noteListUpdate()
+        view.makeToast("삭제되었습니다.")
     }
 }

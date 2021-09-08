@@ -18,6 +18,7 @@ struct Note {
     var longitude : String // 경도
     var lastAlarmDate : String // 마지막 알람날짜
     var onOffAlarm : Int // 알람on/off : ALARM_ON(0) = on, ALARM_OFF(-1) = off
+    var deleted : Int // 삭제여부 : 0=삭제x, 1=삭제o
     
     var toNoteDictionary : [String:String] {
         return  [
@@ -30,7 +31,8 @@ struct Note {
             "latitude" : latitude,
             "longitude" : longitude,
             "lastAlarmDate" : lastAlarmDate,
-            "onOffAlarm" : "\(onOffAlarm)"
+            "onOffAlarm" : "\(onOffAlarm)",
+            "deleted" : "\(deleted)"
         ]
     }
 }

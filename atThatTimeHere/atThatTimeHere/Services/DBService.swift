@@ -75,7 +75,7 @@ class DBService {
     func createNoteTable(){
         do {
             let db = try SQLite()
-            try db.install(query:"CREATE TABLE IF NOT EXISTS Notes (id INTEGER PRIMARY KEY , userId INTEGER, title TEXT, content TEXT, imagePath TEXT, writeDate TEXT, latitude TEXT, longitude TEXT, lastAlarmDate TEXT, onOffAlarm INTEGER );")
+            try db.install(query:"CREATE TABLE IF NOT EXISTS Notes (id INTEGER PRIMARY KEY , userId INTEGER, title TEXT, content TEXT, imagePath TEXT, writeDate TEXT, latitude TEXT, longitude TEXT, lastAlarmDate TEXT, onOffAlarm INTEGER, deleted INTEGER );")
             try db.execute()
         } catch {
             print(error.localizedDescription)
@@ -87,11 +87,11 @@ class DBService {
         do {
             // create note table
             let db = try SQLite()
-            try db.install(query:"CREATE TABLE IF NOT EXISTS Notes (id INTEGER PRIMARY KEY , userId INTEGER, title TEXT, content TEXT, imagePath TEXT, writeDate TEXT, latitude TEXT, longitude TEXT, lastAlarmDate TEXT, onOffAlarm INTEGER );")
+            try db.install(query:"CREATE TABLE IF NOT EXISTS Notes (id INTEGER PRIMARY KEY , userId INTEGER, title TEXT, content TEXT, imagePath TEXT, writeDate TEXT, latitude TEXT, longitude TEXT, lastAlarmDate TEXT, onOffAlarm INTEGER, deleted INTEGER );")
             try db.execute()
                                               
             // insert first note
-            try db.install(query:"INSERT INTO Notes (userId, title, content, imagePath, writeDate, latitude, longitude, lastAlarmDate, onOffAlarm ) VALUES ('\(uid)', '환영합니다 :)', '그때이곳은 당신의 소중한 추억을 알려주는 앱 입니다. 의미있는 장소에서 추억노트를 작성해보세요. 훗날 그곳에 다시갔을 때 작성했던 추억을 보여드릴께요 !', '', '', '78.231570', '15.574564' , '1999-12-31', '1'  ); ")
+            try db.install(query:"INSERT INTO Notes (userId, title, content, imagePath, writeDate, latitude, longitude, lastAlarmDate, onOffAlarm, deleted ) VALUES ('\(uid)', '환영합니다 :)', '그때이곳은 당신의 소중한 추억을 알려주는 앱 입니다. 의미있는 장소에서 추억노트를 작성해보세요. 훗날 그곳에 다시갔을 때 작성했던 추억을 보여드릴께요 !', '', '', '78.231570', '15.574564' , '1999-12-31', '1', '0'  ); ")
             try db.execute()
             
         } catch {
@@ -112,7 +112,7 @@ class DBService {
         do{
             // insert note data
             let db = try SQLite()
-            try db.install(query:"INSERT INTO Notes (userId, title, content, imagePath, writeDate, latitude, longitude, lastAlarmDate, onOffAlarm ) VALUES ('\(uid)', '\(checkedTitle)', '\(checkedContent)', '\(imagePath)', '\(writeDate)', '\(latitude)', '\(longitude)' , '\(lastAlarmDate)', '\(onOffAlarm)'  ); ")
+            try db.install(query:"INSERT INTO Notes (userId, title, content, imagePath, writeDate, latitude, longitude, lastAlarmDate, onOffAlarm, deleted ) VALUES ('\(uid)', '\(checkedTitle)', '\(checkedContent)', '\(imagePath)', '\(writeDate)', '\(latitude)', '\(longitude)' , '\(lastAlarmDate)', '\(onOffAlarm)' ,'0'  ); ")
             try db.execute()
             
             completion(true)
@@ -131,7 +131,7 @@ class DBService {
         
         do{
             let db = try SQLite()
-            try db.install(query:"SELECT * FROM Notes  WHERE userId = \(uid) ORDER BY id DESC;")
+            try db.install(query:"SELECT * FROM Notes  WHERE userId = \(uid) AND deleted = '0' ORDER BY id DESC;")
             try db.execute(){ row in
                 let note_id = Int(sqlite3_column_int(row, 0))
                 let note_uid = Int(sqlite3_column_int(row, 1))
@@ -143,8 +143,9 @@ class DBService {
                 let note_longitude = String(cString: sqlite3_column_text(row, 7))
                 let note_lastAlarmDate = String(cString: sqlite3_column_text(row, 8))
                 let note_onOffAlarm = Int(sqlite3_column_int(row, 9))
+                let note_deleted = Int(sqlite3_column_int(row, 10))
                 
-                let note = Note(id: note_id, userId: note_uid, title: note_title, content: note_content, imagePath: note_imagePath, writeDate: note_date, latitude: note_latitude, longitude: note_longitude, lastAlarmDate: note_lastAlarmDate, onOffAlarm: note_onOffAlarm)
+                let note = Note(id: note_id, userId: note_uid, title: note_title, content: note_content, imagePath: note_imagePath, writeDate: note_date, latitude: note_latitude, longitude: note_longitude, lastAlarmDate: note_lastAlarmDate, onOffAlarm: note_onOffAlarm, deleted: note_deleted)
                 ret.append(note)
             }
             
@@ -160,7 +161,7 @@ class DBService {
     func getNote(ByNoteId noteId: String, completion: @escaping(Bool, Note?) -> Void){
         do{
             let db = try SQLite()
-            try db.install(query:"SELECT * FROM Notes  WHERE id = \(noteId);")
+            try db.install(query:"SELECT * FROM Notes  WHERE id = \(noteId) AND deleted = '0' ;")
             try db.execute(){ row in
                 let note_id = Int(sqlite3_column_int(row, 0))
                 let note_uid = Int(sqlite3_column_int(row, 1))
@@ -172,8 +173,9 @@ class DBService {
                 let note_longitude = String(cString: sqlite3_column_text(row, 7))
                 let note_lastAlarmDate = String(cString: sqlite3_column_text(row, 8))
                 let note_onOffAlarm = Int(sqlite3_column_int(row, 9))
+                let note_deleted = Int(sqlite3_column_int(row, 10))
                 
-                let note = Note(id: note_id, userId: note_uid, title: note_title, content: note_content, imagePath: note_imagePath, writeDate: note_date, latitude: note_latitude, longitude: note_longitude, lastAlarmDate: note_lastAlarmDate, onOffAlarm: note_onOffAlarm)
+                let note = Note(id: note_id, userId: note_uid, title: note_title, content: note_content, imagePath: note_imagePath, writeDate: note_date, latitude: note_latitude, longitude: note_longitude, lastAlarmDate: note_lastAlarmDate, onOffAlarm: note_onOffAlarm, deleted: note_deleted)
                 completion(true, note)
             }
             return
@@ -195,6 +197,23 @@ class DBService {
         catch {
             print("debug : updateLastAlarmDate fail -> \(error.localizedDescription)")
         }
+        completion(false)
+    }
+    
+    func removeNote(ByNoteId noteId: String, completion: @escaping(Bool) -> Void){
+        do{
+            let db = try SQLite()
+            try db.install(query:"UPDATE Notes SET deleted = '1' WHERE id = '\(noteId)';")
+            try db.execute()
+            
+            // 삭제성공
+            completion(true)
+            return
+        }
+        catch {
+            print("debug : removeNote fail -> \(error.localizedDescription)")
+        }
+        // 삭제실패
         completion(false)
     }
 }

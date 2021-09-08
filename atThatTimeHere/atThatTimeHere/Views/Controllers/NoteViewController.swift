@@ -8,8 +8,9 @@
 import UIKit
 import CoreLocation
 
-protocol NoteViewControllerDelegate {
-    func didSaveNote() // 노트저장성공을 알림
+@objc protocol NoteViewControllerDelegate {
+    @objc  optional func didSaveNote() // 노트저장성공을 알림
+    @objc optional func didRemoveNote() // 노트 삭제를 알림
 }
 
 class NoteViewController: BaseViewController {
@@ -58,7 +59,7 @@ class NoteViewController: BaseViewController {
         tv.font = UIFont(name: CUSTOM_FONT, size: 18)
         tv.textColor = .gray
         tv.text = ""
-        tv.backgroundColor = .green.withAlphaComponent(0.2)
+//        tv.backgroundColor = .green.withAlphaComponent(0.2)
         return tv
     }()
     
@@ -182,7 +183,6 @@ class NoteViewController: BaseViewController {
         dividerView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 50).isActive  = true
         dividerView.trailingAnchor.constraint(equalTo: view.trailingAnchor,constant: -50).isActive = true
         
-        
         // 사진
         view.addSubview(photoView)
         photoView.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive =  true
@@ -224,7 +224,7 @@ class NoteViewController: BaseViewController {
         editBtn.translatesAutoresizingMaskIntoConstraints = false
         editBtn.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -10).isActive = true
         editBtn.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -50).isActive = true
-        editBtn.isHidden = viewModel.isNewNote ? false : false // true : false
+        editBtn.isHidden = viewModel.isNewNote ? true : false
         
         // 이미지피커로 고른 사진을 보여줄 view
         view.addSubview(pickerPhotoView)
@@ -308,7 +308,21 @@ class NoteViewController: BaseViewController {
             // 글, 내용 수정
         }
         let removeNote = UIAlertAction(title: "추억 지우기", style: .destructive ) { (_) -> Void in
+            
             // 추억지우기
+            guard let nid = self.viewModel.noteId else {
+                self.view.makeToast("노트정보가 없습니다..")
+                return
+            }
+            DBService.shared.removeNote(ByNoteId: "\(nid)") { removeSuccess in
+                if removeSuccess {
+                    self.delegate?.didRemoveNote?()
+                    self.dismiss(animated: true, completion: nil)
+                }
+                else{
+                    self.view.makeToast("삭제할 노트정보가 없습니다..")
+                }
+            }
         }
         let cancle = UIAlertAction(title: "닫기", style: .cancel){ (_) -> Void in
         }
@@ -394,8 +408,8 @@ class NoteViewController: BaseViewController {
                 if insertResult { // insert 성공
                     self.hideLoading()
                     self.view.endEditing(true)
+                    self.delegate?.didSaveNote?()
                     self.dismiss(animated: true, completion: nil)
-                    self.delegate?.didSaveNote()
                 }
                 else { // insert 실패
                     self.hideLoading()
@@ -411,8 +425,8 @@ class NoteViewController: BaseViewController {
                 if insertResult { // insert 성공
                     self.hideLoading()
                     self.view.endEditing(true)
+                    self.delegate?.didSaveNote?()
                     self.dismiss(animated: true, completion: nil)
-                    self.delegate?.didSaveNote()
                 }
                 else { // insert 실패
                     self.hideLoading()

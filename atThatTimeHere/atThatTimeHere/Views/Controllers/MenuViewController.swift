@@ -129,6 +129,7 @@ class MenuViewController: BaseViewController {
 
 //MARK: extension NoteViewControllerDelegate
 extension MenuViewController : NoteViewControllerDelegate {
+    
     func didSaveNote() {
         self.view.makeToast("노트를 저장했습니다.")
         viewModel.updateNoteList()
@@ -151,56 +152,62 @@ extension MenuViewController : CLLocationManagerDelegate {
         formatter.locale = Locale(identifier: "ko_kr")
 
         for (idx, noteItem) in viewModel.noteList.enumerated() {
-   
-            if let noteLatitude = Double(noteItem.latitude), let noteLongitude = Double(noteItem.longitude), let distance = currentLocation?.distance(from: CLLocation(latitude: noteLatitude, longitude: noteLongitude)), distance <= RETURN_RANGE, let lastAlarmDate = formatter.date(from: noteItem.lastAlarmDate), let writeDate = formatter.date(from:noteItem.writeDate) {
-                // 해당지역 RETURN_RANGE(돌아옴인식범위,200m) 이내로 다시방문한 경우
-                // distance : 노트쓴 장소와 현재 위치 거리차이
-                // lastAlarmDate : 마지막 알람 보낸 날짜
-                // writeDate : 노트 작성 날짜
-
+        
+            // 삭제 여부 확인
+            let noteDeleted = noteItem.deleted
+            if noteDeleted == 0 {
                 
-                let intervalDay = lastAlarmDate.timeIntervalSinceNow / 86400 * -1 // 오늘와 마지막알람날짜 시간차이
-                let alaramCheck = noteItem.onOffAlarm // 해당 노트 알람 on/off 차이
-                if intervalDay >= REMINDE_INTERVAL_DAY, alaramCheck == ALARM_ON {
-                    // 알람on, REMINDE_INTERVAL_DAY(알람간격,31일)이상이면 -> 알람 보내기
+                if let noteLatitude = Double(noteItem.latitude), let noteLongitude = Double(noteItem.longitude), let distance = currentLocation?.distance(from: CLLocation(latitude: noteLatitude, longitude: noteLongitude)), distance <= RETURN_RANGE, let lastAlarmDate = formatter.date(from: noteItem.lastAlarmDate), let writeDate = formatter.date(from:noteItem.writeDate){
+                    // 해당지역 RETURN_RANGE(돌아옴인식범위,200m) 이내로 다시방문한 경우
+                    // distance : 노트쓴 장소와 현재 위치 거리차이
+                    // lastAlarmDate : 마지막 알람 보낸 날짜
+                    // writeDate : 노트 작성 날짜
+
                     
-                    stopLocationUpdate()
+                    let intervalDay = lastAlarmDate.timeIntervalSinceNow / 86400 * -1 // 오늘와 마지막알람날짜 시간차이
+                    let alaramCheck = noteItem.onOffAlarm // 해당 노트 알람 on/off 차이
                     
-                    let todayStr = formatter.string(from: Date()) // 오늘날짜
-                    let writeDateIntervalDay = writeDate.timeIntervalSinceNow / 86400 * -1 // 노트쓴 날짜로부터 오늘날짜 시간차이
-                    
-                    // db에 알람 전송날짜를 오늘로 갱신
-                    DBService.shared.updateLastAlarmDate(withNoteId: "\(noteItem.id)", newLastAlarmDate: todayStr) { updadateResult in
-                        if updadateResult { // 갱신성공시
-                            
-                            // 알람 보내기
-                            print("Debug : send notification")
-                            
-                            // 알람메세지
-                            let content = UNMutableNotificationContent()
-                            content.title = noteItem.title
-                            content.body = "\(Int(writeDateIntervalDay))일전 지금 이곳에서 작성한 노트입니다."
-                            content.badge = 1
-                            content.sound = .default
-                            let indexDict : [String:String] = ["index" : "\(idx)"]
-                            content.userInfo = indexDict
-                            
-                            // 알람 전송
-                            let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 1, repeats: false)
-                            let req = UNNotificationRequest(identifier: "\(noteItem.id)", content: content, trigger: trigger)
-                            UNUserNotificationCenter.current().add(req) { err in
-                                DispatchQueue.main.async { [weak self]  in
-                                    guard let weakSelf = self else {return }
-                                    if let error = err {
-                                        // 전송실패
-                                        print("debug : UNUserNotificationCenter  error -> \(error.localizedDescription)")
-                                        weakSelf.viewModel.updateNoteList()
-                                        weakSelf.startLocationUpdate()
-                                    }
-                                    else{
-                                        // 전송성공
-                                        weakSelf.viewModel.updateNoteList()
-                                        weakSelf.startLocationUpdate()
+                    if intervalDay >= REMINDE_INTERVAL_DAY, alaramCheck == ALARM_ON {
+                        // 알람on, REMINDE_INTERVAL_DAY(알람간격,31일)이상이면 -> 알람 보내기
+                        
+                        stopLocationUpdate()
+                        
+                        let todayStr = formatter.string(from: Date()) // 오늘날짜
+                        let writeDateIntervalDay = writeDate.timeIntervalSinceNow / 86400 * -1 // 노트쓴 날짜로부터 오늘날짜 시간차이
+                        
+                        // db에 알람 전송날짜를 오늘로 갱신
+                        DBService.shared.updateLastAlarmDate(withNoteId: "\(noteItem.id)", newLastAlarmDate: todayStr) { updadateResult in
+                            if updadateResult { // 갱신성공시
+                                
+                                // 알람 보내기
+                                print("Debug : send notification")
+                                
+                                // 알람메세지
+                                let content = UNMutableNotificationContent()
+                                content.title = noteItem.title
+                                content.body = "\(Int(writeDateIntervalDay))일전 지금 이곳에서 작성한 노트입니다."
+                                content.badge = 1
+                                content.sound = .default
+                                let indexDict : [String:String] = ["index" : "\(idx)"]
+                                content.userInfo = indexDict
+                                
+                                // 알람 전송
+                                let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 1, repeats: false)
+                                let req = UNNotificationRequest(identifier: "\(noteItem.id)", content: content, trigger: trigger)
+                                UNUserNotificationCenter.current().add(req) { err in
+                                    DispatchQueue.main.async { [weak self]  in
+                                        guard let weakSelf = self else {return }
+                                        if let error = err {
+                                            // 전송실패
+                                            print("debug : UNUserNotificationCenter  error -> \(error.localizedDescription)")
+                                            weakSelf.viewModel.updateNoteList()
+                                            weakSelf.startLocationUpdate()
+                                        }
+                                        else{
+                                            // 전송성공
+                                            weakSelf.viewModel.updateNoteList()
+                                            weakSelf.startLocationUpdate()
+                                        }
                                     }
                                 }
                             }
