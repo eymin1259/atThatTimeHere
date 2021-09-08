@@ -200,6 +200,23 @@ class DBService {
         completion(false)
     }
     
+    func updateNote(withNoteId noteId : String, title: String, content: String, imagePath:String = "", completion: @escaping(Bool)->Void){
+        do{
+            let db = try SQLite()
+            try db.install(query:"UPDATE Notes SET title = '\(title)', content = '\(content)', imagePath = '\(imagePath)' WHERE id = '\(noteId)';")
+            try db.execute()
+            
+            // update 성공
+            completion(true)
+            return
+        }
+        catch {
+            print("debug : updateLastAlarmDate fail -> \(error.localizedDescription)")
+        }
+        // update 실패
+        completion(false)
+    }
+    
     func removeNote(ByNoteId noteId: String, completion: @escaping(Bool) -> Void){
         do{
             let db = try SQLite()

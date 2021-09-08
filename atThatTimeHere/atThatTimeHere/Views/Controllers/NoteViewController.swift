@@ -11,6 +11,7 @@ import CoreLocation
 @objc protocol NoteViewControllerDelegate {
     @objc  optional func didSaveNote() // 노트저장성공을 알림
     @objc optional func didRemoveNote() // 노트 삭제를 알림
+    @objc optional func didEditNote() // 노트 수정 알림
 }
 
 class NoteViewController: BaseViewController {
@@ -140,8 +141,6 @@ class NoteViewController: BaseViewController {
             titleTextField.isUserInteractionEnabled = false
             contentTextView.isUserInteractionEnabled = false
             contentPlaceHolder.isHidden = true
-            photoBtn.isHidden = true
-            saveBtn.isHidden = true
             
             // 불러올 노트정보 load
             loadNoteData()
@@ -297,8 +296,16 @@ class NoteViewController: BaseViewController {
         let showSelectedPhoto = UIAlertAction(title: "사진보기", style: .default) { (_) -> Void in
             self.view.endEditing(true)
             // pickerPhotoView 세팅
-            self.pickerPhotoView.setImage(image: self.viewModel.noteImage!)
-            self.pickerPhotoView.isHidden = false
+            if let noteImg = self.viewModel.noteImage {
+                self.pickerPhotoView.setImage(image: noteImg)
+                self.pickerPhotoView.isHidden = false
+            }
+            else {
+                self.viewModel.noteImageUrl = nil
+                self.viewModel.noteImage = nil
+                self.viewModel.isNoteWithPhoto = false
+                self.view.makeToast("사진 정보가 없습니다.")
+            }
         }
         let removePhoto = UIAlertAction(title: "첨부취소", style: .destructive) { (_) -> Void in
             // 선택한 데이터 초기화
@@ -327,16 +334,14 @@ class NoteViewController: BaseViewController {
         
         let editNote = UIAlertAction(title: "추억 수정", style: .default) { (_) -> Void in
             // 글, 내용 수정
-            guard let nid = self.viewModel.noteId else {
+            guard let _ = self.viewModel.noteId else {
                 self.view.makeToast("노트를 수정할 수 없습니다..")
                 return
             }
-            
             // edit mode 로 전환
             self.titleTextField.isUserInteractionEnabled = true
             self.contentTextView.isUserInteractionEnabled = true
             self.contentPlaceHolder.isHidden = true
-            self.editBtn.isHidden = true
             self.photoView.heightAnchor.constraint(equalToConstant: 0).isActive = true
             
             // 사진버튼, 수정완료버튼은 키보드의 toolbar로 세팅
@@ -394,7 +399,7 @@ class NoteViewController: BaseViewController {
         contentViewBottomLayoutConstraint?.isActive = true
     }
     
-    // 사진버튼 클릭 action
+    // 사진첨부버튼 클릭 action
     @objc func  didTapPhotoBtn(){
         showPhotoAlert()
     }
@@ -406,6 +411,65 @@ class NoteViewController: BaseViewController {
     // 수정완료버튼 클릭
     @objc func didTapConfirmEditBtn() {
         print("Debug : didTapConfirmEditBtn viewmodel -> \(self.viewModel)")
+        
+        guard let nid = self.viewModel.noteId else {
+            self.view.makeToast("노트를 수정할 수 없습니다..")
+            return
+        }
+        
+        showLoading()
+        
+        // 수정정보
+        let title = titleTextField.text ?? ""
+        let content = contentTextView.text ?? ""
+        
+        // 이미지첨부된 노트 수정
+        if let jpenData = viewModel.noteImage?.jpegData(compressionQuality: 1.0),let imgUrl = viewModel.noteImageUrl, let filePath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first?.appendingPathComponent(imgUrl.lastPathComponent) {
+            //  이미지 저장
+            do {
+                try jpenData.write(to: filePath, options: .atomic)
+            } catch {
+                // 이미지 저장 실패
+                print("debug : pngImage.write error -> \(error.localizedDescription)")
+                hideLoading()
+                view.endEditing(true)
+                self.view.makeToast("이미지 저장 실패, 앱을 다시 실행해주세요.")
+                return
+        
+            }
+            
+            // 디비에 노트 수정
+            DBService.shared.updateNote(withNoteId: "\(nid)", title: title, content: content, imagePath: filePath.absoluteString) { updateSuccess in
+                if updateSuccess { // update 성공
+                    self.hideLoading()
+                    self.view.endEditing(true)
+                    self.delegate?.didEditNote?()
+                    self.dismiss(animated: true, completion: nil)
+                }
+                else { // update 실패
+                    self.hideLoading()
+                    self.view.endEditing(true)
+                    self.view.makeToast("노트 수정 실패, 앱을 다시 실행해주세요.")
+                }
+            }
+        }
+        else { // 이미지 첨부되지 않은 노트 수정
+            // 디비에 저장
+            DBService.shared.updateNote(withNoteId: "\(nid)", title: title, content: content) { updateSuccess in
+                if updateSuccess { // update 성공
+                    self.hideLoading()
+                    self.view.endEditing(true)
+                    self.delegate?.didEditNote?()
+                    self.dismiss(animated: true, completion: nil)
+                }
+                else { // update 실패
+                    self.hideLoading()
+                    self.view.endEditing(true)
+                    self.view.makeToast("노트 수정 실패, 앱을 다시 실행해주세요.")
+                }
+            }
+        }
+       
     }
     
     // 저장버튼 클릭 action

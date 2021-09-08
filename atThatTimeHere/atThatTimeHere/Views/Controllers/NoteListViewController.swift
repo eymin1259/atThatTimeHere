@@ -145,4 +145,9 @@ extension NoteListViewController : NoteViewControllerDelegate {
         noteListUpdate()
         view.makeToast("삭제되었습니다.")
     }
+    
+    func didEditNote() {
+        noteListUpdate()
+        view.makeToast("수정되었습니다.")
+    }
 }
