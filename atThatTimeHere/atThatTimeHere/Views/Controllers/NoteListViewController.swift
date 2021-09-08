@@ -123,7 +123,7 @@ extension NoteListViewController : UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        // 추억보기
+        // 추억보기 클릭
         tableView.deselectRow(at: indexPath, animated: true)
         
         // 선택된 노트의 id

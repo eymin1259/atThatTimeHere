@@ -73,14 +73,26 @@ class NoteViewController: BaseViewController {
         return lbl
     }()
     
-    // 수정버튼
+    // 수정 시작버튼
     var editBtn : UIButton = {
         let btn = UIButton(type: .system)
         btn.setTitle("수정", for: .normal)
         btn.setTitleColor(CUSTOM_MAIN_COLOR, for: .normal)
         btn.titleLabel?.font = UIFont(name: CUSTOM_FONT, size: 20)
         btn.isEnabled = true
-        btn.addTarget(self, action: #selector(didTapEditBtn), for: .touchUpInside)
+        btn.addTarget(self, action: #selector(didTapEditStartBtn), for: .touchUpInside)
+        btn.translatesAutoresizingMaskIntoConstraints = false
+        return btn
+    }()
+    
+    // 수정 완료 버튼
+    var confirmEditBtn : UIButton = {
+        let btn = UIButton(type: .system)
+        btn.setTitle("수정완료", for: .normal)
+        btn.setTitleColor(CUSTOM_MAIN_COLOR, for: .normal)
+        btn.titleLabel?.font = UIFont(name: CUSTOM_FONT, size: 18)
+        btn.isEnabled = true
+        btn.addTarget(self, action: #selector(didTapConfirmEditBtn), for: .touchUpInside)
         btn.translatesAutoresizingMaskIntoConstraints = false
         return btn
     }()
@@ -247,13 +259,22 @@ class NoteViewController: BaseViewController {
                 self.view.makeToast("노트정보가 없습니다...")
                 return
             }
-            self.titleTextField.text = noteData?.title
-            self.contentTextView.text = noteData?.content
+            guard let note = noteData else {
+                self.view.makeToast("노트정보가 없습니다...")
+                return
+            }
             
-            if let imagePath = noteData?.imagePath, let imageUrl = URL(string: imagePath) {
+            self.titleTextField.text = note.title
+            self.contentTextView.text = note.content
+            self.viewModel.currentLocation = CLLocation(latitude: Double(note.latitude) ?? 78.231570, longitude: Double(note.longitude) ?? 15.574564)
+            
+            if  let imageUrl = URL(string: note.imagePath) {
                 do {
                     let imageData = try Data(contentsOf: imageUrl)
                     self.photoView.image =  UIImage(data: imageData)
+                    
+                    self.viewModel.noteImageUrl = imageUrl
+                    self.viewModel.noteImage = UIImage(data: imageData)
                     // self.photoView.sizeToFit()
                 } catch {
                     print("Error loading image : \(error)")
@@ -306,12 +327,34 @@ class NoteViewController: BaseViewController {
         
         let editNote = UIAlertAction(title: "추억 수정", style: .default) { (_) -> Void in
             // 글, 내용 수정
+            guard let nid = self.viewModel.noteId else {
+                self.view.makeToast("노트를 수정할 수 없습니다..")
+                return
+            }
+            
+            // edit mode 로 전환
+            self.titleTextField.isUserInteractionEnabled = true
+            self.contentTextView.isUserInteractionEnabled = true
+            self.contentPlaceHolder.isHidden = true
+            self.editBtn.isHidden = true
+            self.photoView.heightAnchor.constraint(equalToConstant: 0).isActive = true
+            
+            // 사진버튼, 수정완료버튼은 키보드의 toolbar로 세팅
+            let toolbar = UIToolbar()
+            toolbar.backgroundColor =  .white
+            toolbar.sizeToFit()
+            let photoBarBtn = UIBarButtonItem.init(customView: self.photoBtn)
+            let confirmEditBarBtn = UIBarButtonItem.init(customView: self.confirmEditBtn)
+            let emptyBarBtn = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
+            toolbar.items = [photoBarBtn, emptyBarBtn, confirmEditBarBtn]
+            self.titleTextField.inputAccessoryView = toolbar
+            self.contentTextView.inputAccessoryView = toolbar
+            self.titleTextField.becomeFirstResponder()
         }
         let removeNote = UIAlertAction(title: "추억 지우기", style: .destructive ) { (_) -> Void in
-            
             // 추억지우기
             guard let nid = self.viewModel.noteId else {
-                self.view.makeToast("노트정보가 없습니다..")
+                self.view.makeToast("노트를 지울 수 없습니다..")
                 return
             }
             DBService.shared.removeNote(ByNoteId: "\(nid)") { removeSuccess in
@@ -351,14 +394,18 @@ class NoteViewController: BaseViewController {
         contentViewBottomLayoutConstraint?.isActive = true
     }
     
-    // 수정버튼 클릭
-    @objc func didTapEditBtn() {
-        showNoteEditAlert()
-    }
-    
     // 사진버튼 클릭 action
     @objc func  didTapPhotoBtn(){
         showPhotoAlert()
+    }
+    // 수정시작버튼 클릭
+    @objc func didTapEditStartBtn() {
+        showNoteEditAlert()
+    }
+    
+    // 수정완료버튼 클릭
+    @objc func didTapConfirmEditBtn() {
+        print("Debug : didTapConfirmEditBtn viewmodel -> \(self.viewModel)")
     }
     
     // 저장버튼 클릭 action
