@@ -8,8 +8,12 @@
 import UIKit
 import JGProgressHUD
 import Toast_Swift
+import  RxSwift
 
 class BaseViewController: UIViewController {
+    
+    //MARK: properties
+    let disposeBag = DisposeBag()
     
     //MARK: UI
     lazy var hud: JGProgressHUD = {
