@@ -362,16 +362,17 @@ class NoteViewController: BaseViewController {
                 self.view.makeToast("노트를 지울 수 없습니다..")
                 return
             }
-            NoteService.shared.removeNote(ByNoteId: "\(nid)") { removeSuccess in
-                if removeSuccess {
-                    self.delegate?.didRemoveNote?()
-                    self.dismiss(animated: true, completion: nil)
-                }
-                else{
+            
+            NoteService.shared.removeNoteRX(ByNoteId: "\(nid)")
+                .subscribe(onNext: { _ in
+                    self.delegate?.didRemoveNote?() // note list update
+                    self.dismiss(animated: true, completion: nil) // dismiss noteVC 
+                }, onError: {error in
+                    print("Debug : note remove error -> \(error.localizedDescription)")
                     self.view.makeToast("삭제할 노트정보가 없습니다..")
-                }
-            }
+                }).disposed(by: self.disposeBag)
         }
+        
         let cancle = UIAlertAction(title: "닫기", style: .cancel){ (_) -> Void in
         }
         

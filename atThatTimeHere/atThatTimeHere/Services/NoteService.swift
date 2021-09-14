@@ -179,4 +179,23 @@ class NoteService {
         // 삭제실패
         completion(false)
     }
+    
+    // removeNote reactive 전환
+    func removeNoteRX(ByNoteId noteId: String) -> Observable<Bool> {
+        return Observable.create { emitter in
+            do{
+                let db = try SQLite()
+                try db.install(query:"UPDATE Notes SET deleted = '1' WHERE id = '\(noteId)';")
+                try db.execute()
+                
+                // 삭제성공
+                emitter.onNext(true)
+            }
+            catch {
+                // 삭제실패
+                emitter.onError(error)
+            }
+            return Disposables.create()
+        }
+    }
 }
