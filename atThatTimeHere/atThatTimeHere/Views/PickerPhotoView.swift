@@ -43,9 +43,11 @@ class PickerPhotoView: UIView {
     func setup(){
         guard let superView = superview else {return}
         
+        // 피커이미지뷰 -> 부모화면에 맞추기
         widthAnchor.constraint(equalTo: superView.widthAnchor).isActive = true
         heightAnchor.constraint(equalTo: superView.heightAnchor).isActive = true
         
+        // 뒤로가기 버튼
         addSubview(closeBtn)
         closeBtn.translatesAutoresizingMaskIntoConstraints = false
         closeBtn.topAnchor.constraint(equalTo: topAnchor, constant: 20).isActive = true

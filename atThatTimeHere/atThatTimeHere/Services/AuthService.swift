@@ -51,7 +51,7 @@ class  AuthService  {
         }
     }
     
-    // reactive 전환
+    // login reactive 적용
     func loginRX(email: String, password: String) -> Observable<(String)> {
         return Observable.create {  emitter in
             // 암호 복호화
@@ -113,7 +113,7 @@ class  AuthService  {
         }
     }
     
-    // reactive 전환
+    // signUp reactive 적용
     func signUpRX(email: String, password: String) -> Observable<(String)> {
         // user table 생성
         createUserTable()
@@ -138,6 +138,7 @@ class  AuthService  {
                             // 유저정보 Local 저장
                             self.saveUserInfoLocally(user: user)
                             emitter.onNext("회원가입 성공!")
+                            emitter.onCompleted()
                         }else {
                             // db insert 실패
                             emitter.onError(CustomError(errorMessage: "시스템 오류, 관리자에게 문의바랍니다."))
@@ -146,7 +147,6 @@ class  AuthService  {
                     }
                 }
             }
-            emitter.onCompleted()
             return Disposables.create()
         }
     }

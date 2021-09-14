@@ -34,12 +34,15 @@ class NoteListViewController: BaseViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        // viewModel
+        noteListViewModel.disposebag = disposeBag
+        
+        // table view
         tableView.delegate = self
         tableView.dataSource = self
-        //tableView.reloadData()
 
+        // 초기 세팅
         setupUI()
-        
         
         // 알람 클릭시 발송되는 noti 인식 -> show note
         NotificationCenter.default.addObserver(self, selector: #selector(didReceivePushAlarm), name: NSNotification.Name(rawValue: DID_RECEIVE_PUSH_ALARM), object: nil)

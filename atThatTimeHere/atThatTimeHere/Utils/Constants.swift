@@ -16,7 +16,7 @@ public let CUSTOM_FONT = "DXBarunscriptM-KSCpc-EUC-H"
 public let ALARM_ON = 0
 public let ALARM_OFF = -1
 public let RETURN_RANGE = 200.0
-public let REMINDE_INTERVAL_DAY = 31.0
+public let REMINDE_INTERVAL_DAY = 7.0 // 마지막 알람으로부터 7일 이상이여야 함
 public let DID_RECEIVE_PUSH_ALARM = "DID_RECEIVE_PUSH_ALARM"
 
 // 이용약관

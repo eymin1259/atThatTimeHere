@@ -253,36 +253,28 @@ class NoteViewController: BaseViewController {
             view.makeToast("노트정보가 없습니다..")
             return
         }
-        NoteService.shared.getNote(ByNoteId: "\(nid)") { result, noteData in
-            if result == false{
-                self.view.makeToast("노트정보가 없습니다...")
-                return
-            }
-            guard let note = noteData else {
-                self.view.makeToast("노트정보가 없습니다...")
-                return
-            }
-            
-            self.titleTextField.text = note.title
-            self.contentTextView.text = note.content
-            self.viewModel.currentLocation = CLLocation(latitude: Double(note.latitude) ?? 78.231570, longitude: Double(note.longitude) ?? 15.574564)
-            
-            if  let imageUrl = URL(string: note.imagePath) {
-                do {
-                    let imageData = try Data(contentsOf: imageUrl)
-                    self.photoView.image =  UIImage(data: imageData)
-                    
-                    self.viewModel.noteImageUrl = imageUrl
-                    self.viewModel.noteImage = UIImage(data: imageData)
-                    // self.photoView.sizeToFit()
-                } catch {
-                    print("Error loading image : \(error)")
-                    self.view.makeToast("사진정보가 없습니다...")
-                    return
+        NoteService.shared.getNoteRX(ByNoteId: "\(nid)")
+            .subscribe(onNext: { note in
+                // 노트정보 바인딩 : 제목, 내용, 위치
+                self.titleTextField.text = note.title
+                self.contentTextView.text = note.content
+                self.viewModel.currentLocation = CLLocation(latitude: Double(note.latitude) ?? 78.231570, longitude: Double(note.longitude) ?? 15.574564)
+                // 노트 이미지 바인딩
+                if  let imageUrl = URL(string: note.imagePath) {
+                    do {
+                        let imageData = try Data(contentsOf: imageUrl)
+                        self.photoView.image =  UIImage(data: imageData)
+                        self.viewModel.noteImageUrl = imageUrl
+                        self.viewModel.noteImage = UIImage(data: imageData)
+                    } catch {
+                        print("Error loading image : \(error)")
+                        self.view.makeToast("사진정보가 없습니다...")
+                        return
+                    }
                 }
-            }
-        }
-        
+            }, onError: {error in
+                self.view.makeToast("노트정보가 없습니다...")
+            }).disposed(by: disposeBag)
     }
     
     func showPhotoAlert()  {
@@ -477,6 +469,9 @@ class NoteViewController: BaseViewController {
         // 노트저장(유저아이디, 제목,내용, 이미지파일패스, 시간)
         
         showLoading()
+
+        // 현재 로그인한 유저아이디
+        guard let uid = UserDefaults.standard.dictionary(forKey: CURRENTUSERKEY)?["id"] as? String else { return }
         
         // 현재시간 저장
         let today = Date()
@@ -515,36 +510,37 @@ class NoteViewController: BaseViewController {
             
             // 디비에 노트 저장
             NoteService.shared.createNoteTable()
-            NoteService.shared.insertNote(title: title, content: content, imagePath: filePath.absoluteString, writeDate: todayStr,  latitude: "\(latitude)", longitude: "\(longitude)", lastAlarmDate: todayStr, onOffAlarm: ALARM_ON) { insertResult in
-                if insertResult { // insert 성공
+            NoteService.shared.insertNoteRX(userId: uid, title: title, content: content, imagePath: filePath.absoluteString, writeDate: todayStr, latitude: "\(latitude)", longitude: "\(longitude)", lastAlarmDate: todayStr, onOffAlarm: ALARM_ON)
+                .subscribe(onNext: {_ in
+                    // insert 성공
                     self.hideLoading()
                     self.view.endEditing(true)
                     self.delegate?.didSaveNote?()
                     self.dismiss(animated: true, completion: nil)
-                }
-                else { // insert 실패
+                }, onError: { error in
+                    // insert 실패
                     self.hideLoading()
                     self.view.endEditing(true)
                     self.view.makeToast("노트 저장 실패, 앱을 다시 실행해주세요.")
-                }
-            }
+                }).disposed(by: disposeBag)
         }
         else { // 이미지 첨부되지 않은 노트 저장
             // 디비에 저장
             NoteService.shared.createNoteTable()
-            NoteService.shared.insertNote(title: title, content: content, imagePath: "", writeDate: todayStr,  latitude: "\(latitude)", longitude: "\(longitude)", lastAlarmDate: todayStr, onOffAlarm: ALARM_ON) { insertResult in
-                if insertResult { // insert 성공
+            NoteService.shared.insertNoteRX(userId: uid, title: title, content: content, imagePath: "", writeDate: todayStr,  latitude: "\(latitude)", longitude: "\(longitude)", lastAlarmDate: todayStr, onOffAlarm: ALARM_ON)
+                .subscribe(onNext: {_ in
+                    // insert 성공
                     self.hideLoading()
                     self.view.endEditing(true)
                     self.delegate?.didSaveNote?()
                     self.dismiss(animated: true, completion: nil)
-                }
-                else { // insert 실패
+                }, onError: { error in
+                    // insert 실패
                     self.hideLoading()
                     self.view.endEditing(true)
                     self.view.makeToast("노트 저장 실패, 앱을 다시 실행해주세요.")
-                }
-            }
+                }).disposed(by: disposeBag)
+            
         }
     }
 }

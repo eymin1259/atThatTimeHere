@@ -41,6 +41,9 @@ class MenuViewController: BaseViewController {
     //MARK: life cycle
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        // viewModel
+        viewModel.disposebag = disposeBag
 
         // initial setting
         setupUI()
@@ -176,11 +179,10 @@ extension MenuViewController : CLLocationManagerDelegate {
                         let writeDateIntervalDay = writeDate.timeIntervalSinceNow / 86400 * -1 // 노트쓴 날짜로부터 오늘날짜 시간차이
                         
                         // db에 알람 전송날짜를 오늘로 갱신
-                        NoteService.shared.updateLastAlarmDate(withNoteId: "\(noteItem.id)", newLastAlarmDate: todayStr) { updadateResult in
-                            if updadateResult { // 갱신성공시
-                                
+                        NoteService.shared.updateLastAlarmDateRX(withNoteId: "\(noteItem.id)", newLastAlarmDate: todayStr)
+                            .subscribe(onNext: { _ in // 갱신성공시
                                 // 알람 보내기
-                                print("Debug : send notification")
+                                print("Debug : send notification -> note : \(noteItem.id)")
                                 
                                 // 알람메세지
                                 let content = UNMutableNotificationContent()
@@ -210,8 +212,7 @@ extension MenuViewController : CLLocationManagerDelegate {
                                         }
                                     }
                                 }
-                            }
-                        }
+                            }).disposed(by: disposeBag)
                     }
                 }
             }
