@@ -366,7 +366,7 @@ class NoteViewController: BaseViewController {
             NoteService.shared.removeNoteRX(ByNoteId: "\(nid)")
                 .subscribe(onNext: { _ in
                     self.delegate?.didRemoveNote?() // note list update
-                    self.dismiss(animated: true, completion: nil) // dismiss noteVC 
+                    self.dismiss(animated: true, completion: nil) // dismiss noteVC
                 }, onError: {error in
                     print("Debug : note remove error -> \(error.localizedDescription)")
                     self.view.makeToast("삭제할 노트정보가 없습니다..")
@@ -438,37 +438,36 @@ class NoteViewController: BaseViewController {
                 return
         
             }
-            
             // 디비에 노트 수정
-            NoteService.shared.updateNote(withNoteId: "\(nid)", title: title, content: content, imagePath: filePath.absoluteString) { updateSuccess in
-                if updateSuccess { // update 성공
+            NoteService.shared.updateNoteRX(withNoteId: "\(nid)", title: title, content: content, imagePath: filePath.absoluteString)
+                .subscribe(onNext: { _ in
+                    // update 성공
                     self.hideLoading()
                     self.view.endEditing(true)
                     self.delegate?.didEditNote?()
                     self.dismiss(animated: true, completion: nil)
-                }
-                else { // update 실패
+                }, onError: { error in
+                    // update 실패
                     self.hideLoading()
                     self.view.endEditing(true)
                     self.view.makeToast("노트 수정 실패, 앱을 다시 실행해주세요.")
-                }
-            }
+                }).disposed(by: self.disposeBag)
         }
         else { // 이미지 첨부되지 않은 노트 수정
             // 디비에 저장
-            NoteService.shared.updateNote(withNoteId: "\(nid)", title: title, content: content) { updateSuccess in
-                if updateSuccess { // update 성공
+            NoteService.shared.updateNoteRX(withNoteId: "\(nid)", title: title, content: content)
+                .subscribe(onNext: { _ in
+                    // update 성공
                     self.hideLoading()
                     self.view.endEditing(true)
                     self.delegate?.didEditNote?()
                     self.dismiss(animated: true, completion: nil)
-                }
-                else { // update 실패
+                }, onError: { error in
+                    // update 실패
                     self.hideLoading()
                     self.view.endEditing(true)
                     self.view.makeToast("노트 수정 실패, 앱을 다시 실행해주세요.")
-                }
-            }
+                }).disposed(by: self.disposeBag)
         }
        
     }

@@ -17,7 +17,9 @@ class NoteService {
         print("debug : DBService shared init ")
     }
     
-    //MARK: database access
+    //MARK: database
+    
+    //MARK: createNoteTable
     func createNoteTable(){
         do {
             let db = try SQLite()
@@ -28,6 +30,7 @@ class NoteService {
         }
     }
     
+    //MARK: createNoteTableWithFirstNote
     func createNoteTableWithFirstNote(){
         guard let uid = UserDefaults.standard.dictionary(forKey: CURRENTUSERKEY)?["id"] else { return }
         do {
@@ -45,6 +48,7 @@ class NoteService {
         }
     }
     
+    //MARK: insertNote
     func insertNote(title: String, content: String, imagePath:String = "", writeDate:String, latitude:String, longitude:String, lastAlarmDate:String , onOffAlarm : Int, completion: @escaping(Bool)->Void){
         guard let uid = UserDefaults.standard.dictionary(forKey: CURRENTUSERKEY)?["id"] else { return }
         var checkedTitle = title
@@ -69,7 +73,7 @@ class NoteService {
         }
         completion(false)
     }
-    
+    //MARK: getNotes
     func getNotes(completion: @escaping(Bool, [Note]?) -> Void){
 
         guard let uid = UserDefaults.standard.dictionary(forKey: CURRENTUSERKEY)?["id"] else { return }
@@ -104,6 +108,7 @@ class NoteService {
         completion(false, nil)
     }
     
+    //MARK: getNote
     func getNote(ByNoteId noteId: String, completion: @escaping(Bool, Note?) -> Void){
         do{
             let db = try SQLite()
@@ -132,6 +137,8 @@ class NoteService {
         completion(false, nil)
     }
     
+    
+    //MARK: updateLastAlarmDate
     func updateLastAlarmDate(withNoteId noteId : String, newLastAlarmDate : String, completion: @escaping(Bool) -> Void){
         do{
             let db = try SQLite()
@@ -146,6 +153,7 @@ class NoteService {
         completion(false)
     }
     
+    //MARK: updateNote
     func updateNote(withNoteId noteId : String, title: String, content: String, imagePath:String = "", completion: @escaping(Bool)->Void){
         do{
             let db = try SQLite()
@@ -163,6 +171,25 @@ class NoteService {
         completion(false)
     }
     
+    // updateNote reactive 전환
+    func updateNoteRX(withNoteId noteId : String, title: String, content: String, imagePath:String = "") -> Observable<Bool> {
+        return Observable.create { emitter in
+            do{
+                let db = try SQLite()
+                try db.install(query:"UPDATE Notes SET title = '\(title)', content = '\(content)', imagePath = '\(imagePath)' WHERE id = '\(noteId)';")
+                try db.execute()
+                // update 성공
+                emitter.onNext(true)
+            }
+            catch {
+                // update 실패
+                emitter.onError(error)
+            }
+            return Disposables.create()
+        }
+    }
+    
+    //MARK: removeNote
     func removeNote(ByNoteId noteId: String, completion: @escaping(Bool) -> Void){
         do{
             let db = try SQLite()
