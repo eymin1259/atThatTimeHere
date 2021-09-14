@@ -10,11 +10,7 @@ import UIKit
 class LoginViewController: BaseViewController {
     
     //MARK: properties
-    var loginViewModel : AuthViewModel = {
-        var vm = AuthViewModel()
-        vm.isRegisterAuth = false
-        return vm
-    }()
+    var loginViewModel = AuthViewModel()
     
     // MARK: UI
     private let loginTitleLbl :  UILabel  =  {
@@ -67,6 +63,8 @@ class LoginViewController: BaseViewController {
     // MARK: life cycle
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        loginViewModel.isRegisterAuth = false
         
         // ui 세팅
         setupUI()
@@ -127,16 +125,22 @@ class LoginViewController: BaseViewController {
     // 로그인버튼 클릭시
     @objc func handleLoginbtn(){
         view.endEditing(true)
-        loginViewModel.login() { (loginRes, loginMsg) in
-            self.view.makeToast(loginMsg)
-            if loginRes {
+        
+        AuthService.shared.loginRX(email: loginViewModel.email ?? "", password: loginViewModel.password ?? "")
+            .subscribe(onNext: { resultMsg in
+                self.view.makeToast(resultMsg)
                 self.showLoading()
                 DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                    // 로그인성공 -> main tab 이동
                     let controller = MainTabViewController()
                     self.navigationController?.pushViewController(controller, animated: true)
                 }
-            }
-        }
+            }, onError: { error in
+                if let err = error as? CustomError {
+                    // 에러메세지
+                    self.view.makeToast(err.errorMessage)
+                }
+            }).disposed(by: disposeBag)
     }
     
     // 회원가입 버튼 클릭시

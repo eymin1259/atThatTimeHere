@@ -136,42 +136,49 @@ class RegisterViewController: BaseViewController {
     }
     
     // MARK: actions
-    @objc func handleSingup(){
+    @objc func handleSingup(){ // 회원가입버튼 클릭시 호출
         view.endEditing(true)
         showLoading()
-        registerViewModel.register { (resultBoolean, resultMsg) in
-            self.hideLoading()
-            self.view.makeToast(resultMsg) // 회원가입 성공 메시지
-            
-            if resultBoolean { // 회원가입 성공
-                
+        AuthService.shared.signUpRX(email: registerViewModel.email ?? "", password: registerViewModel.password ?? "")
+            .subscribe(onNext: {resultMsg in
+                self.hideLoading()
+                self.view.makeToast(resultMsg)
                 // 초기 note table 세팅
-                DBService.shared.createNoteTableWithFirstNote()
-                
+                NoteService.shared.createNoteTableWithFirstNote()
                 // loginView Controller에게 회원가입 성공 알림
                 DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
                     self.dismiss(animated: true) {
                         self.delegate?.registerDidFinish()
                     }
                 }
-            }
-        }
+            }, onError: {error in
+                self.hideLoading()
+                if let err = error as? CustomError {
+                    // 에러메세지
+                    self.view.makeToast(err.errorMessage)
+                }
+            }).disposed(by: disposeBag)
     }
     
+    
+    // validation check function
     @objc func textDidChange(sender: UITextView) {
-        if sender == emailTextField {
+        if sender == emailTextField { // 이메일 값이 입력되는 경우
             registerViewModel.email = sender.text
-            passwordAlertLbl.textColor = registerViewModel.alertColor
+            // validation 결과 미통과시 붉은 색으로 사유 표기
             passwordAlertLbl.text = registerViewModel.alertMessage
+            passwordAlertLbl.textColor = registerViewModel.alertColor
         }
-        else if sender == passwordTextField {
+        else if sender == passwordTextField { // 패스워드 값이 입력되는 경우
             registerViewModel.password = sender.text
         }
-        else if sender == passwordCheckTextField {
+        else if sender == passwordCheckTextField { // 패스워드 확인 값이 입력되는 경우
             registerViewModel.passwordCheck = sender.text
-            passwordAlertLbl.textColor = registerViewModel.alertColor
+            // validation 결과 미통과시 붉은 색으로 사유 표기
             passwordAlertLbl.text = registerViewModel.alertMessage
+            passwordAlertLbl.textColor = registerViewModel.alertColor
         }
+        // validation 결과 미통과시 버튼 비활성화
         signupBtn.backgroundColor = registerViewModel.btnColor
         signupBtn.isEnabled = registerViewModel.formValid
     }

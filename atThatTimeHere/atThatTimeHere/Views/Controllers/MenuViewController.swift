@@ -176,7 +176,7 @@ extension MenuViewController : CLLocationManagerDelegate {
                         let writeDateIntervalDay = writeDate.timeIntervalSinceNow / 86400 * -1 // 노트쓴 날짜로부터 오늘날짜 시간차이
                         
                         // db에 알람 전송날짜를 오늘로 갱신
-                        DBService.shared.updateLastAlarmDate(withNoteId: "\(noteItem.id)", newLastAlarmDate: todayStr) { updadateResult in
+                        NoteService.shared.updateLastAlarmDate(withNoteId: "\(noteItem.id)", newLastAlarmDate: todayStr) { updadateResult in
                             if updadateResult { // 갱신성공시
                                 
                                 // 알람 보내기

@@ -253,7 +253,7 @@ class NoteViewController: BaseViewController {
             view.makeToast("노트정보가 없습니다..")
             return
         }
-        DBService.shared.getNote(ByNoteId: "\(nid)") { result, noteData in
+        NoteService.shared.getNote(ByNoteId: "\(nid)") { result, noteData in
             if result == false{
                 self.view.makeToast("노트정보가 없습니다...")
                 return
@@ -362,7 +362,7 @@ class NoteViewController: BaseViewController {
                 self.view.makeToast("노트를 지울 수 없습니다..")
                 return
             }
-            DBService.shared.removeNote(ByNoteId: "\(nid)") { removeSuccess in
+            NoteService.shared.removeNote(ByNoteId: "\(nid)") { removeSuccess in
                 if removeSuccess {
                     self.delegate?.didRemoveNote?()
                     self.dismiss(animated: true, completion: nil)
@@ -439,7 +439,7 @@ class NoteViewController: BaseViewController {
             }
             
             // 디비에 노트 수정
-            DBService.shared.updateNote(withNoteId: "\(nid)", title: title, content: content, imagePath: filePath.absoluteString) { updateSuccess in
+            NoteService.shared.updateNote(withNoteId: "\(nid)", title: title, content: content, imagePath: filePath.absoluteString) { updateSuccess in
                 if updateSuccess { // update 성공
                     self.hideLoading()
                     self.view.endEditing(true)
@@ -455,7 +455,7 @@ class NoteViewController: BaseViewController {
         }
         else { // 이미지 첨부되지 않은 노트 수정
             // 디비에 저장
-            DBService.shared.updateNote(withNoteId: "\(nid)", title: title, content: content) { updateSuccess in
+            NoteService.shared.updateNote(withNoteId: "\(nid)", title: title, content: content) { updateSuccess in
                 if updateSuccess { // update 성공
                     self.hideLoading()
                     self.view.endEditing(true)
@@ -514,8 +514,8 @@ class NoteViewController: BaseViewController {
             }
             
             // 디비에 노트 저장
-            DBService.shared.createNoteTable()
-            DBService.shared.insertNote(title: title, content: content, imagePath: filePath.absoluteString, writeDate: todayStr,  latitude: "\(latitude)", longitude: "\(longitude)", lastAlarmDate: todayStr, onOffAlarm: ALARM_ON) { insertResult in
+            NoteService.shared.createNoteTable()
+            NoteService.shared.insertNote(title: title, content: content, imagePath: filePath.absoluteString, writeDate: todayStr,  latitude: "\(latitude)", longitude: "\(longitude)", lastAlarmDate: todayStr, onOffAlarm: ALARM_ON) { insertResult in
                 if insertResult { // insert 성공
                     self.hideLoading()
                     self.view.endEditing(true)
@@ -531,8 +531,8 @@ class NoteViewController: BaseViewController {
         }
         else { // 이미지 첨부되지 않은 노트 저장
             // 디비에 저장
-            DBService.shared.createNoteTable()
-            DBService.shared.insertNote(title: title, content: content, imagePath: "", writeDate: todayStr,  latitude: "\(latitude)", longitude: "\(longitude)", lastAlarmDate: todayStr, onOffAlarm: ALARM_ON) { insertResult in
+            NoteService.shared.createNoteTable()
+            NoteService.shared.insertNote(title: title, content: content, imagePath: "", writeDate: todayStr,  latitude: "\(latitude)", longitude: "\(longitude)", lastAlarmDate: todayStr, onOffAlarm: ALARM_ON) { insertResult in
                 if insertResult { // insert 성공
                     self.hideLoading()
                     self.view.endEditing(true)

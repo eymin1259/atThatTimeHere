@@ -56,18 +56,6 @@ struct AuthViewModel {
     }
     
     //MARK: methods
-    func login(completion: @escaping(Bool, String)->Void) {
-        AuthService.shared.login(email: self.email ?? "", password: self.password ?? "") { (loginResult, loginMsg) in
-            completion(loginResult, loginMsg)
-        }
-    }
-    
-    func register(completion: @escaping(Bool, String)->Void) {
-        AuthService.shared.signUp(email: self.email ?? "", password: self.password ?? "") { (registerRes, Msg) in
-            completion(registerRes, Msg)
-        }
-    }
-    
     func isValidEmail(_ email:String) -> Bool {
         let emailRegEx = "[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,64}"
         let emailTest = NSPredicate(format:"SELF MATCHES %@", emailRegEx)

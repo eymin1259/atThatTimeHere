@@ -14,7 +14,7 @@ class NoteListViewModel {
     
     func updateNoteList() {
         // db
-        DBService.shared.getNotes { result, notes in
+        NoteService.shared.getNotes { result, notes in
             if result == false {
                 //  실패
                 self.noteList.removeAll()

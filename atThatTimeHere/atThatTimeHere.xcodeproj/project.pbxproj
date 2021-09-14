@@ -12,6 +12,7 @@
 		A15E679326DE568B00D1A9FB /* PickerPhotoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A15E679226DE568B00D1A9FB /* PickerPhotoView.swift */; };
 		A15E679526E0AB5700D1A9FB /* NoteListTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A15E679426E0AB5700D1A9FB /* NoteListTableViewCell.swift */; };
 		A15E679726E1067800D1A9FB /* NoteListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A15E679626E1067800D1A9FB /* NoteListViewModel.swift */; };
+		A15E679926EB4C9C00D1A9FB /* CustomError.swift in Sources */ = {isa = PBXBuildFile; fileRef = A15E679826EB4C9C00D1A9FB /* CustomError.swift */; };
 		A180D55926D67AD10076458B /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A180D55826D67AD10076458B /* AppDelegate.swift */; };
 		A180D55B26D67AD10076458B /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A180D55A26D67AD10076458B /* SceneDelegate.swift */; };
 		A180D55D26D67AD10076458B /* IntroViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A180D55C26D67AD10076458B /* IntroViewController.swift */; };
@@ -21,7 +22,7 @@
 		A180D56E26D67BF90076458B /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = A180D56D26D67BF90076458B /* Constants.swift */; };
 		A180D57026D67C0B0076458B /* SQLite.swift in Sources */ = {isa = PBXBuildFile; fileRef = A180D56F26D67C0B0076458B /* SQLite.swift */; };
 		A180D57326D67CDB0076458B /* AuthService.swift in Sources */ = {isa = PBXBuildFile; fileRef = A180D57226D67CDB0076458B /* AuthService.swift */; };
-		A180D57626D67D0D0076458B /* DBService.swift in Sources */ = {isa = PBXBuildFile; fileRef = A180D57526D67D0D0076458B /* DBService.swift */; };
+		A180D57626D67D0D0076458B /* NoteService.swift in Sources */ = {isa = PBXBuildFile; fileRef = A180D57526D67D0D0076458B /* NoteService.swift */; };
 		A180D57B26D67D9F0076458B /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = A180D57A26D67D9F0076458B /* User.swift */; };
 		A180D57D26D67DBF0076458B /* AuthViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A180D57C26D67DBF0076458B /* AuthViewModel.swift */; };
 		A180D58026D67DE20076458B /* TextFieldWithPlaceholder.swift in Sources */ = {isa = PBXBuildFile; fileRef = A180D57F26D67DE20076458B /* TextFieldWithPlaceholder.swift */; };
@@ -46,6 +47,7 @@
 		A15E679226DE568B00D1A9FB /* PickerPhotoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PickerPhotoView.swift; sourceTree = "<group>"; };
 		A15E679426E0AB5700D1A9FB /* NoteListTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoteListTableViewCell.swift; sourceTree = "<group>"; };
 		A15E679626E1067800D1A9FB /* NoteListViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoteListViewModel.swift; sourceTree = "<group>"; };
+		A15E679826EB4C9C00D1A9FB /* CustomError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomError.swift; sourceTree = "<group>"; };
 		A180D55526D67AD10076458B /* atThatTimeHere.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = atThatTimeHere.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		A180D55826D67AD10076458B /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		A180D55A26D67AD10076458B /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -57,7 +59,7 @@
 		A180D56D26D67BF90076458B /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		A180D56F26D67C0B0076458B /* SQLite.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SQLite.swift; sourceTree = "<group>"; };
 		A180D57226D67CDB0076458B /* AuthService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthService.swift; sourceTree = "<group>"; };
-		A180D57526D67D0D0076458B /* DBService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DBService.swift; sourceTree = "<group>"; };
+		A180D57526D67D0D0076458B /* NoteService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoteService.swift; sourceTree = "<group>"; };
 		A180D57A26D67D9F0076458B /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
 		A180D57C26D67DBF0076458B /* AuthViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthViewModel.swift; sourceTree = "<group>"; };
 		A180D57F26D67DE20076458B /* TextFieldWithPlaceholder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextFieldWithPlaceholder.swift; sourceTree = "<group>"; };
@@ -148,6 +150,7 @@
 			children = (
 				A180D56D26D67BF90076458B /* Constants.swift */,
 				A180D56F26D67C0B0076458B /* SQLite.swift */,
+				A15E679826EB4C9C00D1A9FB /* CustomError.swift */,
 			);
 			path = Utils;
 			sourceTree = "<group>";
@@ -156,7 +159,7 @@
 			isa = PBXGroup;
 			children = (
 				A180D57226D67CDB0076458B /* AuthService.swift */,
-				A180D57526D67D0D0076458B /* DBService.swift */,
+				A180D57526D67D0D0076458B /* NoteService.swift */,
 				A180D59B26D77EA90076458B /* PhotoService.swift */,
 			);
 			path = Services;
@@ -329,7 +332,7 @@
 				A180D55D26D67AD10076458B /* IntroViewController.swift in Sources */,
 				A180D57026D67C0B0076458B /* SQLite.swift in Sources */,
 				A180D57326D67CDB0076458B /* AuthService.swift in Sources */,
-				A180D57626D67D0D0076458B /* DBService.swift in Sources */,
+				A180D57626D67D0D0076458B /* NoteService.swift in Sources */,
 				A180D59426D75C100076458B /* SettingViewController.swift in Sources */,
 				A15E679726E1067800D1A9FB /* NoteListViewModel.swift in Sources */,
 				A180D58826D71CCC0076458B /* BaseViewController.swift in Sources */,
@@ -338,6 +341,7 @@
 				A15E679526E0AB5700D1A9FB /* NoteListTableViewCell.swift in Sources */,
 				A15E679326DE568B00D1A9FB /* PickerPhotoView.swift in Sources */,
 				A180D58A26D72B640076458B /* NoteListViewController.swift in Sources */,
+				A15E679926EB4C9C00D1A9FB /* CustomError.swift in Sources */,
 				A180D59C26D77EA90076458B /* PhotoService.swift in Sources */,
 				A180D59026D747080076458B /* DividerView.swift in Sources */,
 				A180D58226D67E060076458B /* MainTabViewController.swift in Sources */,

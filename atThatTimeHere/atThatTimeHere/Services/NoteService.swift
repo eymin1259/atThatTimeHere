@@ -1,5 +1,5 @@
 //
-//  DBService.swift
+//  NoteService.swift
 //  atThatTimeHere
 //
 //  Created by yongmin lee on 8/25/21.
@@ -7,71 +7,17 @@
 
 import Foundation
 import SQLite3
+import RxSwift
 
-
-class DBService {
+class NoteService {
     
-    static let shared = DBService()
+    static let shared = NoteService()
     
     private init () {
         print("debug : DBService shared init ")
     }
     
-    //MARK: User
-    func createUserTable() {
-        do {
-            let db = try SQLite()
-            try db.install(query:"CREATE TABLE IF NOT EXISTS Users (id INTEGER PRIMARY KEY , email TEXT, password TEXT);")
-            try db.execute()
-        } catch {
-            print(error.localizedDescription)
-        }
-    }
-    
-    func getUserInfo(byEmail email : String, completion: @escaping(User?)->Void) {
-        var user : User? = nil
-        
-        do{
-            let db = try SQLite()
-            try db.install(query:"SELECT * FROM Users  WHERE email ='\(email)'")
-            try db.execute(){ row in
-                let uid = Int(sqlite3_column_int(row, 0))
-                let emailAddress = String(cString: sqlite3_column_text(row, 1))
-                let password = String(cString: sqlite3_column_text(row, 2))
-                user = User(id: uid, email: emailAddress, password: password)
-            }
-            completion(user)
-            return
-        }
-        catch {
-            print(error.localizedDescription)
-        }
-        completion(nil)
-    }
-    
-    func insertUserInfo(email: String, password: String, photoUrl:String?, completion: @escaping(Bool, User?)->Void){
-        do{
-            let db = try SQLite()
-            try db.install(query:"INSERT INTO Users (email, password) VALUES ('\(email)', '\(password)')")
-            try db.execute()
-            var user : User?  =  nil
-            try db.install(query:"SELECT * FROM Users  WHERE email ='\(email)'")
-            try db.execute(){ row in
-                let uid = Int(sqlite3_column_int(row, 0))
-                let emailAddress = String(cString: sqlite3_column_text(row, 1))
-                let password = String(cString: sqlite3_column_text(row, 2))
-                user = User(id: uid, email: emailAddress, password: password)
-            }
-            completion(true, user)
-            return
-        }
-        catch {
-            print("debug : insertUserInfo fail -> \(error.localizedDescription)")
-        }
-        completion(false, nil)
-    }
-    
-    //MARK: Note
+    //MARK: database access
     func createNoteTable(){
         do {
             let db = try SQLite()
