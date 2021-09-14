@@ -23,7 +23,7 @@
 	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
 	<string>추억 장소 위치정보 저장을 위해 권한이 필요합니다.</string>
 	<key>NSLocationAlwaysUsageDescription</key>
-	<string>추억 장소 위치정보 저장을 위해 권한이 필요합니다.</string>
+	<string>추억 장소에 도착시 알림을 위해 권한이 필요합니다.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>추억 장소 위치정보 저장을 위해 권한이 필요합니다.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
@@ -55,6 +55,7 @@
 	<true/>
 	<key>UIBackgroundModes</key>
 	<array>
+		<string>fetch</string>
 		<string>location</string>
 		<string>processing</string>
 		<string>remote-notification</string>
