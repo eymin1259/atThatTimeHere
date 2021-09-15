@@ -187,7 +187,7 @@ extension MenuViewController : CLLocationManagerDelegate {
                                 // 알람메세지
                                 let content = UNMutableNotificationContent()
                                 content.title = noteItem.title
-                                content.body = "\(Int(writeDateIntervalDay))일전 지금 이곳에서 작성한 노트입니다."
+                                content.body = "\(Int(writeDateIntervalDay))일전 그때 이곳에서 작성한 노트입니다."
                                 content.badge = 1
                                 content.sound = .default
                                 let indexDict : [String:String] = ["index" : "\(idx)"]
