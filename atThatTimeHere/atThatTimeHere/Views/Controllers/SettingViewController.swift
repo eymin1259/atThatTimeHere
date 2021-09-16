@@ -92,8 +92,8 @@ class SettingViewController: BaseViewController {
         // 이용약관, 개인정보처리방침 포함
         // let stackView = UIStackView(arrangedSubviews: [ myinfoLbl, appVersionLbl, TermsLbl, privacyLbl, appReviewLbl, logoutLbl])
         
-        // 이용약관, 개인정보처리방침 미포함
-        let stackView = UIStackView(arrangedSubviews: [ myinfoLbl, appVersionLbl, appReviewLbl, logoutLbl])
+        // 이용약관, 미포함
+        let stackView = UIStackView(arrangedSubviews: [ myinfoLbl, appVersionLbl, privacyLbl, appReviewLbl, logoutLbl])
         stackView.axis = .vertical
         stackView.spacing = 40
         stackView.alignment = .center
