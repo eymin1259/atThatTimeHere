@@ -48,9 +48,15 @@ class MenuViewController: BaseViewController {
         // initial setting
         setupUI()
         
-        //gps location update start
+        //gps location setting
         locationManager.delegate = self
+        locationManager.distanceFilter = RETURN_RANGE
+        locationManager.desiredAccuracy = kCLLocationAccuracyBest
+        locationManager.pausesLocationUpdatesAutomatically = true
+        locationManager.showsBackgroundLocationIndicator = false
         locationManager.allowsBackgroundLocationUpdates = true // 백그라운드 설정
+        
+        //gps location update start
         startLocationUpdate()
     }
     
@@ -92,10 +98,22 @@ class MenuViewController: BaseViewController {
     
     // gps location update 시작
     func startLocationUpdate() {
-        showLoading() // 위치정보를 가져올때까지 로딩
-        locationManager.requestWhenInUseAuthorization()
-        locationManager.desiredAccuracy = kCLLocationAccuracyBest
-        locationManager.startUpdatingLocation()
+        // 권환체크
+        if CLLocationManager.locationServicesEnabled() {
+            switch locationManager.authorizationStatus {
+            // 권한없는경우
+            case .notDetermined, .restricted, .denied:
+                view.makeToast("위치권환을 설정해주새요.")
+                locationManager.requestAlwaysAuthorization()
+            case .authorizedAlways, .authorizedWhenInUse:
+                showLoading() // 위치정보를 가져올때까지 로딩
+                locationManager.startUpdatingLocation()
+            @unknown default:
+                break
+            }
+        } else {
+            print("Location services are not enabled")
+        }
     }
     // gps location update 중단
     func stopLocationUpdate(){
@@ -134,7 +152,8 @@ class MenuViewController: BaseViewController {
 extension MenuViewController : NoteViewControllerDelegate {
     
     func didSaveNote() {
-        self.view.makeToast("노트를 저장했습니다.")
+        self.view.makeToast("저장되었습니다.\n지금 작성된 추억은 훗날 이곳으로 돌아왔을 때 보여드릴께요!") //  지금 작성한 추억은 훗날 이곳으로 돌아왔을 때 다시 보여드릴께요!
+
         viewModel.updateNoteList()
     }
 }
@@ -145,6 +164,7 @@ extension MenuViewController : CLLocationManagerDelegate {
         hideLoading()
         // 위치정보
         guard let location = locations.first else {return}
+        print("debug : didUpdateLocations -> \(location)")
         // 기존정보 삭제
         currentLocation = nil
         // 새로운 위치정보 저장
