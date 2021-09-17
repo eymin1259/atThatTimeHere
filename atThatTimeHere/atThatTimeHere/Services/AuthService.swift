@@ -155,15 +155,18 @@ class  AuthService  {
     func creatAppleTestAccount(email: String = "appletest@apple.com", password: String = "appletest") {
         createUserTable()
         getUserInfo(byEmail: email) { (userInDb) in
+            // appletest@apple.com 이미존재하는경우
             if let _ = userInDb {
                 return
             }
-            else {
+            else { // appletest@apple.com 존재하지 않는경우
                 guard let encryptedPassword = self.encryptPassword(password: password) else {
                     return
                 }
                 self.insertUserInfo(email: email, password: encryptedPassword, photoUrl: nil) { (result, user) in
-                    if result == true, let _ =  user {
+                    // appletest@apple.com 생성 성공
+                    if result == true, let appleAccount =  user {
+                        NoteService.shared.createNoteTableWithFirstNote(userId: "\(appleAccount.id)")
                         return
                     }else {
                         return

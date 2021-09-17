@@ -143,8 +143,10 @@ class RegisterViewController: BaseViewController {
             .subscribe(onNext: {resultMsg in
                 self.hideLoading()
                 self.view.makeToast(resultMsg)
+                
                 // 초기 note table 세팅
-                NoteService.shared.createNoteTableWithFirstNote()
+                guard let uid = UserDefaults.standard.dictionary(forKey: CURRENTUSERKEY)?["id"] as? String else { return }
+                NoteService.shared.createNoteTableWithFirstNote(userId: uid)
                 // loginView Controller에게 회원가입 성공 알림
                 DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
                     self.dismiss(animated: true) {
