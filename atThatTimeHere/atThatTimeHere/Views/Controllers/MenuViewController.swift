@@ -103,8 +103,9 @@ class MenuViewController: BaseViewController {
             switch locationManager.authorizationStatus {
             // 권한없는경우
             case .notDetermined, .restricted, .denied:
-                view.makeToast("위치권환을 설정해주새요.")
-                locationManager.requestAlwaysAuthorization()
+                // 설정창으로 이동
+                goLocationSetting()
+            // 권한있는경우
             case .authorizedAlways, .authorizedWhenInUse:
                 showLoading() // 위치정보를 가져올때까지 로딩
                 locationManager.startUpdatingLocation()
@@ -115,6 +116,28 @@ class MenuViewController: BaseViewController {
             print("Location services are not enabled")
         }
     }
+    
+    func goLocationSetting() {
+        let alertController = UIAlertController(title :"알림", message: "추억이 어느 장소에서 저장됬는지 알 수 있도록 위치권한을 항상으로 설정해주세요.", preferredStyle: .alert)
+        let settingsAction = UIAlertAction(title: "설정", style: .default) { (_) -> Void in
+            guard let settingsUrl = URL(string: UIApplication.openSettingsURLString) else {
+                return
+            }
+            if UIApplication.shared.canOpenURL(settingsUrl) {
+                // 설정창 이동
+                UIApplication.shared.open(settingsUrl, completionHandler: { (success) in
+                    print("Setting is opened: \(success)")
+                })
+            }
+        }
+        let cancelAction = UIAlertAction(title: "취소", style: .default){ (_) -> Void in
+        }
+        alertController.addAction(settingsAction)
+        alertController.addAction(cancelAction)
+        present(alertController, animated: true, completion: nil)
+    }
+    
+    
     // gps location update 중단
     func stopLocationUpdate(){
         locationManager.stopMonitoringSignificantLocationChanges()
@@ -250,12 +273,21 @@ extension MenuViewController : CLLocationManagerDelegate {
     
     // 앱의 위치 추적 허가 상태가 변경되면 이 메서드를 호출
     func locationManagerDidChangeAuthorization(_ manager: CLLocationManager) {
+        // 허용안됨
         if manager.authorizationStatus == .denied || manager.authorizationStatus == .notDetermined || manager.authorizationStatus == .restricted {
             hideLoading()
             stopLocationUpdate()
             // 기존정보 삭제
             currentLocation = nil
-            self.view.makeToast("위치정보 권한이 필요합니다.")
+            self.view.makeToast("위치권한이 필요합니다.")
+        }
+        // 허용됨
+        else if manager.authorizationStatus == .authorizedAlways || manager.authorizationStatus == .authorizedWhenInUse {
+            // 기존정보 삭제
+            currentLocation = nil
+            // 위치정보 재로드
+            stopLocationUpdate()
+            startLocationUpdate()
         }
     }
 }
