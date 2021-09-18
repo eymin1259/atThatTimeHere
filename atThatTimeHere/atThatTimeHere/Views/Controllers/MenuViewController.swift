@@ -175,8 +175,7 @@ class MenuViewController: BaseViewController {
 extension MenuViewController : NoteViewControllerDelegate {
     
     func didSaveNote() {
-        self.view.makeToast("저장되었습니다.\n지금 작성된 추억은 훗날 이곳으로 돌아왔을 때 보여드릴께요!") //  지금 작성한 추억은 훗날 이곳으로 돌아왔을 때 다시 보여드릴께요!
-
+        self.view.makeToast("저장되었습니다.\n지금 작성된 추억은 훗날 이곳으로 다시 돌아왔을 때 보여드릴께요!")
         viewModel.updateNoteList()
     }
 }
