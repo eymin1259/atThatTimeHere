@@ -23,7 +23,7 @@ class MenuViewController: BaseViewController {
         btn.setTitle("추억 쓰기", for: .normal)
         btn.setTitleColor(CUSTOM_MAIN_COLOR, for: .normal)
         btn.titleLabel?.font = UIFont(name: CUSTOM_FONT, size: 25)
-        btn.isEnabled = true
+        btn.isEnabled = false
         btn.addTarget(self, action: #selector(didTapWriteNote), for: .touchUpInside)
         return btn
     }()
@@ -44,6 +44,7 @@ class MenuViewController: BaseViewController {
         
         // viewModel
         viewModel.disposebag = disposeBag
+        viewModel.delegate = self
 
         // initial setting
         setupUI()
@@ -171,6 +172,20 @@ class MenuViewController: BaseViewController {
     }
 }
 
+//MARK: extension NoteListViewModelDelegate
+extension MenuViewController : NoteListViewModelDelegate {
+    func didFindNoteToAlarm() {
+        // 업데이트한 위치정보에서 씌여진 노트를 찾았으므로 위치정보 업데이트 일시중지
+        stopLocationUpdate()
+    }
+    
+    func didFinishMakeAlarm() {
+        // 업데이트한 위치정보에서 씌여진 노트에 대해 알람 만들었으므로 다시 백그라운드 위치 업데이트 시작
+        viewModel.updateNoteList()
+        startLocationUpdate()
+    }
+}
+
 //MARK: extension NoteViewControllerDelegate
 extension MenuViewController : NoteViewControllerDelegate {
     func didSaveNote() {
@@ -179,10 +194,12 @@ extension MenuViewController : NoteViewControllerDelegate {
     }
 }
 
+//MARK: extestion CLLocationManagerDelegate
 extension MenuViewController : CLLocationManagerDelegate {
     //  gps 위치가 변경될 때마다 가장 최근 위치 데이터를 인자로 이 메서드가 호출
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-        // hideLoading()
+        writeNoteLbl.isEnabled = true
+        
         // 위치정보
         guard let location = locations.first else {return}
         print("debug : didUpdateLocations -> \(location)")
@@ -190,76 +207,9 @@ extension MenuViewController : CLLocationManagerDelegate {
         currentLocation = nil
         // 새로운 위치정보 저장
         currentLocation = location
-  
-        let formatter = DateFormatter()
-        formatter.dateFormat = "yyyy-MM-dd"
-        formatter.locale = Locale(identifier: "ko_kr")
-
-        // 노트들 하나씩 체크
-        for (idx, noteItem) in viewModel.noteList.enumerated() {
         
-            // 노트 삭제 여부 확인
-            let noteDeleted = noteItem.deleted
-            if noteDeleted == 0 {
-                
-                if let noteLatitude = Double(noteItem.latitude), let noteLongitude = Double(noteItem.longitude), let distance = currentLocation?.distance(from: CLLocation(latitude: noteLatitude, longitude: noteLongitude)), distance <= RETURN_RANGE, let lastAlarmDate = formatter.date(from: noteItem.lastAlarmDate), let writeDate = formatter.date(from:noteItem.writeDate){
-                    // 해당지역 RETURN_RANGE(돌아옴인식범위,200m) 이내로 다시방문한 경우
-                    // distance : 노트쓴 장소와 현재 위치 거리차이
-                    // lastAlarmDate : 마지막 알람 보낸 날짜
-                    // writeDate : 노트 작성 날짜
-
-                    
-                    let intervalDay = lastAlarmDate.timeIntervalSinceNow / 86400 * -1 // 오늘과 마지막알람날짜 시간차이
-                    let alaramCheck = noteItem.onOffAlarm // 해당 노트 알람 on/off 체크
-                    
-                    if intervalDay >= REMINDE_INTERVAL_DAY, alaramCheck == ALARM_ON {
-                        // 알람on, REMINDE_INTERVAL_DAY(알람간격시간이 지났으면) -> 알람 보내기
-                        
-                        // 업데이트 일시정지
-                        stopLocationUpdate()
-                        
-                        let todayStr = formatter.string(from: Date()) // 오늘날짜
-                        let writeDateIntervalDay = writeDate.timeIntervalSinceNow / 86400 * -1 // 노트쓴 날짜로부터 오늘날짜 시간차이
-                        
-                        // db에 알람 전송날짜를 오늘로 갱신
-                        NoteService.shared.updateLastAlarmDateRX(withNoteId: "\(noteItem.id)", newLastAlarmDate: todayStr)
-                            .subscribe(onNext: { _ in // 갱신성공시
-                                // 알람 보내기
-                                print("Debug : send notification -> note : \(noteItem.id)")
-                                
-                                // 알람메세지
-                                let content = UNMutableNotificationContent()
-                                content.title = noteItem.title
-                                content.body = "\(Int(writeDateIntervalDay))일전 그때 이곳에서 작성한 노트입니다."
-                                content.badge = 1
-                                content.sound = .default
-                                let indexDict : [String:String] = ["index" : "\(idx)"]
-                                content.userInfo = indexDict
-                                
-                                // 알람 전송
-                                let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 1, repeats: false)
-                                let req = UNNotificationRequest(identifier: "\(noteItem.id)", content: content, trigger: trigger)
-                                UNUserNotificationCenter.current().add(req) { err in
-                                    DispatchQueue.main.async { [weak self]  in
-                                        guard let weakSelf = self else {return }
-                                        if let error = err {
-                                            // 전송실패
-                                            print("debug : UNUserNotificationCenter  error -> \(error.localizedDescription)")
-                                            weakSelf.viewModel.updateNoteList()
-                                            weakSelf.startLocationUpdate()
-                                        }
-                                        else{
-                                            // 전송성공
-                                            weakSelf.viewModel.updateNoteList()
-                                            weakSelf.startLocationUpdate()
-                                        }
-                                    }
-                                }
-                            }).disposed(by: disposeBag)
-                    }
-                }
-            }
-        } //  end for (idx, noteItem) in viewModel.noteList.enumerated()
+        // 현재위치에서 씌여진 노트가 있는지 체크
+        viewModel.checkNoteWroteAt(location: currentLocation)
     }
     
     //  gps위치정보를 가져올때 에러발생시 호출되는 함수
