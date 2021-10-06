@@ -50,9 +50,9 @@ class MenuViewController: BaseViewController {
         
         //gps location setting
         locationManager.delegate = self
-        locationManager.distanceFilter = RETURN_RANGE
+        locationManager.distanceFilter = RETURN_RANGE / 2
         locationManager.desiredAccuracy = kCLLocationAccuracyBest
-        locationManager.pausesLocationUpdatesAutomatically = true
+        locationManager.pausesLocationUpdatesAutomatically = false
         locationManager.showsBackgroundLocationIndicator = false
         locationManager.allowsBackgroundLocationUpdates = true // 백그라운드 설정
         
@@ -107,7 +107,7 @@ class MenuViewController: BaseViewController {
                 goLocationSetting()
             // 권한있는경우
             case .authorizedAlways, .authorizedWhenInUse:
-                showLoading() // 위치정보를 가져올때까지 로딩
+                // showLoading() // 위치정보를 가져올때까지 로딩
                 locationManager.startUpdatingLocation()
             @unknown default:
                 break
@@ -173,7 +173,6 @@ class MenuViewController: BaseViewController {
 
 //MARK: extension NoteViewControllerDelegate
 extension MenuViewController : NoteViewControllerDelegate {
-    
     func didSaveNote() {
         self.view.makeToast("저장되었습니다.\n지금 작성된 추억은 훗날 이곳으로 다시 돌아왔을 때 보여드릴께요!")
         viewModel.updateNoteList()
@@ -183,7 +182,7 @@ extension MenuViewController : NoteViewControllerDelegate {
 extension MenuViewController : CLLocationManagerDelegate {
     //  gps 위치가 변경될 때마다 가장 최근 위치 데이터를 인자로 이 메서드가 호출
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-        hideLoading()
+        // hideLoading()
         // 위치정보
         guard let location = locations.first else {return}
         print("debug : didUpdateLocations -> \(location)")
@@ -196,9 +195,10 @@ extension MenuViewController : CLLocationManagerDelegate {
         formatter.dateFormat = "yyyy-MM-dd"
         formatter.locale = Locale(identifier: "ko_kr")
 
+        // 노트들 하나씩 체크
         for (idx, noteItem) in viewModel.noteList.enumerated() {
         
-            // 삭제 여부 확인
+            // 노트 삭제 여부 확인
             let noteDeleted = noteItem.deleted
             if noteDeleted == 0 {
                 
@@ -209,12 +209,13 @@ extension MenuViewController : CLLocationManagerDelegate {
                     // writeDate : 노트 작성 날짜
 
                     
-                    let intervalDay = lastAlarmDate.timeIntervalSinceNow / 86400 * -1 // 오늘와 마지막알람날짜 시간차이
-                    let alaramCheck = noteItem.onOffAlarm // 해당 노트 알람 on/off 차이
+                    let intervalDay = lastAlarmDate.timeIntervalSinceNow / 86400 * -1 // 오늘과 마지막알람날짜 시간차이
+                    let alaramCheck = noteItem.onOffAlarm // 해당 노트 알람 on/off 체크
                     
                     if intervalDay >= REMINDE_INTERVAL_DAY, alaramCheck == ALARM_ON {
-                        // 알람on, REMINDE_INTERVAL_DAY(알람간격,31일)이상이면 -> 알람 보내기
+                        // 알람on, REMINDE_INTERVAL_DAY(알람간격시간이 지났으면) -> 알람 보내기
                         
+                        // 업데이트 일시정지
                         stopLocationUpdate()
                         
                         let todayStr = formatter.string(from: Date()) // 오늘날짜
@@ -258,7 +259,7 @@ extension MenuViewController : CLLocationManagerDelegate {
                     }
                 }
             }
-        }
+        } //  end for (idx, noteItem) in viewModel.noteList.enumerated()
     }
     
     //  gps위치정보를 가져올때 에러발생시 호출되는 함수
