@@ -246,26 +246,18 @@ class NoteViewController: BaseViewController {
     }
     
     // 노트불러오기인경우 노트정보 load
-    func loadNoteData(){
-
-        // 노트 아이디
-        guard let nid = viewModel.noteId else {
-            view.makeToast("노트정보가 없습니다..")
-            return
-        }
-        NoteService.shared.getNoteRX(ByNoteId: "\(nid)")
+    func loadNoteData(){        
+        viewModel.readNote()
             .subscribe(onNext: { note in
-                // 노트정보 바인딩 : 제목, 내용, 위치
+                print("debug : read  note -> \(note)")
+                // 뷰 바인딩 : 제목, 내용
                 self.titleTextField.text = note.title
                 self.contentTextView.text = note.content
-                self.viewModel.currentLocation = CLLocation(latitude: Double(note.latitude) ?? 78.231570, longitude: Double(note.longitude) ?? 15.574564)
-                // 노트 이미지 바인딩
+                // 노트이미지-뷰 바인딩
                 if  let imageUrl = URL(string: note.imagePath) {
                     do {
                         let imageData = try Data(contentsOf: imageUrl)
                         self.photoView.image =  UIImage(data: imageData)
-                        self.viewModel.noteImageUrl = imageUrl
-                        self.viewModel.noteImage = UIImage(data: imageData)
                     } catch {
                         print("Error loading image : \(error)")
                         self.view.makeToast("사진정보가 없습니다...")
@@ -348,14 +340,10 @@ class NoteViewController: BaseViewController {
             self.contentTextView.inputAccessoryView = toolbar
             self.titleTextField.becomeFirstResponder()
         }
+        
         let removeNote = UIAlertAction(title: "추억 지우기", style: .destructive ) { (_) -> Void in
-            // 추억지우기
-            guard let nid = self.viewModel.noteId else {
-                self.view.makeToast("노트를 지울 수 없습니다..")
-                return
-            }
-            
-            NoteService.shared.removeNoteRX(ByNoteId: "\(nid)")
+            // 추억노트 지우기            
+            self.viewModel.deleteNote()
                 .subscribe(onNext: { _ in
                     self.delegate?.didRemoveNote?() // note list update
                     self.dismiss(animated: true, completion: nil) // dismiss noteVC
@@ -403,145 +391,57 @@ class NoteViewController: BaseViewController {
     
     // 수정완료버튼 클릭
     @objc func didTapConfirmEditBtn() {
-        print("Debug : didTapConfirmEditBtn viewmodel -> \(self.viewModel)")
-        
-        guard let nid = self.viewModel.noteId else {
-            self.view.makeToast("노트를 수정할 수 없습니다..")
-            return
-        }
-        
         showLoading()
         
         // 수정정보
         let title = titleTextField.text ?? ""
         let content = contentTextView.text ?? ""
         
-        // 이미지첨부된 노트 수정
-        if let jpenData = viewModel.noteImage?.jpegData(compressionQuality: 1.0),let imgUrl = viewModel.noteImageUrl, let filePath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first?.appendingPathComponent(imgUrl.lastPathComponent) {
-            //  이미지 저장
-            do {
-                try jpenData.write(to: filePath, options: .atomic)
-            } catch {
-                // 이미지 저장 실패
-                print("debug : pngImage.write error -> \(error.localizedDescription)")
-                hideLoading()
-                view.endEditing(true)
-                self.view.makeToast("이미지 저장 실패, 앱을 다시 실행해주세요.")
-                return
-        
-            }
-            // 디비에 노트 수정
-            NoteService.shared.updateNoteRX(withNoteId: "\(nid)", title: title, content: content, imagePath: filePath.absoluteString)
-                .subscribe(onNext: { _ in
-                    // update 성공
-                    self.hideLoading()
-                    self.view.endEditing(true)
-                    self.delegate?.didEditNote?()
-                    self.dismiss(animated: true, completion: nil)
-                }, onError: { error in
-                    // update 실패
-                    self.hideLoading()
-                    self.view.endEditing(true)
-                    self.view.makeToast("노트 수정 실패, 앱을 다시 실행해주세요.")
-                }).disposed(by: self.disposeBag)
-        }
-        else { // 이미지 첨부되지 않은 노트 수정
-            // 디비에 저장
-            NoteService.shared.updateNoteRX(withNoteId: "\(nid)", title: title, content: content)
-                .subscribe(onNext: { _ in
-                    // update 성공
-                    self.hideLoading()
-                    self.view.endEditing(true)
-                    self.delegate?.didEditNote?()
-                    self.dismiss(animated: true, completion: nil)
-                }, onError: { error in
-                    // update 실패
-                    self.hideLoading()
-                    self.view.endEditing(true)
-                    self.view.makeToast("노트 수정 실패, 앱을 다시 실행해주세요.")
-                }).disposed(by: self.disposeBag)
-        }
-       
+        // 업데이트
+        viewModel.updateNote(title: title, content: content)
+            .subscribe(onNext: { _ in
+                // update 성공
+                self.hideLoading()
+                self.view.endEditing(true)
+                self.delegate?.didEditNote?()
+                self.dismiss(animated: true, completion: nil)
+            }, onError: { error in
+                // update 실패
+                self.hideLoading()
+                self.view.endEditing(true)
+                self.view.makeToast("노트 수정 실패, 앱을 다시 실행해주세요.")
+            }).disposed(by: self.disposeBag)
     }
     
     // 저장버튼 클릭 action
     @objc func  didTapSaveBtn() {
         // 노트저장(유저아이디, 제목,내용, 이미지파일패스, 시간)
-        
         showLoading()
 
         // 현재 로그인한 유저아이디
-        guard let uid = UserDefaults.standard.dictionary(forKey: CURRENTUSERKEY)?["id"] as? String else { return }
+        guard let uid = UserDefaults.standard.dictionary(forKey: CURRENTUSERKEY)?["id"] as? String else {
+            self.view.makeToast("로그인 정보가 없습니다, 앱을 다시 실행해주세요.")
+            return
+        }
         
-        // 현재시간 저장
-        let today = Date()
-        let formatter = DateFormatter()
-        formatter.dateFormat = "yyyy-MM-dd"
-        formatter.locale = Locale(identifier: "ko_kr")
-        let todayStr = formatter.string(from: today)
         // 제목, 내용
         let title = titleTextField.text ?? ""
         let content = contentTextView.text ?? ""
-       
-        // 디폴트좌표 -> 북극
-        var latitude = CLLocationDegrees(78.231570)
-        var longitude = CLLocationDegrees(15.574564)
         
-        // 현재위치좌표
-        if  let lati = viewModel.currentLocation?.coordinate.latitude, let  longi = viewModel.currentLocation?.coordinate.longitude {
-            latitude = lati
-            longitude = longi
-        }
-        print("debug : note is saved at -> (\(latitude), \(longitude)")
-        
-        // 이미지첨부된 노트 저장
-        if let jpenData = viewModel.noteImage?.jpegData(compressionQuality: 1.0),let imgUrl = viewModel.noteImageUrl, let filePath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first?.appendingPathComponent(imgUrl.lastPathComponent) {
-            //  이미지 저장
-            do {
-                try jpenData.write(to: filePath, options: .atomic)
-            } catch {
-                // 이미지 저장 실패
-                print("debug : pngImage.write error -> \(error.localizedDescription)")
-                hideLoading()
-                view.endEditing(true)
-                self.view.makeToast("이미지 저장 실패, 앱을 다시 실행해주세요.")
-                return
-            }
-            
-            // 디비에 노트 저장
-            NoteService.shared.createNoteTable()
-            NoteService.shared.insertNoteRX(userId: uid, title: title, content: content, imagePath: filePath.absoluteString, writeDate: todayStr, latitude: "\(latitude)", longitude: "\(longitude)", lastAlarmDate: todayStr, onOffAlarm: ALARM_ON)
-                .subscribe(onNext: {_ in
-                    // insert 성공
-                    self.hideLoading()
-                    self.view.endEditing(true)
-                    self.delegate?.didSaveNote?()
-                    self.dismiss(animated: true, completion: nil)
-                }, onError: { error in
-                    // insert 실패
-                    self.hideLoading()
-                    self.view.endEditing(true)
-                    self.view.makeToast("노트 저장 실패, 앱을 다시 실행해주세요.")
-                }).disposed(by: disposeBag)
-        }
-        else { // 이미지 첨부되지 않은 노트 저장
-            // 디비에 저장
-            NoteService.shared.createNoteTable()
-            NoteService.shared.insertNoteRX(userId: uid, title: title, content: content, imagePath: "", writeDate: todayStr,  latitude: "\(latitude)", longitude: "\(longitude)", lastAlarmDate: todayStr, onOffAlarm: ALARM_ON)
-                .subscribe(onNext: {_ in
-                    // insert 성공
-                    self.hideLoading()
-                    self.view.endEditing(true)
-                    self.delegate?.didSaveNote?()
-                    self.dismiss(animated: true, completion: nil)
-                }, onError: { error in
-                    // insert 실패
-                    self.hideLoading()
-                    self.view.endEditing(true)
-                    self.view.makeToast("노트 저장 실패, 앱을 다시 실행해주세요.")
-                }).disposed(by: disposeBag)
-            
-        }
+        // 저장
+        viewModel.createNote(userId: uid, title: title, content: content)
+            .subscribe(onNext: {_ in
+                // insert 성공
+                self.hideLoading()
+                self.view.endEditing(true)
+                self.delegate?.didSaveNote?()
+                self.dismiss(animated: true, completion: nil)
+            }, onError: { error in
+                // insert 실패
+                self.hideLoading()
+                self.view.endEditing(true)
+                self.view.makeToast("노트 저장 실패, 앱을 다시 실행해주세요.")
+            }).disposed(by: disposeBag)
     }
 }
 
