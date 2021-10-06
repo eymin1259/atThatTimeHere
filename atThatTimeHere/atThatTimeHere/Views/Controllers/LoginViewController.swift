@@ -72,7 +72,7 @@ class LoginViewController: BaseViewController {
         // 아이디, 패스워드 입력값 변화에 호출되는 action 함수 등록
         configureNotificationObserver()
     }
-    
+        
     // MARK: methods
     private func setupUI(){
         
@@ -126,7 +126,8 @@ class LoginViewController: BaseViewController {
     @objc func handleLoginbtn(){
         view.endEditing(true)
         
-        AuthService.shared.loginRX(email: loginViewModel.email ?? "", password: loginViewModel.password ?? "")
+        // 로그인
+        loginViewModel.login()
             .subscribe(onNext: { resultMsg in
                 self.view.makeToast(resultMsg)
                 self.showLoading()

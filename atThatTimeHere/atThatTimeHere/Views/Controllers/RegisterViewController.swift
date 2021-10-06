@@ -139,14 +139,15 @@ class RegisterViewController: BaseViewController {
     @objc func handleSingup(){ // 회원가입버튼 클릭시 호출
         view.endEditing(true)
         showLoading()
-        AuthService.shared.signUpRX(email: registerViewModel.email ?? "", password: registerViewModel.password ?? "")
+        
+        // 회원가입
+        registerViewModel.signup()
             .subscribe(onNext: {resultMsg in
+                // 성공시
                 self.hideLoading()
+                // 성공 메세지 띄우기
                 self.view.makeToast(resultMsg)
-                
-                // 초기 note table 세팅
-                guard let uid = UserDefaults.standard.dictionary(forKey: CURRENTUSERKEY)?["id"] as? String else { return }
-                NoteService.shared.createNoteTableWithFirstNote(userId: uid)
+
                 // loginView Controller에게 회원가입 성공 알림
                 DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
                     self.dismiss(animated: true) {
@@ -154,9 +155,10 @@ class RegisterViewController: BaseViewController {
                     }
                 }
             }, onError: {error in
+                // 실패시
                 self.hideLoading()
                 if let err = error as? CustomError {
-                    // 에러메세지
+                    // 에러메세지 띄우기
                     self.view.makeToast(err.errorMessage)
                 }
             }).disposed(by: disposeBag)

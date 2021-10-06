@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import RxSwift
 
 struct AuthViewModel {
     
@@ -14,6 +15,8 @@ struct AuthViewModel {
     var password: String?
     var passwordCheck : String?
     var isRegisterAuth = true
+    let disposeBag = DisposeBag()
+
     
     var formValid : Bool {
         if isRegisterAuth { // 회원가입
@@ -60,5 +63,40 @@ struct AuthViewModel {
         let emailRegEx = "[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,64}"
         let emailTest = NSPredicate(format:"SELF MATCHES %@", emailRegEx)
         return emailTest.evaluate(with: email)
+    }
+    
+    // 회원가입
+    func signup() -> Observable<(String)> {
+        return Observable.create {  emitter in
+            AuthService.shared.signUpRX(email: email ?? "", password: password ?? "")
+                .subscribe(onNext: {resultMsg in
+                    // 초기 note table 세팅
+                    guard let uid = UserDefaults.standard.dictionary(forKey: CURRENTUSERKEY)?["id"] as? String else { return }
+                    NoteService.shared.createNoteTableWithFirstNote(userId: uid)
+                    // 메세지 전달
+                    emitter.onNext(resultMsg)
+                    emitter.onCompleted()
+                }, onError: {error in
+                    // 실패시 에러전달
+                    emitter.onError(error)
+                }).disposed(by: disposeBag)
+            return Disposables.create()
+        }
+    }
+    
+    //로그인
+    func login() -> Observable<(String)> {
+        return Observable.create {  emitter in
+            AuthService.shared.loginRX(email: email ?? "", password: password ?? "")
+                .subscribe(onNext: {resultMsg in
+                    // 성공시 성공메세지 전달
+                    emitter.onNext(resultMsg)
+                    emitter.onCompleted()
+                }, onError: {error in
+                    // 실패시 에러전달
+                    emitter.onError(error)
+                }).disposed(by: disposeBag)
+            return Disposables.create()
+        }
     }
 }
