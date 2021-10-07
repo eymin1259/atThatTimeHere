@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		9EFB9A4261C702F5344DB24C /* Pods_atThatTimeHere.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2DB03DBBED17A0E08486FEA1 /* Pods_atThatTimeHere.framework */; };
+		A109581C282BEA530005F493 /* SilencePlayerService.swift in Sources */ = {isa = PBXBuildFile; fileRef = A109581B282BEA530005F493 /* SilencePlayerService.swift */; };
 		A15E678F26DDB7E100D1A9FB /* Note.swift in Sources */ = {isa = PBXBuildFile; fileRef = A15E678E26DDB7E100D1A9FB /* Note.swift */; };
 		A15E679326DE568B00D1A9FB /* PickerPhotoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A15E679226DE568B00D1A9FB /* PickerPhotoView.swift */; };
 		A15E679526E0AB5700D1A9FB /* NoteListTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A15E679426E0AB5700D1A9FB /* NoteListTableViewCell.swift */; };
@@ -44,6 +45,7 @@
 /* Begin PBXFileReference section */
 		241F2CAA5EB3B204A8356B8F /* Pods-atThatTimeHere.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-atThatTimeHere.debug.xcconfig"; path = "Target Support Files/Pods-atThatTimeHere/Pods-atThatTimeHere.debug.xcconfig"; sourceTree = "<group>"; };
 		2DB03DBBED17A0E08486FEA1 /* Pods_atThatTimeHere.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_atThatTimeHere.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		A109581B282BEA530005F493 /* SilencePlayerService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SilencePlayerService.swift; sourceTree = "<group>"; };
 		A15E678E26DDB7E100D1A9FB /* Note.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Note.swift; sourceTree = "<group>"; };
 		A15E679226DE568B00D1A9FB /* PickerPhotoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PickerPhotoView.swift; sourceTree = "<group>"; };
 		A15E679426E0AB5700D1A9FB /* NoteListTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoteListTableViewCell.swift; sourceTree = "<group>"; };
@@ -167,6 +169,7 @@
 				A180D57226D67CDB0076458B /* AuthService.swift */,
 				A180D57526D67D0D0076458B /* NoteService.swift */,
 				A180D59B26D77EA90076458B /* PhotoService.swift */,
+				A109581B282BEA530005F493 /* SilencePlayerService.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -342,6 +345,7 @@
 				A180D57326D67CDB0076458B /* AuthService.swift in Sources */,
 				A180D57626D67D0D0076458B /* NoteService.swift in Sources */,
 				A180D59426D75C100076458B /* SettingViewController.swift in Sources */,
+				A109581C282BEA530005F493 /* SilencePlayerService.swift in Sources */,
 				A15E679726E1067800D1A9FB /* NoteListViewModel.swift in Sources */,
 				A180D58826D71CCC0076458B /* BaseViewController.swift in Sources */,
 				A180D57B26D67D9F0076458B /* User.swift in Sources */,
