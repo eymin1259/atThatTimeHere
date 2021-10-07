@@ -1,10 +1,23 @@
 
-# 추억노트앱 배포 레포지토리
+# 그때이곳 - 추억 노트, 위치 알람 앱
 
-- no public !
+그때이곳은 특정 위치에서 노트를 기록하고 해당 위치로 돌아갔을 때 알람으로 알려주는 위치 기반 알람 앱 입니다.
 
+App Store : https://apps.apple.com/kr/app/id1585791289 
 
-ReadME  작성 예시
+## 개발환경 및 라이브러리
+- 기능 및 UI 기획 부터 개발, 릴리즈, 운영까지 서비스의 A-Z 담당
+- 사용기술 : RxSwift, MVVM, AutoLayout, UIKit, CoreLocation , SQLite3, StoreKit
 
-- https://github.com/wnstkdyu/Portfolio
-- https://github.com/pavlovskyive/Todo-List
+## 개발 기능
+- 백그라운드 로케이션을 활용하여 노트가 씌여진 위치 모니터링 기능 개발 
+- SQLite3 활용하여 게시물,  유저정보 데이터베이스 CRUD 개발
+- 노트 작성, 저장, 수정, 삭제, 조회
+- 사진 첨부
+- gps 위치 모니터링 및 푸시알림
+
+## 접근 권한 :
+- 위치 : 메모를 기록한 시점의 위치를 저장합니다. (필수)
+- 사진 : 사진을 첨부합니다. (선택)
+
+(그때이곳 깃헙 공개용 repo)
