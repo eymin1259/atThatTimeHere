@@ -18,7 +18,7 @@ class NoteListViewController: BaseViewController {
     // 타이틀
     private var  titleLbl :  UILabel  =  {
         let  text = UILabel()
-        text.text = "추억 보기"
+        text.text = "Memories".localized()
         text.font = UIFont(name: CUSTOM_FONT, size: 25)
         text.textColor = CUSTOM_MAIN_COLOR
         return text
@@ -146,11 +146,11 @@ extension NoteListViewController : UITableViewDelegate, UITableViewDataSource {
 extension NoteListViewController : NoteViewControllerDelegate {
     func didRemoveNote() {
         noteListUpdate()
-        view.makeToast("삭제되었습니다.")
+        view.makeToast("deleted".localized())
     }
     
     func didEditNote() {
         noteListUpdate()
-        view.makeToast("수정되었습니다.")
+        view.makeToast("modified".localized())
     }
 }

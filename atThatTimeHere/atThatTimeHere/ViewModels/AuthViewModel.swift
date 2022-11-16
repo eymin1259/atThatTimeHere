@@ -49,10 +49,10 @@ struct AuthViewModel {
     
     var alertMessage : String {
         if let emailVal = email, isValidEmail(emailVal) == false {
-            return "이메일 형식이 올바르지 않습니다."
+            return "invalid_email_format".localized()
         }
         else if let passwordVal = password, let passworkCheckVal = passwordCheck, passwordVal != passworkCheckVal {
-            return "비밀번호가 일치하지 않습니다."
+            return "incorrect_login_input".localized()
         }
         return " "
         

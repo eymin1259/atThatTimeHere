@@ -18,7 +18,7 @@ class NoteListTableViewCell: UITableViewCell {
     // 제목
     private var titleLbl : UILabel = {
         let lbl = UILabel()
-        lbl.text = "제목없음"
+        lbl.text = "untitled".localized()
         lbl.textColor = .black
         lbl.font = UIFont(name: CUSTOM_FONT, size: 22)
         lbl.lineBreakMode = .byTruncatingTail

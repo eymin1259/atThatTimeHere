@@ -5,4 +5,8 @@
   Created by yongmin lee on 9/14/21.
   
 */
-"CFBundleDisplayName"="그때이곳";
+"CFBundleDisplayName"="HereAgain";
+"NSLocationAlwaysAndWhenInUseUsageDescription" = "Turning on location services allows us to save the location of your memories.";
+"NSLocationAlwaysUsageDescription" = "Turning on location services allows us to notify you when you arrive at a memory location. ";
+"NSLocationWhenInUseUsageDescription" = "Turning on location services allows us to save the location of your memories.";
+"NSPhotoLibraryUsageDescription" = "Allow access to photos to select from your library.";

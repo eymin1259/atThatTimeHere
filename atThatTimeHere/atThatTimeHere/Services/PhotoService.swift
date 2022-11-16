@@ -55,9 +55,9 @@ struct PhotoService {
     
     // 사진권한 없을시 권한설정 유도
     func goPhoneSetting(vc : BaseViewController){
-        let alertController = UIAlertController(title :"알림", message: "사진 등록을 위해 사진 접근권한이 필요합니다.", preferredStyle: .alert)
+        let alertController = UIAlertController(title :"Alert".localized(), message: "photo_permisson".localized(), preferredStyle: .alert)
         
-        let settingsAction = UIAlertAction(title: "설정", style: .default) { (_) -> Void in
+        let settingsAction = UIAlertAction(title: "setting".localized(), style: .default) { (_) -> Void in
             guard let settingsUrl = URL(string: UIApplication.openSettingsURLString) else {
                 return
             }
@@ -68,7 +68,7 @@ struct PhotoService {
             }
         }
         alertController.addAction(settingsAction)
-        let cancelAction = UIAlertAction(title: "취소", style: .default){ (_) -> Void in
+        let cancelAction = UIAlertAction(title: "cancel".localized(), style: .default){ (_) -> Void in
         }
         alertController.addAction(cancelAction)
         vc.present(alertController, animated: true, completion: nil)

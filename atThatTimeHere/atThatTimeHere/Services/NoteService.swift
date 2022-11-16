@@ -39,7 +39,7 @@ class NoteService {
             try db.execute()
                                               
             // insert first note
-            try db.install(query:"INSERT INTO Notes (userId, title, content, imagePath, writeDate, latitude, longitude, lastAlarmDate, onOffAlarm, deleted ) VALUES ('\(userId)', '환영합니다 :)', '그때이곳은 소중한 추억을 간직하는 추억알람앱 입니다. 의미있는 장소에서 추억노트를 작성해보세요. 훗날 그곳에 다시 갔을 때 그곳에서 작성했던 추억을 보여드릴께요 !', '', '', '78.231570', '15.574564' , '2099-12-31', '1', '0'  ); ")
+            try db.install(query:"INSERT INTO Notes (userId, title, content, imagePath, writeDate, latitude, longitude, lastAlarmDate, onOffAlarm, deleted ) VALUES ('\(userId)', '\("default_title".localized())', '\("default_body".localized())', '', '', '78.231570', '15.574564' , '2099-12-31', '1', '0'  ); ")
             try db.execute()
             
         } catch {
@@ -52,7 +52,7 @@ class NoteService {
         guard let uid = UserDefaults.standard.dictionary(forKey: CURRENTUSERKEY)?["id"] else { return }
         var checkedTitle = title
         if title == "" {
-            checkedTitle = "제목없음"
+            checkedTitle = "untitled".localized()
         }
         var checkedContent = content
         if content == "" {
@@ -79,7 +79,7 @@ class NoteService {
             
             var checkedTitle = title
             if title == "" {
-                checkedTitle = "제목없음"
+                checkedTitle = "untitled".localized()
             }
             var checkedContent = content
             if content == "" {

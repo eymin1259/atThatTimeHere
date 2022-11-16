@@ -35,7 +35,7 @@ class NoteViewController: BaseViewController {
     
     // 제목 입력
     var titleTextField : TextFieldWithPlaceholder = {
-        var tf = TextFieldWithPlaceholder(placeholder: "제목", fontSize: 30)
+        var tf = TextFieldWithPlaceholder(placeholder: "title".localized(), fontSize: 30)
         tf.keyboardType = .default
         tf.autocorrectionType = .no
         return tf
@@ -67,7 +67,7 @@ class NoteViewController: BaseViewController {
     // 본문내용 placeholer
     var contentPlaceHolder : UILabel = {
         var lbl  = UILabel()
-        lbl.text = "내용을 입력하세요."
+        lbl.text = "content".localized()
         lbl.font = UIFont(name: CUSTOM_FONT, size: 18)
         lbl.textColor = .gray.withAlphaComponent(0.6)
         lbl.translatesAutoresizingMaskIntoConstraints = false
@@ -77,7 +77,7 @@ class NoteViewController: BaseViewController {
     // 수정 시작버튼
     var editBtn : UIButton = {
         let btn = UIButton(type: .system)
-        btn.setTitle("수정", for: .normal)
+        btn.setTitle("edit".localized(), for: .normal)
         btn.setTitleColor(CUSTOM_MAIN_COLOR, for: .normal)
         btn.titleLabel?.font = UIFont(name: CUSTOM_FONT, size: 20)
         btn.isEnabled = true
@@ -89,7 +89,7 @@ class NoteViewController: BaseViewController {
     // 수정 완료 버튼
     var confirmEditBtn : UIButton = {
         let btn = UIButton(type: .system)
-        btn.setTitle("수정완료", for: .normal)
+        btn.setTitle("confirm".localized(), for: .normal)
         btn.setTitleColor(CUSTOM_MAIN_COLOR, for: .normal)
         btn.titleLabel?.font = UIFont(name: CUSTOM_FONT, size: 18)
         btn.isEnabled = true
@@ -101,7 +101,7 @@ class NoteViewController: BaseViewController {
     // 사진첨부 버튼
     var photoBtn : UIButton = {
         let btn = UIButton(type: .system)
-        btn.setTitle("사진", for: .normal)
+        btn.setTitle("photo".localized(), for: .normal)
         btn.setTitleColor(CUSTOM_MAIN_COLOR, for: .normal)
         btn.titleLabel?.font = UIFont(name: CUSTOM_FONT, size: 18)
         btn.isEnabled = true
@@ -113,7 +113,7 @@ class NoteViewController: BaseViewController {
     // 저장 버튼
     var saveBtn : UIButton = {
         let btn = UIButton(type: .system)
-        btn.setTitle("저장", for: .normal)
+        btn.setTitle("save".localized(), for: .normal)
         btn.setTitleColor(CUSTOM_MAIN_COLOR, for: .normal)
         btn.titleLabel?.font = UIFont(name: CUSTOM_FONT, size: 18)
         btn.isEnabled = true
@@ -260,24 +260,24 @@ class NoteViewController: BaseViewController {
                         self.photoView.image =  UIImage(data: imageData)
                     } catch {
                         print("Error loading image : \(error)")
-                        self.view.makeToast("사진정보가 없습니다...")
+                        self.view.makeToast("no_photo".localized())
                         return
                     }
                 }
             }, onError: {error in
-                self.view.makeToast("노트정보가 없습니다...")
+                self.view.makeToast("no_note".localized())
             }).disposed(by: disposeBag)
     }
     
     func showPhotoAlert()  {
-        let alertController = UIAlertController(title :"사진", message: "", preferredStyle: .actionSheet)
+        let alertController = UIAlertController(title :"photo".localized(), message: "", preferredStyle: .actionSheet)
         
-        let selectPhoto = UIAlertAction(title: "사진첨부", style: .default) { (_) -> Void in
+        let selectPhoto = UIAlertAction(title: "select_photo".localized(), style: .default) { (_) -> Void in
             self.showLoading()
             // 권환확인 및 image picker 실행
             PhotoService.shared.checkPhotoPermission(vc: self)
         }
-        let showSelectedPhoto = UIAlertAction(title: "사진보기", style: .default) { (_) -> Void in
+        let showSelectedPhoto = UIAlertAction(title: "show_photo".localized(), style: .default) { (_) -> Void in
             self.view.endEditing(true)
             // pickerPhotoView 세팅
             if let noteImg = self.viewModel.noteImage {
@@ -288,16 +288,16 @@ class NoteViewController: BaseViewController {
                 self.viewModel.noteImageUrl = nil
                 self.viewModel.noteImage = nil
                 self.viewModel.isNoteWithPhoto = false
-                self.view.makeToast("사진 정보가 없습니다.")
+                self.view.makeToast("no_photo".localized())
             }
         }
-        let removePhoto = UIAlertAction(title: "첨부취소", style: .destructive) { (_) -> Void in
+        let removePhoto = UIAlertAction(title: "remove_photo".localized(), style: .destructive) { (_) -> Void in
             // 선택한 데이터 초기화
             self.viewModel.noteImageUrl = nil
             self.viewModel.noteImage = nil
             self.viewModel.isNoteWithPhoto = false
         }
-        let cancle = UIAlertAction(title: "닫기", style: .cancel){ (_) -> Void in
+        let cancle = UIAlertAction(title: "cancel".localized(), style: .cancel){ (_) -> Void in
         }
         
         if viewModel.isNoteWithPhoto {
@@ -314,12 +314,12 @@ class NoteViewController: BaseViewController {
     }
     
     func showNoteEditAlert(){
-        let alertController = UIAlertController(title :"수정", message: "", preferredStyle: .actionSheet)
+        let alertController = UIAlertController(title :"edit".localized(), message: "", preferredStyle: .actionSheet)
         
-        let editNote = UIAlertAction(title: "추억 수정", style: .default) { (_) -> Void in
+        let editNote = UIAlertAction(title: "edit".localized(), style: .default) { (_) -> Void in
             // 글, 내용 수정
             guard let _ = self.viewModel.noteId else {
-                self.view.makeToast("노트를 수정할 수 없습니다..")
+                self.view.makeToast("unable_edit".localized())
                 return
             }
             // edit mode 로 전환
@@ -341,7 +341,7 @@ class NoteViewController: BaseViewController {
             self.titleTextField.becomeFirstResponder()
         }
         
-        let removeNote = UIAlertAction(title: "추억 지우기", style: .destructive ) { (_) -> Void in
+        let removeNote = UIAlertAction(title: "remove_memory".localized(), style: .destructive ) { (_) -> Void in
             // 추억노트 지우기            
             self.viewModel.deleteNote()
                 .subscribe(onNext: { _ in
@@ -349,11 +349,11 @@ class NoteViewController: BaseViewController {
                     self.dismiss(animated: true, completion: nil) // dismiss noteVC
                 }, onError: {error in
                     print("Debug : note remove error -> \(error.localizedDescription)")
-                    self.view.makeToast("삭제할 노트정보가 없습니다..")
+                    self.view.makeToast("unable_remove".localized())
                 }).disposed(by: self.disposeBag)
         }
         
-        let cancle = UIAlertAction(title: "닫기", style: .cancel){ (_) -> Void in
+        let cancle = UIAlertAction(title: "cancel".localized(), style: .cancel){ (_) -> Void in
         }
         
         alertController.addAction(editNote)
@@ -409,7 +409,7 @@ class NoteViewController: BaseViewController {
                 // update 실패
                 self.hideLoading()
                 self.view.endEditing(true)
-                self.view.makeToast("노트 수정 실패, 앱을 다시 실행해주세요.")
+                self.view.makeToast("unable_edit".localized())
             }).disposed(by: self.disposeBag)
     }
     
@@ -420,7 +420,7 @@ class NoteViewController: BaseViewController {
 
         // 현재 로그인한 유저아이디
         guard let uid = UserDefaults.standard.dictionary(forKey: CURRENTUSERKEY)?["id"] as? String else {
-            self.view.makeToast("로그인 정보가 없습니다, 앱을 다시 실행해주세요.")
+            self.view.makeToast("no_login_info".localized())
             return
         }
         
@@ -440,7 +440,7 @@ class NoteViewController: BaseViewController {
                 // insert 실패
                 self.hideLoading()
                 self.view.endEditing(true)
-                self.view.makeToast("노트 저장 실패, 앱을 다시 실행해주세요.")
+                self.view.makeToast("unable_save".localized())
             }).disposed(by: disposeBag)
     }
 }

@@ -46,7 +46,7 @@ class NoteListViewModel {
 
         let formatter = DateFormatter()
         formatter.dateFormat = "yyyy-MM-dd"
-        formatter.locale = Locale(identifier: "ko_kr")
+        formatter.locale = Locale.current
 
         // 노트들 하나씩 체크
         for (idx, noteItem) in noteList.enumerated() {
@@ -86,7 +86,7 @@ class NoteListViewModel {
                                 // 알람메세지
                                 let content = UNMutableNotificationContent()
                                 content.title = noteItem.title
-                                content.body = "\(Int(writeDateIntervalDay))일전 그때 이곳에서 작성한 노트입니다."
+                                content.body = "\(Int(writeDateIntervalDay))" + "alarm_body".localized()
                                 content.badge = 1
                                 content.sound = .default
                                 let indexDict : [String:String] = ["index" : "\(idx)"]

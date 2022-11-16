@@ -20,7 +20,7 @@ class MenuViewController: BaseViewController {
     //MARK: UI
     private var  writeNoteLbl :  UIButton  =  {
         let btn = UIButton(type: .system)
-        btn.setTitle("추억 쓰기", for: .normal)
+        btn.setTitle("writing_memories".localized(), for: .normal)
         btn.setTitleColor(CUSTOM_MAIN_COLOR, for: .normal)
         btn.titleLabel?.font = UIFont(name: CUSTOM_FONT, size: 25)
         btn.isEnabled = false
@@ -30,7 +30,7 @@ class MenuViewController: BaseViewController {
     
     private var  settingLbl :  UIButton  =  {
         let btn = UIButton(type: .system)
-        btn.setTitle("앱 설정", for: .normal)
+        btn.setTitle("settings".localized(), for: .normal)
         btn.setTitleColor(.black, for: .normal)
         btn.titleLabel?.font = UIFont(name: CUSTOM_FONT, size: 25)
         btn.isEnabled = true
@@ -79,7 +79,7 @@ class MenuViewController: BaseViewController {
     func setupUI(){
         
         // customize navigationController backButton
-        let backBtn = UIBarButtonItem(title: "뒤로", style: .plain, target: self, action: nil)
+        let backBtn = UIBarButtonItem(title: "back".localized(), style: .plain, target: self, action: nil)
         backBtn.tintColor = CUSTOM_MAIN_COLOR
         navigationItem.backBarButtonItem = backBtn
         
@@ -119,8 +119,8 @@ class MenuViewController: BaseViewController {
     }
     
     func goLocationSetting() {
-        let alertController = UIAlertController(title :"알림", message: "추억이 어느 장소에서 저장됬는지 알 수 있도록 위치권한을 항상으로 설정해주세요.", preferredStyle: .alert)
-        let settingsAction = UIAlertAction(title: "설정", style: .default) { (_) -> Void in
+        let alertController = UIAlertController(title :"Alert".localized(), message: "location_always_message".localized(), preferredStyle: .alert)
+        let settingsAction = UIAlertAction(title: "setting".localized(), style: .default) { (_) -> Void in
             guard let settingsUrl = URL(string: UIApplication.openSettingsURLString) else {
                 return
             }
@@ -131,7 +131,7 @@ class MenuViewController: BaseViewController {
                 })
             }
         }
-        let cancelAction = UIAlertAction(title: "취소", style: .default){ (_) -> Void in
+        let cancelAction = UIAlertAction(title: "cancel".localized(), style: .default){ (_) -> Void in
         }
         alertController.addAction(settingsAction)
         alertController.addAction(cancelAction)
@@ -189,7 +189,11 @@ extension MenuViewController : NoteListViewModelDelegate {
 //MARK: extension NoteViewControllerDelegate
 extension MenuViewController : NoteViewControllerDelegate {
     func didSaveNote() {
-        self.view.makeToast("저장되었습니다.\n지금 작성된 추억은 훗날 이곳으로 다시 돌아왔을 때 보여드릴께요!")
+        self.view.makeToast(
+            "saved".localized()
+            + "\n"
+            + "saved_message".localized()
+        )
         viewModel.updateNoteList()
     }
 }
@@ -229,7 +233,7 @@ extension MenuViewController : CLLocationManagerDelegate {
             stopLocationUpdate()
             // 기존정보 삭제
             currentLocation = nil
-            self.view.makeToast("위치권한이 필요합니다.")
+            self.view.makeToast("location_require".localized())
         }
         // 허용됨
         else if manager.authorizationStatus == .authorizedAlways || manager.authorizationStatus == .authorizedWhenInUse {

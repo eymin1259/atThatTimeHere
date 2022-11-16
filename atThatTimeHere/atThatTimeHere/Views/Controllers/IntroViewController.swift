@@ -13,7 +13,7 @@ class IntroViewController: UIViewController {
     
     private let atThatTimeLbl :  UILabel  =  {
         let  text = UILabel()
-        text.text = "그때"
+        text.text = "Here".localized()
         text.textColor = .white
         text.font = UIFont(name: CUSTOM_FONT, size: 30)
         text.translatesAutoresizingMaskIntoConstraints = false
@@ -22,7 +22,7 @@ class IntroViewController: UIViewController {
     
     private let hereLbl :  UILabel  =  {
         let  text = UILabel()
-        text.text = "이곳"
+        text.text = "Again".localized()
         text.textColor = .white
         text.font = UIFont(name: CUSTOM_FONT, size: 30)
         text.translatesAutoresizingMaskIntoConstraints = false

@@ -13,7 +13,7 @@ class SettingViewController: BaseViewController {
     //MARK: UI
     private var  myinfoLbl :  UIButton  =  {
         let btn = UIButton(type: .system)
-        btn.setTitle("내 정보", for: .normal)
+        btn.setTitle("my_info".localized(), for: .normal)
         btn.setTitleColor(.black, for: .normal)
         btn.titleLabel?.font = UIFont(name: CUSTOM_FONT, size: 25)
         btn.isEnabled = true
@@ -23,7 +23,7 @@ class SettingViewController: BaseViewController {
     
     private var  appVersionLbl :  UIButton  =  {
         let btn = UIButton(type: .system)
-        btn.setTitle("앱 정보", for: .normal)
+        btn.setTitle("app_info".localized(), for: .normal)
         btn.setTitleColor(.black, for: .normal)
         btn.titleLabel?.font = UIFont(name: CUSTOM_FONT, size: 25)
         btn.isEnabled = true
@@ -34,7 +34,7 @@ class SettingViewController: BaseViewController {
     private var TermsLbl :  UIButton  =  {
         // 정보저장x, 앱버전
         let btn = UIButton(type: .system)
-        btn.setTitle("이용약관", for: .normal)
+        btn.setTitle("terms_and_conditions".localized(), for: .normal)
         btn.setTitleColor(.black, for: .normal)
         btn.titleLabel?.font = UIFont(name: CUSTOM_FONT, size: 25)
         btn.isEnabled = true
@@ -45,7 +45,7 @@ class SettingViewController: BaseViewController {
     private var privacyLbl :  UIButton  =  {
         // 정보저장x, 앱버전
         let btn = UIButton(type: .system)
-        btn.setTitle("개인정보 처리방침", for: .normal)
+        btn.setTitle("privacy_policy".localized(), for: .normal)
         btn.setTitleColor(.black, for: .normal)
         btn.titleLabel?.font = UIFont(name: CUSTOM_FONT, size: 25)
         btn.isEnabled = true
@@ -55,7 +55,7 @@ class SettingViewController: BaseViewController {
     
     private var  appReviewLbl :  UIButton  =  {
         let btn = UIButton(type: .system)
-        btn.setTitle("의견 보내기", for: .normal)
+        btn.setTitle("reviews".localized(), for: .normal)
         btn.setTitleColor(.black, for: .normal)
         btn.titleLabel?.font = UIFont(name: CUSTOM_FONT, size: 25)
         btn.isEnabled = true
@@ -65,7 +65,7 @@ class SettingViewController: BaseViewController {
     
     private var  logoutLbl :  UIButton  =  {
         let btn = UIButton(type: .system)
-        btn.setTitle("로그아웃", for: .normal)
+        btn.setTitle("logout".localized(), for: .normal)
         btn.setTitleColor(.black, for: .normal)
         btn.titleLabel?.font = UIFont(name: CUSTOM_FONT, size: 25)
         btn.isEnabled = true
@@ -110,26 +110,26 @@ class SettingViewController: BaseViewController {
     @objc func didTapMyInfo(){
         // id
         guard let email = UserDefaults.standard.dictionary(forKey: CURRENTUSERKEY)?["email"] else { return }
-        showDialog(title: "내 정보", message: "email : \(email)")
+        showDialog(title: "my_info".localized(), message: "email : \(email)")
     }
     
     @objc func didTapAppVersion(){
         guard let dictionary = Bundle.main.infoDictionary else {return}
         guard let version = dictionary["CFBundleShortVersionString"] as? String else {return}
         
-        showDialog(title: "앱 정보", message: "\nvserion : \(version)\n개발자 : eymin1259@gmail.com")
+        showDialog(title: "app_info".localized(), message: "\nvserion : \(version)\ndeveloper : eymin1259@gmail.com")
     }
     
     @objc func didTapTermsOfService(){
         // 정보저장x, 앱버전
         print("debug : didTapTermsOfService  ")
-        showDialog(title: "이용약관", message: TERMS_OF_SERVICE)
+        showDialog(title: "terms_and_conditions".localized(), message: TERMS_OF_SERVICE)
     }
     
     @objc func didTapPrivacy(){
         // 개인정보처리방침
         print("debug : didTapTermsOfService  ")
-        showDialog(title: "개인정보 처리방침", message: PRIVACY_POLICY)
+        showDialog(title: "privacy_policy".localized(), message: "privacy_policy_content".localized())
     }
     
     @objc func didTapAppReview(){

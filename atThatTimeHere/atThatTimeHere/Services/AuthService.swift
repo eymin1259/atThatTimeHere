@@ -28,7 +28,7 @@ class  AuthService  {
     func login(email: String, password: String, completion: @escaping(Bool, String)->Void) {
         
         guard let encryptedPassword = self.encryptPassword(password: password) else {
-            completion(false, SYSTEM_ERROR_MESSAGE + "1")
+            completion(false, "error_occurred".localized() + "1")
             return
         }
         
@@ -36,16 +36,16 @@ class  AuthService  {
             if let user = userInDb {
                 if user.password == encryptedPassword {
                     self.saveUserInfoLocally(user: user)
-                    completion(true, "로그인 성공!")
+                    completion(true, "login success".localized())
                     return
                 }
                 else {
-                    completion(false, "비밀번호를 다시 확인하세요.")
+                    completion(false, "incorrect_login_input".localized())
                     return
                 }
             }
             else {
-                completion(false, "존재하지 않는 아이디입니다.")
+                completion(false, "incorrect_login_input".localized())
                 return
             }
         }
@@ -62,17 +62,17 @@ class  AuthService  {
                         if user.password == encryptedPassword {
                             // 로그인 유저 정보 저장
                             self.saveUserInfoLocally(user: user)
-                            emitter.onNext("로그인 성공!")
+                            emitter.onNext("login success".localized())
                             return
                         }
                         else { // 패스워드 불일치
-                            emitter.onError(CustomError(errorMessage: "비밀번호를 다시 확인하세요."))
+                            emitter.onError(CustomError(errorMessage: "incorrect_login_input".localized()))
                             return
                         }
                     }
                     else {
                         // 디비의 해당 이메일의 유저 정보 없는경우
-                        emitter.onError(CustomError(errorMessage: "존재하지 않는 아이디입니다."))
+                        emitter.onError(CustomError(errorMessage: "incorrect_login_input".localized()))
                         return
                     }
                 }
@@ -80,7 +80,7 @@ class  AuthService  {
             }
             else {
                 // 암호 복호화 실패
-                emitter.onError(CustomError(errorMessage: "비밀번호 시스템 오류 입니다."))
+                emitter.onError(CustomError(errorMessage: "error_occurred".localized()))
             }
             return Disposables.create()
         }
@@ -91,21 +91,21 @@ class  AuthService  {
         createUserTable()
         getUserInfo(byEmail: email) { (userInDb) in
             if let _ = userInDb {
-                completion(false, "이미 존재하는 이메일입니다.")
+                completion(false, "email_not_found".localized())
                 return
             }
             else {
                 guard let encryptedPassword = self.encryptPassword(password: password) else {
-                    completion(false, SYSTEM_ERROR_MESSAGE  + " 2")
+                    completion(false, "error_occurred".localized()  + " 2")
                     return
                 }
                 self.insertUserInfo(email: email, password: encryptedPassword, photoUrl: nil) { (result, user) in
                     if result == true, let user =  user {
                         self.saveUserInfoLocally(user: user)
-                        completion(true, "회원가입 성공!")
+                        completion(true, "registration_success".localized())
                         return
                     }else {
-                        completion(false, SYSTEM_ERROR_MESSAGE + " 3")
+                        completion(false, "error_occurred".localized() + " 3")
                         return
                     }
                 }
@@ -123,13 +123,13 @@ class  AuthService  {
             self.getUserInfo(byEmail: email) { userInDb in
                 // 이미 해당 이메일 존재하는 경우
                 if let _ = userInDb {
-                    emitter.onError(CustomError(errorMessage: "이미 존재하는 이메일입니다."))
+                    emitter.onError(CustomError(errorMessage: "email_not_found".localized()))
                     return
                 }
                 else {
                     guard let encryptedPassword = self.encryptPassword(password: password) else {
                         // 암호 복호화 에러
-                        emitter.onError(CustomError(errorMessage: "비밀번호 시스템 오류 입니다."))
+                        emitter.onError(CustomError(errorMessage: "error_occurred".localized()))
                         return
                     }
                     self.insertUserInfo(email: email, password: encryptedPassword, photoUrl: nil) { (result, user) in
@@ -137,11 +137,11 @@ class  AuthService  {
                         if result == true, let user =  user {
                             // 유저정보 Local 저장
                             self.saveUserInfoLocally(user: user)
-                            emitter.onNext("회원가입 성공!")
+                            emitter.onNext("registration_success".localized())
                             emitter.onCompleted()
                         }else {
                             // db insert 실패
-                            emitter.onError(CustomError(errorMessage: "시스템 오류, 관리자에게 문의바랍니다."))
+                            emitter.onError(CustomError(errorMessage: "error_occurred".localized()))
                             return
                         }
                     }

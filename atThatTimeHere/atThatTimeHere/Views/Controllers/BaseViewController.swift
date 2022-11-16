@@ -44,7 +44,7 @@ class BaseViewController: UIViewController {
     func showDialog(title: String, message :String) {
         DispatchQueue.main.async {
             let alertController = UIAlertController(title :title, message: message, preferredStyle: .alert)
-            let okAction = UIAlertAction(title: "확인", style: .default) { (_) -> Void in
+            let okAction = UIAlertAction(title: "confirm".localized(), style: .default) { (_) -> Void in
             }
             alertController.addAction(okAction)
             self.present(alertController, animated: true, completion: nil)

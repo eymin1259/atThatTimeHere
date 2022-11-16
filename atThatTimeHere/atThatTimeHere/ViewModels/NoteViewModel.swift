@@ -37,7 +37,7 @@ class NoteViewModel {
             let today = Date()
             let formatter = DateFormatter()
             formatter.dateFormat = "yyyy-MM-dd"
-            formatter.locale = Locale(identifier: "ko_kr")
+            formatter.locale = Locale.current
             let todayStr = formatter.string(from: today)
             
             // 디폴트좌표 -> 북극
