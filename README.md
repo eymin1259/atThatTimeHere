@@ -12,6 +12,7 @@
 - gps 위치 모니터링 및 푸시알림
 
 ## Skills
-- RxSwift, MVVM
+- MVVM
+- RxSwift
 - UIKit, AutoLayout
 - CoreLocation, SQLite3
