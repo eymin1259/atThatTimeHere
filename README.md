@@ -4,7 +4,7 @@
 - App Store (KR) : https://apps.apple.com/kr/app/id1585791289 
 - App Store (EN) : https://apps.apple.com/us/app/id1585791289
 
-## 구현 기능
+## Developments
 - 백그라운드 로케이션을 활용하여 노트가 씌여진 위치 모니터링 기능 개발 
 - SQLite3 활용하여 게시물,  유저정보 데이터베이스 CRUD 개발
 - 노트 작성, 저장, 수정, 삭제, 조회
