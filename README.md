@@ -3,7 +3,6 @@
 - 그때이곳은 특정 위치에서 노트를 기록하고 해당 위치로 돌아갔을 때 알람으로 알려주는 위치 기반 알람 앱 입니다.
 - App Store (KR) : https://apps.apple.com/kr/app/id1585791289 
 - App Store (EN) : https://apps.apple.com/us/app/id1585791289
-
 </br>
 
 # Skills
@@ -11,6 +10,7 @@
 - RxSwift
 - UIKit, AutoLayout
 - CoreLocation, SQLite3
+</br>
 
 
 # Developments
