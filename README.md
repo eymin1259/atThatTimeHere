@@ -4,15 +4,17 @@
 - App Store (KR) : https://apps.apple.com/kr/app/id1585791289 
 - App Store (EN) : https://apps.apple.com/us/app/id1585791289
 
-## Developments
-- 백그라운드 로케이션을 활용하여 노트가 씌여진 위치 모니터링 기능 개발 
-- SQLite3 활용하여 게시물,  유저정보 데이터베이스 CRUD 개발
-- 노트 작성, 저장, 수정, 삭제, 조회
-- 사진 첨부
-- gps 위치 모니터링 및 푸시알림
+</br>
 
-## Skills
-- MVVM
+# Skills
+- MVVM Architecture
 - RxSwift
 - UIKit, AutoLayout
 - CoreLocation, SQLite3
+
+
+# Developments
+- 백그라운드 로케이션을 활용하여 노트가 작성된 위치 모니터링 기능 개발
+- SQLite3 활용하여 게시물, 유저정보 데이터베이스 CRUD 개발
+- gps 위치 모니터링 및 로컬 notification 개발
+- 로컬라이징 적용하여 한국어 버전, 영어 버전 앱스토어 출시
